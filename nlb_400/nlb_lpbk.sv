@@ -31,19 +31,19 @@
 //   +------------------------------------------------------------------+                       
 //   |    +----------+           +---------+      +------------+        |                           
 //   |    |          |  Wr       |         |<---->| Test_lpbk1 |        |                           
-//  CCI-S |Requestor |<--------->| Arbiter |<--+  +------------+        |                            
+//  CCI-P |Requestor |<--------->| Arbiter |<--+  +------------+        |                            
 // <----->|          |  Rd       |/Selector|<+ |  +------------+        |                       
 //   |    |          |<--------->|         | | +->|Test_rdwr   |        |                       
 //   |    +----------+           +---------+ |    +------------+        |                       
 //   |                                    /\ |    +------------+        |               
-//   |                                    |  +--->| Test_lpbk2 |        |
+//   |                                    |  +--->| Test_SW1   |        |
 //   |                                    |       +------------+        |
 //   |                                    |       +------------+        |                       
-//   |                                    ------->| Test_lpbk3 |        |
-//   |                                    |       +------------+        |
-//   |                                    |       +------------+        |                       
-//   |                                    ------->| Test_SW1   |        |
-//   | nlb_lpbk                                   +------------+        |
+//   |                                    ------->| Test_atomic|        |
+//   |                                            +------------+        |
+//   |                                                                  |                       
+//   |                                                                  |
+//   | nlb_lpbk                                                         |
 //   +------------------------------------------------------------------+
 //
 //
@@ -123,18 +123,25 @@
 //
 //
 // CSR_CFG:
+// [47:32]  RW    cr_numCX - Num HW CX operations for Mode5 
 // [29]     RW    cr_interrupt_testmode - used to test interrupt. Generates an interrupt at end of each test.
 // [28]     RW    cr_interrupt_on_error - send an interrupt when error detected
 // [27:20]  RW    cr_test_cfg  -may be used to configure the behavior of each test mode
+// [19:17]  RW    cr_qword     - Qword offset for Mode5
+// [16]     RW    cr_CXsubmode - select sub-mode for Mode5
+//                           0 - default - separate token
+//                           1 - shared token
 // [13:12]  RW    cr_chsel     -select virtual channel
 // [10:9]   RW    cr_rdsel     -configure read request type. 0- RdLine_S, 1- RdLine_I, 2- RdLine_O, 3- Mixed mode
 // [8]      RW    cr_delay_en  -enable random delay insertion between requests
+// [6:5]    RW    cr_multiCL_len  - Multi CL length. Valid values are 0,1,3
 // [4:2]    RW    cr_mode      -configures test mode
 // [1]      RW    cr_cont      - 1- test rollsover to start address after it reaches the CSR_NUM_LINES count. Such a test terminates only on an error.
 //                               0- test terminates, updated the status csr when CSR_NUM_LINES count is reached.
 // [0]      RW    cr_wrthru_en -switch between WrLine_I & WrLine_M  request types. 
 //                              0- WrLine_M
 //                              1- WrLine_I
+//
 //
 // CSR_INACT_THRESHOLD:
 // [31:0]   RW  inactivity threshold limit. The idea is to detect longer duration of stalls during a test run. Inactivity counter will count number of consecutive idle cycles,
@@ -153,7 +160,9 @@
 // [159:128] RO  Number of reads
 // [127:64]  RO  Number of clocks
 // [63:32]   RO  test error register
-// [31:0]    RO  test completion flag
+// [31:16]   RO  Compare and Exchange success Counter
+// [15:1]    RO  Unique id for each dsm status write
+// [0]       RO  test completion flag
 //
 // High Level Test flow:
 //---------------------------------------------------------------
@@ -178,7 +187,7 @@
 // 2.     READ          3'b001                          2^N                                             14'h3fff
 // 3.     WRITE         3'b010                          2^N                                             14'h3fff
 // 4.     TRPUT         3'b011                          2^N                                             14'h3fff
-// 5.     LPBK2         3'b101                          smaller of 2^N or 14'h80                        14'h80
+// 5.     ATOMIC        3'b101                          
 // 6.     LPBK3         3'b110                          smaller of 2^(N-16) or 14'h80                   14'h10
 // 7.     SW1           3'b111                          2^N                                             14'h3ffe
 //
@@ -256,7 +265,7 @@
 // 7. Read N cache lines. Wait for all read completions.
 // 6. Stop timer Send test completion.
 //
-
+`include "vendor_defines.vh"
 import ccip_if_pkg::*;
 module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
 (
@@ -323,7 +332,7 @@ module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
    wire [7:0]                   re2xy_test_cfg;
    wire [2:0]                   re2ab_Mode;
    wire                         ab2re_TestCmp;
-   wire [255:0]                 ab2re_ErrorInfo;
+  (* `KEEP_WIRE *) wire [255:0] ab2re_ErrorInfo;
    wire                         ab2re_ErrorValid;
    
    wire                         test_SoftReset;
@@ -332,7 +341,7 @@ module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
    wire  [31:0]                 cr2re_num_lines;
    wire  [31:0]                 cr2re_inact_thresh;
    wire  [31:0]                 cr2re_interrupt0;
-   wire  [31:0]                 cr2re_cfg;
+   wire  [63:0]                 cr2re_cfg;
    wire  [31:0]                 cr2re_ctl;
    wire  [63:0]                 cr2re_dsm_base;
    wire                         cr2re_dsm_base_valid;
@@ -349,12 +358,20 @@ module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
    logic                        re2ab_WrRspFormat;
    logic [1:0]                  re2ab_WrRspCLnum;
    logic [1:0]                  re2xy_multiCL_len;
-	
+   
+   logic                        re2ab_CXsubmode;
+   logic [2:0]                  re2ab_qword;
+   logic [15:0]                 re2ab_numCX;
+   logic                        re2ab_cxSuccess;
+   logic [2:0]                  ab2re_cxQword; 
+   logic                        ab2re_cxEn;
+   
    reg                          SoftReset_q=1'b1;
    always @(posedge Clk_400)
    begin
        SoftReset_q <= SoftReset;
    end
+   
 requestor #(.PEND_THRESH(PEND_THRESH),
             .ADDR_LMT   (ADDR_LMT),
             .TXHDR_WIDTH(TXHDR_WIDTH),
@@ -427,7 +444,14 @@ inst_requestor(
        re2ab_RdRspCLnum,
        re2ab_WrRspFormat,
        re2ab_WrRspCLnum,
-       re2xy_multiCL_len
+       re2xy_multiCL_len,
+	   
+       re2ab_CXsubmode,
+       re2ab_qword,
+       re2ab_numCX,
+       re2ab_cxSuccess,
+       ab2re_cxQword,
+	     ab2re_cxEn
 );
 
 arbiter #(.PEND_THRESH(PEND_THRESH),
@@ -483,7 +507,14 @@ inst_arbiter (
        re2ab_RdRspCLnum,
        re2ab_WrRspFormat,
        re2ab_WrRspCLnum,
-       re2xy_multiCL_len
+       re2xy_multiCL_len,
+	   
+	     re2ab_CXsubmode,
+       re2ab_qword,
+       re2ab_numCX,
+       re2ab_cxSuccess,
+       ab2re_cxQword,
+	     ab2re_cxEn
 );
 
 t_ccip_c0_ReqMmioHdr       cp2cr_MmioHdr;

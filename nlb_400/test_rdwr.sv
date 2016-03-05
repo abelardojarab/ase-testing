@@ -121,13 +121,13 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    reg      [255:0]           rw2ab_ErrorInfo;        // arb:        error information
    reg                        rw2ab_ErrorValid;       // arb:        test has detected an error
      
-   reg      [15:0]            Num_RdReqs;
-   reg      [15:0]            Num_RdPend;
+   reg      [19:0]            Num_RdReqs;
+   reg      [9:0]             Num_RdPend;
    reg      [1:0]             RdFSM;
    reg      [MDATA-2:0]       Rdmdata;
 
-   reg      [15:0]            Num_WrReqs;
-   reg      [15:0]            Num_WrPend;
+   reg      [19:0]            Num_WrReqs;
+   reg      [9:0]             Num_WrPend;
    reg      [1:0]             WrFSM;
    reg      [MDATA-2:0]       Wrmdata;
    
@@ -135,7 +135,12 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    reg                        rw2ab_RdSop;
    reg      [1:0]             rw2ab_WrLen;
    reg                        rw2ab_WrSop;
-            
+   
+   logic                      rw2ab_RdEn_q;
+   logic                      ab2rw_RdSent_q;
+   logic                      ab2rw_RdRspValid_q;
+   logic    [1:0]             RdFSM_q;  
+   
    assign rw2ab_RdTID = {Rdmdata, 1'b1};
    assign rw2ab_WrTID = {Wrmdata, 1'b0};
 
@@ -153,19 +158,20 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
      else
        begin
          rw2ab_ErrorValid <= 0;
-         rw2ab_TestCmp    <= (((WrFSM == 2'h2 && Num_WrPend == 0) && (RdFSM == 2'h2 && Num_RdPend == 0)));
+         rw2ab_TestCmp    <= (((WrFSM == 2'h2 && Num_WrPend == 0) && (RdFSM_q == 2'h2 && Num_RdPend == 0)));
        end
    end
    
    always @(posedge Clk_400)
    begin
+         RdFSM_q          <= RdFSM;
          case(RdFSM)       /* synthesis parallel_case */
          2'h0:
          begin
            rw2ab_RdAddr   <= 0;
            rw2ab_RdLen    <= re2xy_multiCL_len; 
            rw2ab_RdSop    <= 1'b1;
-           Num_RdReqs     <= 16'h0 + re2xy_multiCL_len + 1'b1;       // Default is 1 req; implies single CL 
+           Num_RdReqs     <= 20'h0 + re2xy_multiCL_len + 1'b1;       // Default is 1 req; implies single CL 
 
            if(re2xy_go)
              begin
@@ -185,7 +191,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
                rw2ab_RdSop         <= 1'b1;
                Num_RdReqs          <= Num_RdReqs + re2xy_multiCL_len + 1'b1;        
                
-               if(Num_RdReqs >= re2xy_NumLines)
+               if(Num_RdReqs == re2xy_NumLines)
                  if(re2xy_Cont)
                    RdFSM     <= 2'h0;
                  else
@@ -201,13 +207,19 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 
          if ((rw2ab_RdEn && ab2rw_RdSent))
            Rdmdata           <= Rdmdata + 1'b1;
-         
-	 // Track read responses
-         if  ((rw2ab_RdEn && ab2rw_RdSent) && !ab2rw_RdRspValid)
+	 
+         // Track read responses
+         // Timing Fix: Update Num_RdPend - one cycle delayed 
+         // Delays Test completion by 1 cycle in non-cont mode
+         rw2ab_RdEn_q         <= rw2ab_RdEn;
+         ab2rw_RdSent_q       <= ab2rw_RdSent;
+         ab2rw_RdRspValid_q   <= ab2rw_RdRspValid;
+		 
+         if  ((rw2ab_RdEn_q && ab2rw_RdSent_q) && !ab2rw_RdRspValid_q)
            Num_RdPend        <= Num_RdPend + 1'b1 + re2xy_multiCL_len;
-         else if ((rw2ab_RdEn && ab2rw_RdSent) &&  ab2rw_RdRspValid)
+         else if ((rw2ab_RdEn_q && ab2rw_RdSent_q) &&  ab2rw_RdRspValid_q)
            Num_RdPend        <= Num_RdPend + re2xy_multiCL_len;
-         else if(!(rw2ab_RdEn && ab2rw_RdSent) &&  ab2rw_RdRspValid && ((rw2ab_TestCmp == 1'b0)))
+         else if(!(rw2ab_RdEn_q && ab2rw_RdSent_q) &&  ab2rw_RdRspValid_q && ((rw2ab_TestCmp == 1'b0)))
            Num_RdPend        <= Num_RdPend - 1'b1;
            
  
@@ -215,7 +227,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
        begin
          rw2ab_RdAddr   <= 0;
          Rdmdata        <= 0;
-         Num_RdReqs     <= 16'h1;
+         Num_RdReqs     <= 20'h1;
          Num_RdPend     <= 0;
          RdFSM          <= 0;
          rw2ab_RdLen    <= 0;
@@ -232,7 +244,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
            rw2ab_WrAddr   <= 0;
            rw2ab_WrLen    <= re2xy_multiCL_len;
            rw2ab_WrSop    <= 1;
-           Num_WrReqs     <= 16'h1;
+           Num_WrReqs     <= 20'h1;
 		              
            if(re2xy_go)
            begin
@@ -267,7 +279,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
                  rw2ab_WrSop    <= 0;
                end
 			   
-               if(Num_WrReqs >= re2xy_NumLines)
+               if(Num_WrReqs == re2xy_NumLines)
                  if(re2xy_Cont)
                    WrFSM     <= 2'h0;
                  else
@@ -312,7 +324,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 //         rw2ab_WrAddr   <= 0;
  //        rw2ab_WrDin    <= 0;
          Wrmdata        <= 0;
-         Num_WrReqs     <= 16'h1;
+         Num_WrReqs     <= 20'h1;
          Num_WrPend     <= 0;
          WrFSM          <= 0;	
          rw2ab_WrLen    <= 0;

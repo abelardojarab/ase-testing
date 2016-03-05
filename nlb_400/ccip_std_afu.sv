@@ -31,12 +31,26 @@ module ccip_std_afu(
 //===============================================================================================
 // User AFU goes here
 //===============================================================================================
+
+// NOTE: All inputs and outputs in PR region (AFU) must be registered
+// NLB AFU registers all its outputs therefore not registered again here.
+// Registering Inputs to AFU
+logic          pck_cp2af_softReset_T1;
+t_if_ccip_Rx   pck_cp2af_sRx_T1;
+
+always@(posedge pClk)
+begin
+    pck_cp2af_sRx_T1           <= pck_cp2af_sRx;
+    pck_cp2af_softReset_T1     <= pck_cp2af_softReset;
+end
+
+
 // NLB AFU- provides validation, performance characterization modes. It also serves as a reference design
 nlb_lpbk nlb_lpbk(
   .Clk_400             ( pClk ) ,
-  .SoftReset           ( pck_cp2af_softReset ) ,
+  .SoftReset           ( pck_cp2af_softReset_T1 ) ,
 
-  .cp2af_sRxPort       ( pck_cp2af_sRx ) ,
+  .cp2af_sRxPort       ( pck_cp2af_sRx_T1 ) ,
   .af2cp_sTxPort       ( pck_af2cp_sTx ) 
 );
 
