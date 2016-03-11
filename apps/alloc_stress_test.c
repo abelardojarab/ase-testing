@@ -10,17 +10,21 @@ int main()
   buf  = (struct buffer_t *)malloc(sizeof(struct buffer_t));
   buf->memsize  = 2*1024*1024;
 
-  for (i = 0; i < 2048 ; i++) 
+  /* while(1) */
+  /* i = 0; */
+  for (i = 0; i < 32000 ; i++)
     {
       printf(" ------- Iteration %d ------- \n", i);
       allocate_buffer(buf, NULL);
       if (buf->fake_paddr == 0) 
 	{
 	  printf("Physaddr = 0 is unacceptable\n");
-	  break;
+	  goto cruel_world;
 	}
+      // i++;
     }
 
+ cruel_world:
   session_deinit();
 
   return 0;

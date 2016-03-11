@@ -774,10 +774,10 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
 
         /* synthesis translate_off */
         if(af2cp_sTxPort.c1.valid )
-            $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
+          //$display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
 
         if(af2cp_sTxPort.c0.valid)
-            $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
+          //$display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
 
         /* synthesis translate_on */
 
@@ -841,7 +841,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             begin
                 penalty_start_f   <= 1'b1;
                 penalty_start     <= Num_ticks_low[7:0];                    /* synthesis translate_off */
-                $display ("NLB_INFO : start penalty = %d ", Num_ticks_low); /* synthesis translate_on */
+               // $display ("NLB_INFO : start penalty = %d ", Num_ticks_low); /* synthesis translate_on */
             end
 
             penalty_end <= penalty_end + 1'b1;
@@ -856,7 +856,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
               && !cp2af_sRxPort.c1TxAlmFull
               && !status_write)
             begin                                                       /* synthesis translate_off */
-                $display ("NLB_INFO : end penalty = %d ", penalty_end); /* synthesis translate_on */
+               $display ("NLB_INFO : end penalty = %d ", penalty_end); /* synthesis translate_on */
             end
 
         end
