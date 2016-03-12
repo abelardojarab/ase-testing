@@ -23,6 +23,8 @@ echo "#                                              #"
 echo "#              Building AALSDK                 #"
 echo "#                                              #"
 echo "################################################"
+cd $AALDIR
+./prep-build
 cd $AALUSER
 mkdir mybuild
 cd mybuild
