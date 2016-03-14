@@ -14,8 +14,9 @@ echo "#                                              #"
 echo "#               Setup variables                #"
 echo "#                                              #"
 echo "################################################"
-echo "VCS Version : " $VCS_HOME
-echo "ASE_DEBUG   : " $ASE_DEBUG
+echo "VCS Version     : " $VCS_HOME
+echo "Quartus Version : " $QUARTUS_HOME
+echo "ASE_DEBUG       : " $ASE_DEBUG
 
 # Set submodule directory to my branch
 echo "################################################"
@@ -58,6 +59,6 @@ echo "#                Building ASE                  #"
 echo "#                                              #"
 echo "################################################"
 cd $ASE_DIR
-./scripts/generate_ase_envrionment.py $TESTS_BASE/nlb_mode0/HW/
+./scripts/generate_ase_environment.py $TESTS_BASE/nlb_mode0/HW/
 make ASE_DEBUG=$ASE_DEBUG
 

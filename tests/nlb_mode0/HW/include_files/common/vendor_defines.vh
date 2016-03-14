@@ -9,6 +9,9 @@
 `ifndef VENDOR_DEFINES_VH
 `define VENDOR_DEFINES_VH
 
+    `define VENDOR_ALTERA
+    `define TOOL_QUARTUS
+
     // Generate error if Vendor not defined
     `ifdef VENDOR_XILINX
             `ifdef VENDOR_ALTERA

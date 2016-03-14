@@ -16,6 +16,7 @@
 //  ------------------------------------------------------------------------------------------------------------------------------------------------
 //
 // This module instantiates different test AFUs, and connect them up to the arbiter.
+`include "nlb_cfg_pkg.vh"
 
 module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 (
