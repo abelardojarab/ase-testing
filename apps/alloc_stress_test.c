@@ -10,9 +10,9 @@ int main()
   buf  = (struct buffer_t *)malloc(sizeof(struct buffer_t));
   buf->memsize  = 2*1024*1024;
 
-  /* while(1) */
-  /* i = 0; */
-  for (i = 0; i < 32000 ; i++)
+  i = 0;
+  while(1)
+  //  for (i = 0; i < 32000 ; i++)
     {
       printf(" ------- Iteration %d ------- \n", i);
       allocate_buffer(buf, NULL);

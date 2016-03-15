@@ -59,6 +59,6 @@ echo "#                Building ASE                  #"
 echo "#                                              #"
 echo "################################################"
 cd $ASE_DIR
-./scripts/generate_ase_environment.py $TESTS_BASE/nlb_mode0/HW/
+./scripts/generate_ase_environment.py $TESTS_BASE/nlb_allmodes/HW/
 make ASE_DEBUG=$ASE_DEBUG
 
