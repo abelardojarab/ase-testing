@@ -3,3 +3,5 @@
 simple
 *.o
 *.pyc
+aalsdk/
+myinst/
