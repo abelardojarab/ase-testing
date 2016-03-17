@@ -1,8 +1,13 @@
 #!/bin/sh
 
-ASE_SRCDIR=../../aalsdk/aaluser/ase/
+if [ $1 != "" ]
+then
+    ASE_SRCDIR=$1
+else
+    ASE_SRCDIR=../../aalsdk/aaluser/ase/
+fi
 
-# set -v
+set -v
 
 gcc -g -o nlb_test.out \
     nlb_lpbk1_test.c \
