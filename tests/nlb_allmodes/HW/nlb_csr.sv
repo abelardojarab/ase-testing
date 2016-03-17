@@ -13,7 +13,7 @@
 //                  capable of doing 32 and 64 bit rd/wr the register file.
 //
 // ***************************************************************************
-`include "vendor_defines.vh"
+`include "nlb_cfg_pkg.vh"
 import ccip_if_pkg::*;
 module nlb_csr #(parameter CCIP_VERSION_NUMBER=0)
 (
