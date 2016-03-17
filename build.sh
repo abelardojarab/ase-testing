@@ -82,7 +82,7 @@ echo "#                                              #"
 echo "#                Starting ASE                  #"
 echo "#                                              #"
 echo "################################################"
-xterm -e make sim &
+make sim | tee $BASEDIR/sim.log & 
 echo "Waiting for simulator to be ready ."
 while [ ! -f "$ASE_WORKDIR/.ase_ready.pid" ]
 do
@@ -101,10 +101,9 @@ echo "################################################"
 echo "Testing peek-poke application"
 cd $PEEKPOKE_APPS
 export ASE_WORKDIR="$ASE_WORKDIR"
-xterm -e ./stress.sh 200 
+./stress.sh 200 | tee $BASEDIR/stress.log
 sleep 3
 cd $BASEDIR
-
 
 echo "################################################"
 echo "#                                              #"
