@@ -21,7 +21,7 @@ int main()
 	  printf("Physaddr = 0 is unacceptable\n");
 	  goto cruel_world;
 	}
-      // i++;
+      i++;
     }
 
  cruel_world:

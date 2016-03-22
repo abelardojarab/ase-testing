@@ -4,7 +4,7 @@
 /* #define VC_SET                   0x0 */
 
 /////////////////////////////////////////
-#define BASE_OFFSET              0x20000
+#define BASE_OFFSET              0x30000
 
 #define DFH                      BASE_OFFSET + 0x000
 #define AFU_ID_L                 BASE_OFFSET + 0x008
