@@ -1,5 +1,26 @@
 #!/bin/sh
 
+# Tool setting
+if [ "$1" == "VCS" ] ; then 
+    echo "Running VCS mode"
+elif [ "$1" == "QUESTA" ] ; then
+    echo "Running QUESTA mode"
+else
+    echo "** ERROR: Tool unidentified **"
+    echo "** You must specify tool when running **"
+    echo "** ./build.sh <VCS|QUESTA> [AALCLONE_DISABLE] **"
+    exit
+fi
+
+# AAL Clone disable
+if [ "$2" == "AALCLONE_DISABLE" ] ; then
+    echo "AALSDK will not be cloned"
+    aalclone_disable=1
+else
+    echo "AAL will be cloned"
+    aalclone_disable=0
+fi
+
 BASEDIR=$(pwd)
 AALDIR="$BASEDIR"/aalsdk/
 AALUSER="$AALDIR"/aaluser/
@@ -8,7 +29,6 @@ INSTALL_DIR=$BASEDIR/myinst/
 ASE_DEBUG=$ASE_DEBUG
 ASE_DIR=$AALUSER/ase/
 TESTS_BASE=$BASEDIR/tests/
-ASE_WORKDIR=$AALUSER/ase/work/
 PEEKPOKE_APPS=$BASEDIR/apps/
 
 echo "################################################"
@@ -16,21 +36,44 @@ echo "#                                              #"
 echo "#               Setup variables                #"
 echo "#                                              #"
 echo "################################################"
-echo "VCS Version     : " $VCS_HOME
-echo "Quartus Version : " $QUARTUS_HOME
-echo "ASE_DEBUG       : " $ASE_DEBUG
+echo "VCS Version       : " $VCS_HOME
+echo "Quartus Version   : " $QUARTUS_HOME
+echo "Questasim Version : " $MTI_HOME
+echo "ASE_DEBUG         : " $ASE_DEBUG
+
+if [ -z "$VCS_HOME" ]; then
+    echo "VCS_HOME must be set"
+    exit 1
+fi
+
+if [ -z "$MTI_HOME" ]; then
+    echo "MTI_HOME must be set"
+    exit 1
+fi
+
+if [ -z "$QUARTUS_HOME" ]; then
+    echo "QUARTUS_HOME must be set"
+    exit
+fi
+
+if [ -z "$ASE_DEBUG" ]; then
+    echo "ASE_DEBUG must be set"
+    exit
+fi
 
 # Set submodule directory to my branch
-echo "################################################"
-echo "#                                              #"
-echo "#           AALSDK Anonymous pull              #"
-echo "#                                              #"
-echo "################################################"
-rm -rf aalsdk
-git clone git://aalrepo.jf.intel.com/aalsdk aalsdk
-cd aalsdk
-git checkout ase_ccip
-cd ..
+if [ $aalclone_disable == "0" ] ; then
+    echo "################################################"
+    echo "#                                              #"
+    echo "#           AALSDK Anonymous pull              #"
+    echo "#                                              #"
+    echo "################################################"
+    rm -rf aalsdk
+    git clone git://aalrepo.jf.intel.com/aalsdk aalsdk
+    cd aalsdk
+    git checkout ase_ccip
+    cd ..
+fi
 
 echo "################################################"
 echo "#                                              #"
@@ -71,7 +114,16 @@ echo "#                                              #"
 echo "################################################"
 cd $ASE_DIR
 ./scripts/env_check.sh
-./scripts/generate_ase_environment.py $TESTS_BASE/nlb_allmodes/HW/
+if [ "$1" == "VCS" ]
+then 
+    ./scripts/generate_ase_environment.py -t VCS $TESTS_BASE/nlb_allmodes/HW/
+    ASE_WORKDIR=$AALUSER/ase/work/
+elif [ "$1" == "QUESTA" ]
+then
+    ./scripts/generate_ase_environment.py -t QUESTA $TESTS_BASE/nlb_allmodes/HW/
+    ASE_WORKDIR=$AALUSER/ase/
+fi
+
 make ASE_DEBUG=$ASE_DEBUG
 cp $BASEDIR/fpga-regress.py $INSTALL_DIR/bin/
 cp $BASEDIR/testlib.py $INSTALL_DIR/bin/
