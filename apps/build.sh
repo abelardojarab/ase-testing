@@ -9,7 +9,7 @@ fi
 
 set -v
 
-gcc -g -o nlb_test.out \
+gcc -O2 -g -o nlb_test.out \
     nlb_lpbk1_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \

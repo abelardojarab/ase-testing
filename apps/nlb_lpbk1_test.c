@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
   
   mmio_write32(CSR_CFG, (0 | (mcl_set << 5) | (vc_set << 12)) );  
   
-  uint32_t *status_addr = (uint32_t *)((uint64_t)dsm->vbase + DSM_STATUS_TEST_COMPLETE);
+  volatile uint32_t *status_addr = (uint32_t *)((uint64_t)dsm->vbase + DSM_STATUS_TEST_COMPLETE);
 
   mmio_write32(CSR_CTL, 3);
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 machine=$(uname -n)
 machine=${machine,,}
@@ -22,7 +22,8 @@ then
     source /nfs/pdx/home/rrsharma/bashrc_aliases/questasim.sh    
 fi
 
-echo "QUARTUS_HOME    : " $QUARTUS_HOME
-echo "VCS_HOME        : " $VCS_HOME
-echo "MTI_HOME        : " $MTI_HOME
-echo "LM_LICENSE_FILE : " $LM_LICENSE_FILE
+echo "QUARTUS_HOME         : " $QUARTUS_HOME
+echo "VCS_HOME             : " $VCS_HOME
+echo "MTI_HOME             : " $MTI_HOME
+echo "LM_LICENSE_FILE      : " $LM_LICENSE_FILE
+echo "SNPSLMD_LICENSE_FILE : " $SNPSLMD_LICENSE_FILE
