@@ -27,6 +27,7 @@
 /////////////////////////////////////////
 #define  ORIG_ALLOC_BUFFER
 
+// #define ENABLE_UMSG
 
 int main(int argc, char *argv[])
 {
@@ -67,14 +68,15 @@ int main(int argc, char *argv[])
 
   // Port control
   ase_portctrl("AFU_RESET 1");
+#ifdef ENABLE_UMSG
   ase_portctrl("UMSG_MODE 63");
-  usleep(10000);
+#endif
   ase_portctrl("AFU_RESET 0");
 
   // usleep(100);
   // sleep(2);
   // Send umsg
-#if 1
+#if ENABLE_UMSG
   uint64_t umsgdata;
   for(i= 0; i < 100; i++)
     {
