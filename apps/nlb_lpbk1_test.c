@@ -27,7 +27,7 @@
 /////////////////////////////////////////
 #define  ORIG_ALLOC_BUFFER
 
-// #define ENABLE_UMSG
+#define ENABLE_UMSG
 
 int main(int argc, char *argv[])
 {
@@ -55,35 +55,34 @@ int main(int argc, char *argv[])
   int vc_arr[4] = {0, 1, 2, 3};
   int mcl_arr[3] = {0, 1, 3};
 
-#if 0
-  srand(time(NULL));
-  vc_set = vc_arr[rand()%4];
-  mcl_set = mcl_arr[rand()%3];
-  num_cl = num_cl * mcl_set;
-#endif
-  // num_cl = num_cl * (mcl_set + 1);
-
   printf("num_cl = %d, vc_set = %d, mcl_set = %d\n", num_cl, vc_set, mcl_set);
 
 
   // Port control
   ase_portctrl("AFU_RESET 1");
 #ifdef ENABLE_UMSG
-  ase_portctrl("UMSG_MODE 63");
+  ase_portctrl("UMSG_MODE 255");
 #endif
   ase_portctrl("AFU_RESET 0");
 
   // usleep(100);
   // sleep(2);
   // Send umsg
-#if ENABLE_UMSG
-  uint64_t umsgdata;
-  for(i= 0; i < 100; i++)
+#ifdef ENABLE_UMSG
+  volatile uint64_t *umsg_1;  
+  volatile uint64_t *umsg_7;
+  umsg_1 = umsg_get_address(1);
+  umsg_7 = umsg_get_address(7);
+  for(i= 0; i < 1000; i++)
     {
-      umsgdata = 0x1111111100000000 + i;
-      umsg_send (1, &umsgdata);
-      umsgdata = 0x7777777700000000 + i;
-      umsg_send (7, &umsgdata);
+      *umsg_1 = 0x1111111100000000 + i;
+      // usleep(1);
+      *umsg_7 = 0x7777777700000000 + i;
+      // usleep(1);
+      /* umsgdata = 0x1111111100000000 + i; */
+      /* umsg_send (1, &umsgdata); */
+      /* umsgdata = 0x7777777700000000 + i; */
+      /* umsg_send (7, &umsgdata); */
     }
 #endif
   struct buffer_t *dsm, *src, *dst;

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+rm -rf *.out output.*.log
+
 if [ $1 != "" ]
 then
     ASE_SRCDIR=$1
@@ -9,7 +11,7 @@ fi
 
 set -v
 
-gcc -O2 -g -o nlb_test.out \
+gcc -pg -O2 -g -o nlb_test.out \
     nlb_lpbk1_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
@@ -17,7 +19,6 @@ gcc -O2 -g -o nlb_test.out \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
     -lrt -lm -I ${ASE_SRCDIR}/sw/ \
-    -D ASE_DEBUG
 
 gcc -g -o mmio_test.out \
     mmio_test.c \

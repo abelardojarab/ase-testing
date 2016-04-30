@@ -25,8 +25,8 @@ fi
 echo "Stress test will run" $NUM_TESTS "tests"
 for i in `seq 1 $NUM_TESTS`;
 do
-    # if pgrep "ase_simv" -u $USER
-    # then
+    if pgrep "ase_simv" -u $USER
+    then
 	echo "------------------------------------------------"
 	echo "Running test" $i
 
@@ -38,8 +38,8 @@ do
 	mcl_cnt=$(($mcl_set + 1))
 
 #	num_cl=`shuf -i 12000-16000 -n 1`
-	num_cl=`shuf -i 256-1024 -n 1`
-#	num_cl=`shuf -i 4-16 -n 1`
+#	num_cl=`shuf -i 256-1024 -n 1`
+	num_cl=`shuf -i 4-16 -n 1`
 	num_cl=$(($num_cl * $mcl_cnt))
 	
 	echo ./nlb_test.out $num_cl $vc_set $mcl_set
@@ -51,10 +51,10 @@ do
 	    exit
 	fi
 	sleep 1
-    # else
-    # 	echo "Simulator not running... EXIT";
-    # 	exit
-    # fi
+    else
+	echo "Simulator not running... EXIT";
+	exit
+    fi
 done
 echo "------------------------------------------------"
 # pkill ase_simv
