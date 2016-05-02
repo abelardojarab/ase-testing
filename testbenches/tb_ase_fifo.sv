@@ -1,17 +1,22 @@
 module tb_ase_fifo();
 
-   parameter DATA_WIDTH = 65536;
-   parameter MAX_COUNT = 256;
-
+   parameter DATA_WIDTH = 64;
+   parameter MAX_COUNT = 16;
+   parameter DEPTH_BASE2 = 4;
+   
+   
    logic clk, rst, full, empty, valid_in, valid_out, read_en;
    logic [DATA_WIDTH-1:0] data_in, data_out;
-   logic [3:0] 		  count;
+   logic [DEPTH_BASE2:0]  count;
    logic 		  start_reading;
 
    int 			  wr_iter;
    int 			  rd_iter;
 
-   ase_svfifo inst_fifo (clk, rst, valid_in, data_in, read_en, data_out, valid_out, full, , empty, count, , );
+   ase_svfifo
+     #(DATA_WIDTH, DEPTH_BASE2, 5)
+   inst_fifo 
+     (clk, rst, valid_in, data_in, read_en, data_out, valid_out, full, , empty, count, , );
 
    //clk
    initial begin
@@ -110,7 +115,7 @@ module tb_ase_fifo();
 
    initial begin
       // #1000_00;
-      wait until (rd_iter == MAX_COUNT);
+      wait (rd_iter == MAX_COUNT);
       #200;		  
       $display(check_array);
       $display(rd_iter);      

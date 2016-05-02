@@ -27,7 +27,7 @@ fifo:
 ase_svfifo:
 	vcs -j 4 -full64 -nc  -sverilog -override_timescale=10ps/10ps \
 	+incdir+../../hw/ -debug_all \
-	../../hw/ase_svfifo.sv \
+	/home/rrsharma/xeon-fpga-src/aalsdk/aaluser/ase/hw/ase_svfifo.sv \
 	tb_ase_fifo.sv
 
 prng:
