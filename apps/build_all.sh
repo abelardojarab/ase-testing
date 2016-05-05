@@ -11,52 +11,51 @@ fi
 
 set -v
 
-gcc -pg -O2 -g -o nlb_test.out \
+gcc -pg -g -o nlb_test.out \
     nlb_lpbk1_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
     ${ASE_SRCDIR}/sw/app_backend.c \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
-    -lrt -lm -I ${ASE_SRCDIR}/sw/ \
+    -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
-gcc -g -o mmio_test.out \
+gcc -pg -g -o mmio_test.out \
     mmio_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
     ${ASE_SRCDIR}/sw/app_backend.c \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
-    -lrt -lm -I ${ASE_SRCDIR}/sw/ \
-    -D ASE_DEBUG
+    -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
-gcc -g -o alloc_dealloc.out \
+gcc -pg -g -o alloc_dealloc.out \
     alloc_dealloc.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
     ${ASE_SRCDIR}/sw/app_backend.c \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
-    -lrt -lm -I ${ASE_SRCDIR}/sw/ \
+    -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
     -D ASE_DEBUG
 
-gcc -g -o alloc_stress_test.out \
+gcc -pg -g -o alloc_stress_test.out \
     alloc_stress_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
     ${ASE_SRCDIR}/sw/app_backend.c \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
-    -lrt -lm -I ${ASE_SRCDIR}/sw/ \
+    -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
-gcc -g -o mux_nlb_test.out \
-    mux_nlb_test.c \
-    ${ASE_SRCDIR}/sw/tstamp_ops.c \
-    ${ASE_SRCDIR}/sw/ase_ops.c \
-    ${ASE_SRCDIR}/sw/app_backend.c \
-    ${ASE_SRCDIR}/sw/mqueue_ops.c \
-    ${ASE_SRCDIR}/sw/error_report.c \
-    -lrt -lm -I ${ASE_SRCDIR}/sw/ \
-    -D ASE_DEBUG
+# gcc -g -o mux_nlb_test.out \
+#     mux_nlb_test.c \
+#     ${ASE_SRCDIR}/sw/tstamp_ops.c \
+#     ${ASE_SRCDIR}/sw/ase_ops.c \
+#     ${ASE_SRCDIR}/sw/app_backend.c \
+#     ${ASE_SRCDIR}/sw/mqueue_ops.c \
+#     ${ASE_SRCDIR}/sw/error_report.c \
+#     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
+#     -D ASE_DEBUG
 
 
