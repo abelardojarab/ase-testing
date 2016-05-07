@@ -81,7 +81,7 @@ output logic                 cr2cp_MmioDout_v;        //   CSR read data valid
 // BBB Attributes
 // --------------------------------------------------------------------------
 localparam       END_OF_LIST           = 1'h0;  // Set this to 0 if there is another DFH beyond this
-localparam       NEXT_DFH_BYTE_OFFSET  = 24'h0; // Next DFH Byte offset
+localparam       NEXT_DFH_BYTE_OFFSET  = 24'h1000; // Next DFH Byte offset
 
 //----------------------------------------------------------------------------
 // CSR Attributes
