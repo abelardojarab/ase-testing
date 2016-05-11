@@ -9,14 +9,14 @@ $BBB_GIT/cci_mpf/HW/cci-if/cci_csr_if_pkg.sv
 
 
 
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/test_lpbk1.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/arbiter.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/test_rdwr.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/requestor.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/test_sw1.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/nlb_lpbk.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/nlb_csr.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/test_atomic.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_lpbk1.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/arbiter.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_rdwr.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/requestor.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_sw1.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_lpbk.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_csr.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_atomic.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_buffer_afu.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_buffer_fiu.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_rsp_order.sv
@@ -53,13 +53,13 @@ $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_track_multi_write.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_fifo_lutram.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_lfsr.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_fifo2.sv
-$BBB_GIT/cci_mpf/test_afus/ccip_vtp_nlb.sv
+$BBB_GIT/cci_mpf/test_afus/ccip_vtp_nlb_all.sv
 
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/nlb_C1Tx_fifo.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_151/synth/lpbk1_RdRspRAM2PORT_ram_2port_151_davj2sq.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/synth/lpbk1_RdRspRAM2PORT.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_151/synth/req_C1TxRAM2PORT_ram_2port_151_xaxn5ri.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_151/synth/req_C1TxRAM2PORT_ram_2port_151_t3axzby.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb/HW/nlb_gram_sdp.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_C1Tx_fifo.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_151/synth/lpbk1_RdRspRAM2PORT_ram_2port_151_davj2sq.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/synth/lpbk1_RdRspRAM2PORT.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_151/synth/req_C1TxRAM2PORT_ram_2port_151_xaxn5ri.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_151/synth/req_C1TxRAM2PORT_ram_2port_151_t3axzby.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_gram_sdp.v
 
