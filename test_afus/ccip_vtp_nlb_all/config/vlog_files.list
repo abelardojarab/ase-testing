@@ -53,7 +53,7 @@ $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_track_multi_write.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_fifo_lutram.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_lfsr.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-prims/cci_mpf_prim_fifo2.sv
-$BBB_GIT/cci_mpf/test_afus/ccip_vtp_nlb_all.sv
+$BBB_GIT/cci_mpf/samples/afu/ccip_mpf_nlb.sv
 
 $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_C1Tx_fifo.v
 $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_151/synth/lpbk1_RdRspRAM2PORT_ram_2port_151_davj2sq.v
