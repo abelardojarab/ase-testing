@@ -16,6 +16,7 @@ export ASE_SRCDIR=$AALSDK_GIT/aaluser/ase/
 export ASE_WORKDIR=$AALSDK_GIT/aaluser/ase/work/
 export AALKERN_DIR=$AALSDK_GIT/aalkernel/
 export MYINST_DIR=$BASEDIR/myinst/
+export AALSAMP_DIR=$AALSDK_GIT/aalsamples/
 
 echo "Directory settings =>"
 echo "AALSDK_GIT  : " $AALSDK_GIT
@@ -27,4 +28,5 @@ echo "ASE_SRCDIR  : " $ASE_SRCDIR
 echo "ASE_WORKDIR : " $ASE_WORKDIR
 echo "AALKERN_DIR : " $AALKERN_DIR
 echo "MYINST_DIR  : " $MYINST_DIR
+echo "AALSAMP_DIR : " $AALSAMP_DIR
 

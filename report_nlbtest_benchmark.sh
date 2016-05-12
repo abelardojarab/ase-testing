@@ -30,7 +30,7 @@ CURRDIR=$PWD
 ASE_SRCDIR=$AALUSER_DIR/ase/
 ASE_WORKDIR=$ASE_SRCDIR/work/
 
-AFU_CONFIG=$ASEVAL_GIT/test_afus/nlb_allmodes/config/
+AFU_CONFIG=$ASEVAL_GIT/test_afus/ccip_nlb_all/config/
 
 ## Recompile AALSDK specifics
 ASE_DEBUG="0 1"

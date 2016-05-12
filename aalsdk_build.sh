@@ -15,17 +15,23 @@ if [ -z "$ASEVAL_GIT" ]; then
     exit 1
 fi
 
+rm -rf $MYINST_DIR
+./prep-build --deep-clean
+./prep-build
+
 cd $AALUSER_DIR
+rm -rf mybuild
 mkdir mybuild
 cd mybuild
-../configure --prefix=$MYINST_DIR
-make -j 8
-make install
+../configure --prefix=$MYINST_DIR || exit 1
+make -j 8 || exit 1
+make install || exit 1
 
 cd $AALKERN_DIR
+rm -rf mybuild
 mkdir mybuild
 cd mybuild
-../configure --prefix=$MYINST_DIR
-make -j 8 
+../configure --prefix=$MYINST_DIR || exit 1
+make -j 8  || exit 1
 
 
