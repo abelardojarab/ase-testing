@@ -1,96 +1,96 @@
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	          Took 72,981,328,928 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	          Took 67,316,087,727 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	          Took 62,539,848,401 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	          Took 94,351,274,001 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	          Took 85,368,352,449 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	          Took 85,429,774,242 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	          Took 95,421,148,648 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	          Took 88,622,145,346 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	          Took 82,584,116,572 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	          Took 91,254,465,578 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	          Took 89,474,335,074 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	          Took 86,518,516,788 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	          Took 87,663,598,122 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	          Took 79,865,175,499 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	          Took 78,441,297,547 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	          Took 110,925,355,907 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	          Took 104,836,538,274 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	          Took 98,645,040,032 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	          Took 110,399,689,431 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	          Took 102,331,150,293 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	          Took 99,705,746,676 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	          Took 109,666,955,835 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	          Took 101,977,752,875 nsec 
-ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	          Took 98,726,204,596 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	          Took 139,049,688,174 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	          Took 136,537,683,388 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	          Took 122,399,296,416 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	          Took 176,057,231,773 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	          Took 165,359,875,949 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	          Took 173,304,785,794 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	          Took 189,816,827,661 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	          Took 175,722,931,934 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	          Took 159,312,412,457 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	          Took 189,730,167,442 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	          Took 178,001,627,295 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	          Took 168,273,657,270 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	          Took 159,607,671,912 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	          Took 150,916,939,247 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	          Took 146,939,092,798 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	          Took 206,562,812,187 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	          Took 194,714,136,945 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	          Took 181,612,827,782 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	          Took 209,862,724,840 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	          Took 192,685,518,819 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	          Took 180,835,651,315 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	          Took 206,585,934,977 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	          Took 194,980,908,386 nsec 
-ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	          Took 181,230,066,686 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	          Took 97,198,389,176 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	          Took 94,596,319,529 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	          Took 87,920,800,912 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	          Took 129,440,344,166 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	          Took 121,516,104,757 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	          Took 115,768,074,982 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	          Took 126,318,383,137 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	          Took 120,903,616,336 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	          Took 117,122,871,985 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	          Took 129,207,761,102 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	          Took 124,227,244,932 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	          Took 120,718,052,271 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	          Took 114,469,973,990 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	          Took 104,986,188,025 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	          Took 101,880,805,625 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	          Took 147,842,902,072 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	          Took 131,796,211,939 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	          Took 127,886,407,223 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	          Took 144,251,750,255 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	          Took 135,810,466,475 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	          Took 129,530,193,692 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	          Took 145,828,657,362 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	          Took 137,340,505,180 nsec 
-ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	          Took 128,722,432,371 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	          Took 182,426,530,184 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	          Took 163,110,121,314 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	          Took 175,080,936,758 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	          Took 230,346,881,970 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	          Took 213,542,625,744 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	          Took 204,061,963,138 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	          Took 228,609,304,032 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	          Took 212,993,830,110 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	          Took 204,882,741,779 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	          Took 229,599,017,172 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	          Took 214,960,598,465 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	          Took 203,972,582,419 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	          Took 192,429,769,932 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	          Took 176,116,641,960 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	          Took 169,249,504,868 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	          Took 238,815,664,256 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	          Took 227,793,581,857 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	          Took 217,247,772,756 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	          Took 240,643,556,962 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	          Took 223,948,953,420 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	          Took 215,224,842,002 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	          Took 239,504,521,822 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	          Took 230,001,787,246 nsec 
-ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	          Took 219,661,524,735 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	           72,981,328,928 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	           67,316,087,727 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	           62,539,848,401 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	           94,351,274,001 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	           85,368,352,449 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	           85,429,774,242 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	           95,421,148,648 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	           88,622,145,346 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	           82,584,116,572 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	           91,254,465,578 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	           89,474,335,074 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	           86,518,516,788 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	           87,663,598,122 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	           79,865,175,499 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	           78,441,297,547 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	           110,925,355,907 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	           104,836,538,274 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	           98,645,040,032 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	           110,399,689,431 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	           102,331,150,293 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	           99,705,746,676 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	           109,666,955,835 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	           101,977,752,875 nsec 
+ASE_DEBUG=0 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	           98,726,204,596 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	           139,049,688,174 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	           136,537,683,388 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	           122,399,296,416 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	           176,057,231,773 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	           165,359,875,949 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	           173,304,785,794 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	           189,816,827,661 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	           175,722,931,934 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	           159,312,412,457 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	           189,730,167,442 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	           178,001,627,295 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	           168,273,657,270 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	           159,607,671,912 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	           150,916,939,247 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	           146,939,092,798 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	           206,562,812,187 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	           194,714,136,945 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	           181,612,827,782 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	           209,862,724,840 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	           192,685,518,819 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	           180,835,651,315 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	           206,585,934,977 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	           194,980,908,386 nsec 
+ASE_DEBUG=0 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	           181,230,066,686 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	           97,198,389,176 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	           94,596,319,529 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	           87,920,800,912 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	           129,440,344,166 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	           121,516,104,757 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	           115,768,074,982 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	           126,318,383,137 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	           120,903,616,336 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	           117,122,871,985 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	           129,207,761,102 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	           124,227,244,932 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	           120,718,052,271 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	           114,469,973,990 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	           104,986,188,025 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	           101,880,805,625 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	           147,842,902,072 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	           131,796,211,939 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	           127,886,407,223 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	           144,251,750,255 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	           135,810,466,475 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	           129,530,193,692 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	           145,828,657,362 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	           137,340,505,180 nsec 
+ASE_DEBUG=1 	WAVEDUMP=0 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	           128,722,432,371 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 0 	           182,426,530,184 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 1 	           163,110,121,314 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 0 3 	           175,080,936,758 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 0 	           230,346,881,970 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 1 	           213,542,625,744 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 1 3 	           204,061,963,138 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 0 	           228,609,304,032 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 1 	           212,993,830,110 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 2 3 	           204,882,741,779 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 0 	           229,599,017,172 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 1 	           214,960,598,465 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 0 	./nlb_test 64000 3 3 	           203,972,582,419 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 0 	           192,429,769,932 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 1 	           176,116,641,960 nsec <---
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 0 3 	           169,249,504,868 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 0 	           238,815,664,256 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 1 	           227,793,581,857 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 1 3 	           217,247,772,756 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 0 	           240,643,556,962 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 1 	           223,948,953,420 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 2 3 	           215,224,842,002 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 0 	           239,504,521,822 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 1 	           230,001,787,246 nsec 
+ASE_DEBUG=1 	WAVEDUMP=1 	ENABLE_CL_VIEW = 1 	./nlb_test 64000 3 3 	           219,661,524,735 nsec 
