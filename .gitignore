@@ -6,3 +6,9 @@ simple
 aalsdk/
 myinst/
 tmp/
+*.vpd
+
+
+## Binaries by name
+InitRelease
+
