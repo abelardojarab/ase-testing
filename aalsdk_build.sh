@@ -15,7 +15,10 @@ if [ -z "$ASEVAL_GIT" ]; then
     exit 1
 fi
 
+cd $BASEDIR
 rm -rf $MYINST_DIR
+
+cd $AALSDK_GIT
 ./prep-build --deep-clean
 ./prep-build
 
