@@ -53,7 +53,7 @@ for i in $TOOL_VERSION; do
     echo "--------------------------------------------------------------------------"
     cd $ASE_SRCDIR
     make clean
-    make
+    make > log.txt
     if [ $? -eq 0 ]; then
     	echo -e "$VCS_HOME" "\t\t" "[BUILD PASS]" >> $ASEVAL_GIT/vcs-scrub.txt
 	echo "Testing build with ./stress.sh"
@@ -63,7 +63,7 @@ for i in $TOOL_VERSION; do
 	    sleep 1
 	done
 	cd $ASEVAL_GIT/apps/
-	./nlb_scrub.sh
+	./nlb_scrub.sh 
 	if [ $? -eq 0 ]; then
     	    echo -e "$VCS_HOME" "\t\t" "[RUN PASS]" >> $ASEVAL_GIT/vcs-scrub.txt	    
 	else
@@ -73,8 +73,9 @@ for i in $TOOL_VERSION; do
 	sleep 1
     else
     	echo -e "$VCS_HOME" "\t\t" "[BUILD FAIL]" >> $ASEVAL_GIT/vcs-scrub.txt
-	make clean
-	make | tee $logname-build-FAIL.txt
+	mv log.txt $logname-build-FAIL.txt
+	# make clean
+	# make | tee
     fi
 done
 
