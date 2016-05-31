@@ -40,6 +40,10 @@ export TOOL_VERSION="
 cd $ASE_SRCDIR
 rm -rf $ASEVAL_GIT/vcs-scrub.txt
 
+echo "Building Quick-scrub tests"
+cd $ASEVAL_GIT/apps/
+./build_all.sh
+
 for i in $TOOL_VERSION; do
     logname=`basename $i`
     export VCS_HOME=$i
@@ -58,11 +62,15 @@ for i in $TOOL_VERSION; do
 	do
 	    sleep 1
 	done
-	sleep 5
+	cd $ASEVAL_GIT/apps/
+	./nlb_scrub.sh
+	if [ $? -eq 0 ]; then
+    	    echo -e "$VCS_HOME" "\t\t" "[RUN FAIL]" >> $ASEVAL_GIT/vcs-scrub.txt	    
+	else
+	    echo -e "$VCS_HOME" "\t\t" "[RUN PASS]" >> $ASEVAL_GIT/vcs-scrub.txt	    
+	fi
 	$ASEVAL_GIT/kill_running_ase.sh
-	# cd $ASEVAL_GIT/apps/
-	# ./build_all.sh
-	# ./nlb_scrub.sh
+	sleep 1
     else
     	echo -e "$VCS_HOME" "\t\t" "[BUILD FAIL]" >> $ASEVAL_GIT/vcs-scrub.txt
 	make clean
