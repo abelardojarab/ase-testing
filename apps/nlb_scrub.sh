@@ -6,7 +6,8 @@ vc_arr="0 1 2 3"
 
 mcl_arr="0 1 3"
 
-cl_arr="16 64 256 1024 4096 32768"
+cl_arr="16 4096 32768"
+# cl_arr="16 64 256 1024 4096 32768"
 
 echo "NLB Scrub test will run" $NUM_TESTS "tests"
 for vc in $vc_arr; do
