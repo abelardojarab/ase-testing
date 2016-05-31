@@ -57,7 +57,7 @@ for i in $TOOL_VERSION; do
     if [ $? -eq 0 ]; then
     	echo -e "$VCS_HOME" "\t\t" "[BUILD PASS]" >> $ASEVAL_GIT/vcs-scrub.txt
 	echo "Testing build with ./stress.sh"
-	xterm -iconic -e "cd $ASE_WORKDIR ; make sim " &
+	xterm -iconic -e "cd $ASE_SRCDIR ; make sim " &
 	while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
 	do
 	    sleep 1
@@ -65,9 +65,9 @@ for i in $TOOL_VERSION; do
 	cd $ASEVAL_GIT/apps/
 	./nlb_scrub.sh
 	if [ $? -eq 0 ]; then
-    	    echo -e "$VCS_HOME" "\t\t" "[RUN FAIL]" >> $ASEVAL_GIT/vcs-scrub.txt	    
+    	    echo -e "$VCS_HOME" "\t\t" "[RUN PASS]" >> $ASEVAL_GIT/vcs-scrub.txt	    
 	else
-	    echo -e "$VCS_HOME" "\t\t" "[RUN PASS]" >> $ASEVAL_GIT/vcs-scrub.txt	    
+	    echo -e "$VCS_HOME" "\t\t" "[RUN FAIL]" >> $ASEVAL_GIT/vcs-scrub.txt	    
 	fi
 	$ASEVAL_GIT/kill_running_ase.sh
 	sleep 1
