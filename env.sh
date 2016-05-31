@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ $1 != "" ]
+if [[ $1 != "" ]]
 then
     BASEDIR=$1
 else
