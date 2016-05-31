@@ -15,9 +15,6 @@ if [ -z "$ASEVAL_GIT" ]; then
     exit 1
 fi
 
-source /opt/synopsys/vcs-mx/vcs.sh
-source /opt/altera/quartus_15.sh
-
 PERF_REPORT=ase_performance.rpt
 rm -rf $PERF_REPORT
 touch $PERF_REPORT
