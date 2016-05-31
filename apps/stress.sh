@@ -22,6 +22,7 @@ else
     NUM_TESTS=$1
 fi
 
+## Check if inputs OK
 if [ -z "$1" ]
 then
     echo "Usage: ./stress.sh <num_tests> <short|long>"
@@ -36,10 +37,22 @@ else
     fi	
 fi
 
+# Wait for Simulator to be running/ready
+echo "Waiting for simulator to be ready ... "
+while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
+do
+    sleep 1
+done
+echo "Done"
+
+# Simulator PID
+ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
+
+# 
 echo "Stress test will run $NUM_TESTS tests"
 for i in `seq 1 $NUM_TESTS`;
 do
-    if pgrep "ase_simv" -u $USER
+    if ps -p $ase_pid > /dev/null
     then
 	echo "------------------------------------------------"
 	echo "Running test" $i
