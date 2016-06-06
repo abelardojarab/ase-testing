@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
   int num_cl;
   int vc_set;
   int mcl_set;
+  int app_ret;
 
   if (argc > 1) 
     {
@@ -49,8 +50,7 @@ int main(int argc, char *argv[])
     }
 
   session_init();
-  int i;
-  
+  int i;  
   
   int vc_arr[4] = {0, 1, 2, 3};
   int mcl_arr[3] = {0, 1, 3};
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
   if (ret != src->memsize)     
     {
       perror("fread");
-      return 1;
+      return -1;
     }
   fclose(fp_rand);
 
@@ -198,13 +198,21 @@ int main(int argc, char *argv[])
   printf("Test complete\n");
 
   if (memcmp((char*)src->vbase, (char*)dst->vbase, num_cl*64) == 0)
-    printf("Buffers matched\n");
+    {
+      printf("Buffers matched\n");
+      app_ret = 0;
+    }
   else
-    printf("*** Buffer mismatch ***\n");
+    {
+      printf("*** Buffer mismatch ***\n");
+      app_ret = -1;
+    }
 
   /* deallocate_buffer(dsm); */
   /* deallocate_buffer(src); */
   /* deallocate_buffer(dst); */
+
+  send_swreset();
 
   deallocate_buffer_by_index(4);
   deallocate_buffer_by_index(3);
@@ -212,5 +220,5 @@ int main(int argc, char *argv[])
 
   session_deinit();
 
-  return 0;
+  return app_ret;
 }

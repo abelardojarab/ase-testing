@@ -19,7 +19,6 @@ ASEHW_FILE_LIST = \
 	$(ASE_SRCDIR)/hw/ccip_logger.sv \
 	$(ASE_SRCDIR)/hw/ccip_sniffer.sv \
 	$(ASE_SRCDIR)/hw/ase_top.sv \
-	$(ASE_SRCDIR)/hw/stream_checker.sv \
 
 
 ASE_INCDIR = $(ASE_SRCDIR)/hw/+

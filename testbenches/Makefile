@@ -1,11 +1,10 @@
 channel:
 	vcs -j 4 -full64 -nc -l comp.log \
 	-sverilog -override_timescale=10ps/10ps \
-	+incdir+../../hw/ -debug_all -race \
+	+incdir+$(ASE_SRCDIR)/hw/ -debug_all -race \
 	+define+ASE_DEBUG \
-	../../hw/ase_pkg.sv \
-	../../hw/stream_checker.sv \
-	../../hw/outoforder_wrf_channel.sv \
+	$(ASE_SRCDIR)/hw/ase_pkg.sv \
+	$(ASE_SRCDIR)/hw/outoforder_wrf_channel.sv \
 	tb_channel.sv \
 
 #	+vcs+loopreport +vcs+loopdetect \

@@ -19,6 +19,7 @@ gcc -pg -g -o nlb_test.out \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
+#    -D ASE_DEBUG
 
 gcc -pg -g -o mmio_test.out \
     mmio_test.c \
@@ -57,5 +58,14 @@ gcc -pg -g -o alloc_stress_test.out \
 #     ${ASE_SRCDIR}/sw/error_report.c \
 #     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 #     -D ASE_DEBUG
+
+gcc -pg -g -o session_stress.out \
+    session_stress.c \
+    ${ASE_SRCDIR}/sw/tstamp_ops.c \
+    ${ASE_SRCDIR}/sw/ase_ops.c \
+    ${ASE_SRCDIR}/sw/app_backend.c \
+    ${ASE_SRCDIR}/sw/mqueue_ops.c \
+    ${ASE_SRCDIR}/sw/error_report.c \
+    -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
 

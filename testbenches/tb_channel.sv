@@ -34,25 +34,25 @@ module tb_channel();
    int wr_i;
    int x;
       
-   initial begin
-      rst <= 1;
-      #200;
-      rst <= 0;
-      wait (wr_i == MAX_ITEMS);
-      #500000;
-      `ifdef ASE_DEBUG
-      $display("------- Dropped Transactions -------");
-      //      $display(tb_channel.outoforder_wrf_channel.checkunit.check_array);
-      if (tb_channel.outoforder_wrf_channel.checkunit.check_array.first(x)) begin
-	 do begin	    
-	    $display("%x : %x", (x >> 2), tb_channel.outoforder_wrf_channel.checkunit.check_array[x]); 
-	 end while (tb_channel.outoforder_wrf_channel.checkunit.check_array.next(x));
-      end
-      $display("Mismatch Count =%d", tb_channel.outoforder_wrf_channel.checkunit.check_array.num() );      
+   // initial begin
+   //    rst <= 1;
+   //    #200;
+   //    rst <= 0;
+   //    wait (wr_i == MAX_ITEMS);
+   //    #500000;
+   //    `ifdef ASE_DEBUG
+   //    $display("------- Dropped Transactions -------");
+   //    //      $display(tb_channel.outoforder_wrf_channel.checkunit.check_array);
+   //    if (tb_channel.outoforder_wrf_channel.checkunit.check_array.first(x)) begin
+   // 	 do begin	    
+   // 	    $display("%x : %x", (x >> 2), tb_channel.outoforder_wrf_channel.checkunit.check_array[x]); 
+   // 	 end while (tb_channel.outoforder_wrf_channel.checkunit.check_array.next(x));
+   //    end
+   //    $display("Mismatch Count =%d", tb_channel.outoforder_wrf_channel.checkunit.check_array.num() );      
       
-      `endif
-      $finish;
-   end
+   //    `endif
+   //    $finish;
+   // end
 
    // channel select
    function logic [1:0] sel_rand_len ();

@@ -2,23 +2,27 @@ import ase_pkg::*;
 
 module tb_latency_scoreboard();
 
-   parameter DATA_WIDTH = 64;
-   parameter HDR_WIDTH = 80;
-      
-   logic clk, rst, full, empty, valid_in, valid_out, read_en;     
+   parameter TXN_COUNT = 8;
+   parameter ADDR_BASE = 0;
+         
+   logic clk, rst, almfull, full, empty, valid_in, valid_out, read_en;     
    logic [DATA_WIDTH-1:0] data_in, data_out;
-   logic [HDR_WIDTH-1:0]  meta_in, meta_out;
+   
+   TxHdr_t txhdr_in;
+   TxHdr_t txhdr_out;
+   RxHdr_t rxhdr_out;
+
+   logic [CCIP_DATA_WIDTH-1:0] data0 = 512'hCAFECAFECAFECAFE_CAFECAFECAFECAFE_CAFECAFECAFECAFE_CAFECAFECAFECAFE_CAFECAFECAFECAFE_CAFECAFECAFECAFE_CAFECAFECAFECAFE_0000000000000000;
+      
    int 			  ii;
-   logic 		  overflow, underflow;
+   logic 		  overflow;
    
    // Buffer
    outoforder_wrf_channel
      #(
-       .NUM_TRANSACTIONS (4),
-       .HDR_WIDTH  (HDR_WIDTH), 
-       .DATA_WIDTH (DATA_WIDTH)
+       .WRITE_CHANNEL (0)
        ) 
-   buffer (clk, rst, meta_in, data_in, valid_in, meta_out, data_out, valid_out, read_en, empty, full, overflow, underflow, );
+   buffer (clk, rst, txhdr_in, data_in, valid_in, txhdr_out, rxhdr_out, data_out, valid_out, read_en, empty, almfull, full, overflow );
 
    //clk
    initial begin
@@ -45,14 +49,17 @@ module tb_latency_scoreboard();
       if (rst) begin
 	 valid_in <= 0;
 	 wr_iter <= 0;
-	 data_in <= 64'hCAFEBABE_BEBAFECA;	 
-	 meta_in <= 72'h00_00000000_00000000;	 
+	 txhdr_in <= TxHdr_t'(0);
+	 txhdr_in.vc <= VC_VA;
+	 txhdr_in.sop <= 0;
+	 txhdr_in.len <= ASE_1CL;
+	 txhdr_in.addr <= ADDR_BASE;	
       end
       else begin
-	 if ((~full) && (wr_iter < 256)) begin
+	 if ((~almfull) && (wr_iter < TNX_COUNT)) begin
 	    $display(wr_iter);	    
 	    wr_iter <= wr_iter + 1;
-	    meta_in <= meta_in + 72'h01_00000000_00000000;
+	    
 	    valid_in <= 1;	    
 	 end
 	 else begin
