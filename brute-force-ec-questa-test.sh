@@ -65,15 +65,18 @@ for i in $TOOL_VERSION; do
     export MTI_HOME=$i/../
     export PATH=$i:$PATH
     echo "------------------------------------------------------------------"
-    echo "Now running : $i "
+    echo "Now running : $MTI_HOME "
     echo "------------------------------------------------------------------"    
     cd $ASE_SRCDIR
     make clean
     make
-    if [ $? -eq 0 ]; then
-    	echo -e "$MTI_HOME" "\t\t[BUILD PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
+#    if [ $? -eq 0 ]; then
+    echo -e "$MTI_HOME" >> $ASEVAL_GIT/$SCRUB_LOG
+    if [ -f $ASE_SRCDIR/work/work/dpiheader.h ]; then
+    	echo -e -n "\t[BUILD PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
 	echo "Running tests"
 	xterm -iconic -e "cd $ASE_SRCDIR ; make sim " &
+#	xterm -e "cd $ASE_SRCDIR ; make sim " &
 	while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
 	do
 	    sleep 1
@@ -81,15 +84,15 @@ for i in $TOOL_VERSION; do
 	cd $ASEVAL_GIT/apps/
 	./nlb_scrub.sh 
 	if [ $? -eq 0 ]; then
-    	    echo -e "$MTI_HOME" "\t\t[RUN PASS]" >> $ASEVAL_GIT/$SCRUB_LOG	    
+    	    echo -e -n "\t[RUN PASS]" >> $ASEVAL_GIT/$SCRUB_LOG	    
 	    $ASEVAL_GIT/kill_running_ase.sh
 	else
-	    echo -e "$MTI_HOME" "\t\t[** RUN FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
+	    echo -e -n "\t[** RUN FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
 	    $ASEVAL_GIT/kill_running_ase.sh
 	fi
 	sleep 1
     else
-    	echo -e "$MTI_HOME" "\t\t[** BUILD FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
+    	echo -e -n "\t[** BUILD FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
     fi
 done
 
