@@ -70,8 +70,7 @@ for i in $TOOL_VERSION; do
     cd $ASE_SRCDIR
     make clean
     make
-#    if [ $? -eq 0 ]; then
-    echo -e "$MTI_HOME" >> $ASEVAL_GIT/$SCRUB_LOG
+    echo -e -n "$MTI_HOME" >> $ASEVAL_GIT/$SCRUB_LOG
     if [ -f $ASE_SRCDIR/work/work/dpiheader.h ]; then
     	echo -e -n "\t[BUILD PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
 	echo "Running tests"
@@ -92,7 +91,8 @@ for i in $TOOL_VERSION; do
 	fi
 	sleep 1
     else
-    	echo -e -n "\t[** BUILD FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
+    	echo -n -e "\t[** BUILD FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
     fi
+    echo -e "" >> $ASEVAL_GIT/$SCRUB_LOG 
 done
 
