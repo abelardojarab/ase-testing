@@ -7,6 +7,8 @@
 
 source ~/bashrc_aliases/quartus_15_pro.csh
 
+SCRUB_LOG=vcs-scrub.txt
+
 export SNPSLMD_LICENSE_FILE="26586@plxs0402.pdx.intel.com:26586@plxs0405.pdx.intel.com:26586@plxs0406.pdx.intel.com:26586@plxs0408.pdx.intel.com:26586@plxs0414.pdx.intel.com:26586@plxs0415.pdx.intel.com:26586@plxs0416.pdx.intel.com:26586@plxs0418.pdx.intel.com"
 
 export TOOL_VERSION="
@@ -52,7 +54,7 @@ export TOOL_VERSION="
 "
 
 cd $ASE_SRCDIR
-rm -rf $ASEVAL_GIT/vcs-scrub.txt
+rm -rf $ASEVAL_GIT/$SCRUB_LOG
 
 echo "Building Quick-scrub tests"
 cd $ASEVAL_GIT/apps/
@@ -65,12 +67,13 @@ for i in $TOOL_VERSION; do
     echo "--------------------------------------------------------------------------"
     echo "  Currently testing VCS version: $i $logname  " 
     echo "--------------------------------------------------------------------------"
+    echo -n -e "$VCS_HOME" >> $ASEVAL_GIT/$SCRUB_LOG
     cd $ASE_SRCDIR
     make clean
     rm -rf log.txt
     make | tee log.txt
     if [ -f $ASE_WORKDIR/ase_simv ]; then
-    	echo -e "$VCS_HOME" "\t\t[BUILD PASS]" >> $ASEVAL_GIT/vcs-scrub.txt
+    	echo -n -e "\t[BUILD PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
 	echo "Running tests"
 	xterm -iconic -e "cd $ASE_SRCDIR ; make sim " &
 	while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
@@ -80,10 +83,10 @@ for i in $TOOL_VERSION; do
 	cd $ASEVAL_GIT/apps/
 	./nlb_scrub.sh 
 	if [ $? -eq 0 ]; then
-    	    echo -e "$VCS_HOME" "\t\t[RUN PASS]" >> $ASEVAL_GIT/vcs-scrub.txt	    
+    	    echo -n -e "\t[RUN PASS]" >> $ASEVAL_GIT/$SCRUB_LOG	    
 	    $ASEVAL_GIT/kill_running_ase.sh
 	else
-	    echo -e "$VCS_HOME" "\t\t[** RUN FAIL **]" >> $ASEVAL_GIT/vcs-scrub.txt
+	    echo -n -e "\t[** RUN FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
 	    $ASEVAL_GIT/kill_running_ase.sh
 	    mkdir -p $ASEVAL_GIT/error_log/$logname/
 	    cp $ASE_WORKDIR/*.log $ASEVAL_GIT/error_log/$logname/
@@ -91,9 +94,10 @@ for i in $TOOL_VERSION; do
 	fi
 	sleep 1
     else
-    	echo -e "$VCS_HOME" "\t\t[** BUILD FAIL **]" >> $ASEVAL_GIT/vcs-scrub.txt
+    	echo -n -e "\t[** BUILD FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
 	mv log.txt $logname-build-FAIL.txt	
     fi
+    echo -e "" >> $ASEVAL_GIT/$SCRUB_LOG
 done
 
 
