@@ -31,7 +31,7 @@ else
     TEST_TYPE=$2
     if [ "$2" != "short" ]; then
 	if [ "$2" != "long" ]; then
-	    echo "TEST_TYPE must be small OR long"
+	    echo "TEST_TYPE must be short OR long"
 	    exit
 	fi
     fi	
