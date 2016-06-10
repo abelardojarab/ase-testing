@@ -5,7 +5,7 @@
 #                                                                           #
 #############################################################################
 
-DUT_VLOG_SRC_LIST = vlog_files.list 
+DUT_VLOG_SRC_LIST = $(ASE_SRCDIR)/vlog_files.list 
 
 DUT_INCDIR = $(ASEVAL_GIT)/test_afus/ccip_mmioafu/HW/+
 
