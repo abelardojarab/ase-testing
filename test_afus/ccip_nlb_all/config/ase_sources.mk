@@ -37,5 +37,5 @@ ASESW_FILE_LIST = \
 
 ASE_TOP = ase_top
 
-SIMULATOR = VCS
+SIMULATOR ?= VCS
 

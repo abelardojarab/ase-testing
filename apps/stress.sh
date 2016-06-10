@@ -92,5 +92,3 @@ do
 done
 echo "------------------------------------------------"
 
-$ASEVAL_GIT/kill_running_ase.sh
-
