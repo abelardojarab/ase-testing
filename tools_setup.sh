@@ -44,6 +44,17 @@ else
 fi
 export SIMULATOR=$SELECTED_CLASS
 
+## Setup Altera settings
+export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@fmylic36b.fm.intel.com:1800@fmylic7001.fm.intel.com:1800@fmylic7008.fm.intel.com"
+export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@altera02p.elic.intel.com:1800@dan-host-1.sc.intel.com:1800@plxs0402.pdx.intel.com"
+export QUARTUS_HOME=/opt/altera/15.1.2/quartus/
+export QUARTUS_ROOTDIR=$QUARTUS_HOME
+export QUARTUS_64BIT=1
+export QUARTUS_ROOTDIR_OVERRIDE=$QUARTUS_HOME
+export ALTERAOCLSDKROOT="/opt/altera/15.1.2/hld/"
+export PATH=$PATH:$QUARTUS_HOME/bin/:$QUARTUS_HOME/../hld/bin/
+
+
 ## Print variables
 echo "QUARTUS_HOME         : " $QUARTUS_HOME
 echo "VCS_HOME             : " $VCS_HOME
@@ -51,3 +62,4 @@ echo "MTI_HOME             : " $MTI_HOME
 echo "SNPSLMD_LICENSE_FILE : " $SNPSLMD_LICENSE_FILE
 echo "MGLS_LICENSE_FILE    : " $MGLS_LICENSE_FILE
 echo "PATH                 : " $PATH
+echo "LM_LIBRARY_PATH      : " $LM_LIBRARY_PATH
