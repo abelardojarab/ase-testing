@@ -13,9 +13,9 @@ declare -A TOOL_PATH
 declare -A TOOL_CLASS
 
 ## Set up VCS/Modelsim based on TOOLKEY
-TOOL_PATH=([vcsmx_H_2013_06_SP1_15]="/opt/synopsys/vcs-mx/H-2013.06-SP1-15/" [vcsmx_J_2014_12_SP3_5]="/opt/synopsys/vcs-mx/J-2014.12-SP3-5/" [vcsmx_K_2015_09_SP1]="/opt/synopsys/vcs-mx/K-2015.09-SP1/" [vcsmx_L_2016_06]="/opt/synopsys/vcs-mx/L-2016.06/")
+TOOL_PATH=([vcsmx_H_2013_06_SP1_15]="/opt/synopsys/vcs-mx/H-2013.06-SP1-15/" [vcsmx_J_2014_12_SP3_5]="/opt/synopsys/vcs-mx/J-2014.12-SP3-5/" [vcsmx_K_2015_09_SP1]="/opt/synopsys/vcs-mx/K-2015.09-SP1/" [vcsmx_L_2016_06]="/opt/synopsys/vcs-mx/L-2016.06/" [vsim_questasim_10_5b]="/opt/mentor/questasim_10.5b/questasim/" [vsim_modelsim_se_10_5a]="/opt/mentor/modelsim_se_10.5a/modeltech")
 
-TOOL_CLASS=([vcsmx_H_2013_06_SP1_15]=VCS [vcsmx_J_2014_12_SP3_5]=VCS [vcsmx_K_2015_09_SP1]=VCS [vcsmx_L_2016_06]=VCS)
+TOOL_CLASS=([vcsmx_H_2013_06_SP1_15]=VCS [vcsmx_J_2014_12_SP3_5]=VCS [vcsmx_K_2015_09_SP1]=VCS [vcsmx_L_2016_06]=VCS [vsim_questasim_10_5b]=QUESTA [vsim_modelsim_se_10_5a]=QUESTA)
 
 
 ## Set path
