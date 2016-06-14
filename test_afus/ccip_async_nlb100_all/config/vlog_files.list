@@ -6,7 +6,7 @@ $ASEVAL_GIT/test_afus/ccip_nlb_all/HW/test_sw1.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all/HW/nlb_lpbk.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all/HW/nlb_csr.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all/HW/test_atomic.sv
-$BBB_GIT/ccip_async/samples/async_nlb300.sv
+$BBB_GIT/ccip_async/samples/async_nlb100.sv
 $BBB_GIT/ccip_async/HW/ccip_async_shim.sv
 $BBB_GIT/ccip_async/HW/ccip_afifo_channel.sv
 
