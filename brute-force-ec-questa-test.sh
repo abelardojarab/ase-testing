@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 SCRUB_LOG=questa-scrub.txt
 
 export MGLS_LICENSE_FILE="1717@mentor04p.elic.intel.com"
@@ -7,6 +9,10 @@ export MGLS_LICENSE_FILE="1717@mentor04p.elic.intel.com"
 export LM_LICENSE_FILE="1717@mentor04p.elic.intel.com":$LM_LICENSE_FILE
 
 export LM_PROJECT="ATP-PLAT-DEV"
+
+# /nfs/site/eda/tools/mentor/modelsim/6.1a/common/modeltech/linux_x86_64/ \
+
+
 
 export TOOL_VERSION="
 /p/eda/acd/mentor/questasim/6.6a/linux_x86_64 \
@@ -31,7 +37,6 @@ export TOOL_VERSION="
 /nfs/site/eda/tools/mentor/modelsim/6.0b/common/modeltech/linux_x86_64/ \
 /nfs/site/eda/tools/mentor/modelsim/6.0c/common/modeltech/linux_ia64/ \
 /nfs/site/eda/tools/mentor/modelsim/6.0d/common/linux_x86_64 \
-/nfs/site/eda/tools/mentor/modelsim/6.1a/common/modeltech/linux_x86_64/ \
 /nfs/site/eda/tools/mentor/modelsim/6.1b/common/modeltech/linux_x86_64 \
 /nfs/site/eda/tools/mentor/modelsim/6.1d/common/linux_x86_64 \
 /nfs/site/eda/tools/mentor/modelsim/6.1e/common/linux_x86_64 \
@@ -66,35 +71,36 @@ for i in $TOOL_VERSION; do
     export PATH=$i:$PATH
     echo "------------------------------------------------------------------"
     echo "Now running : $MTI_HOME "
-    echo "------------------------------------------------------------------"    
-    # ls $i
-    # which vlog
-    cd $ASE_SRCDIR
-    make clean
-    make
+    echo "------------------------------------------------------------------"
+    find $MTI_HOME -name svdpi.h
     echo -e -n "$MTI_HOME" >> $ASEVAL_GIT/$SCRUB_LOG
-    if [ -f $ASE_SRCDIR/work/work/dpiheader.h ]; then
+    cd $ASE_SRCDIR
+    rm -rf compile.log
+    make clean 
+    make SIMULATOR=QUESTA | tee compile.log
+    if [ -d $ASE_SRCDIR/work/work/ase_top/ ]; then
     	echo -e -n "\t[BUILD PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
     	echo "Running tests"
-#    	xterm -iconic -e "cd $ASE_SRCDIR ; make sim " &
-    	xterm -e "cd $ASE_SRCDIR ; make sim " &
+#    	xterm -iconic -e "cd $ASE_SRCDIR ; make sim SIMULATOR=QUESTA " &
+    	xterm -e "cd $ASE_SRCDIR ; make sim SIMULATOR=QUESTA " &
     	while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
     	do
     	    sleep 1
     	done
     	cd $ASEVAL_GIT/apps/
-    	./nlb_scrub.sh 
+    	./nlb_scrub.sh
     	if [ $? -eq 0 ]; then
-    	    echo -e -n "\t[RUN PASS]" >> $ASEVAL_GIT/$SCRUB_LOG	    
-    	    $ASEVAL_GIT/kill_running_ase.sh
+    	    echo -e -n "\t[RUN PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
     	else
     	    echo -e -n "\t[** RUN FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
-    	    $ASEVAL_GIT/kill_running_ase.sh
     	fi
+    	$ASEVAL_GIT/kill_running_ase.sh
+	pkill xterm
     	sleep 1
     else
     	echo -n -e "\t[** BUILD FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
+	# IFS='/' read -r -a $path_str <<< "$i"
+	# mv compile.log $ASE_SRCDIR/vsim-$path_str[6]-FAIL.txt
     fi
-    echo -e "" >> $ASEVAL_GIT/$SCRUB_LOG 
+    echo -e "" >> $ASEVAL_GIT/$SCRUB_LOG
 done
-
