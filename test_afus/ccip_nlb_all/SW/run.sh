@@ -6,12 +6,12 @@ fpgadiag_cnt_arr="64 1024 8192"
 fpgadiag_rdtype_arr="--rds --rdi"
 fpgadiag_wrtype_arr="--wt --wb"
 
-echo "##################################"
-echo "# Testing Peek-poke stress tests #"
-echo "##################################"
-cd $ASEVAL_GIT/apps/
-./stress.sh 25 short
-./stress.sh 10 long
+# echo "##################################"
+# echo "# Testing Peek-poke stress tests #"
+# echo "##################################"
+# cd $ASEVAL_GIT/apps/
+# ./stress.sh 25 short
+# ./stress.sh 10 long
 
 echo "##################################"
 echo "#     Testing Hello_ALI_NLB      #"
