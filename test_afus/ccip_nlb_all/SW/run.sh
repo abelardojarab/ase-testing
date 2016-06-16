@@ -33,6 +33,7 @@ for vc_set in $fpgadiag_vc_arr ; do
 	for cnt_set in $fpgadiag_cnt_arr ; do
 	    for rd_set in $fpgadiag_rdtype_arr ; do
 		for wr_set in $fpgadiag_wrtype_arr ; do
+		    date
 		    echo "./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
 		    timeout 1800 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set
 		    if [[ $? != 0 ]] ; 
