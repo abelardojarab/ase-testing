@@ -31,7 +31,6 @@ $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_edge/cci_mpf_shim_edge_afu.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_csr.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_null.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_buffer_lockstep_afu.sv
-$BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_wro.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-shims/cci_mpf_shim_mux.sv
 $BBB_GIT/cci_mpf/HW/cci_mpf_pipe_std.sv
 $BBB_GIT/cci_mpf/HW/cci-mpf-if/ccis_wires_to_mpf.sv
