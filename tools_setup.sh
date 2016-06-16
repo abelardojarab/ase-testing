@@ -53,6 +53,8 @@ export QUARTUS_ROOTDIR_OVERRIDE=$QUARTUS_HOME
 export ALTERAOCLSDKROOT="/opt/altera/15.1.2/hld/"
 export PATH=$PATH:$QUARTUS_HOME/bin/:$QUARTUS_HOME/../hld/bin/
 
+## License file path
+export LD_LIBRARY_PATH=$BBB_GIT/cci_mpf/SW/ 
 
 ## Print variables
 echo "QUARTUS_HOME         : " $QUARTUS_HOME
@@ -61,4 +63,6 @@ echo "MTI_HOME             : " $MTI_HOME
 echo "SNPSLMD_LICENSE_FILE : " $SNPSLMD_LICENSE_FILE
 echo "MGLS_LICENSE_FILE    : " $MGLS_LICENSE_FILE
 echo "PATH                 : " $PATH
-echo "LM_LIBRARY_PATH      : " $LM_LIBRARY_PATH
+echo "LD_LIBRARY_PATH      : " $LD_LIBRARY_PATH
+echo "LM_LICENSE_FILE      : " $LM_LICENSE_FILE
+
