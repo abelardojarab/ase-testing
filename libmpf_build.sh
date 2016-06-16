@@ -19,6 +19,6 @@ cd $BBB_GIT/cci_mpf/SW/
 make clean
 make prefix=$MYINST_DIR
 
-cd $BBB_GIT/cci_mpf/Hello_ALI_VTP_NLB/SW/
+cd $BBB_GIT/cci_mpf/samples/Hello_ALI_VTP_NLB/SW/
 make clean
-make prefix=$MYINST_DIR
+make prefix=$MYINST_DIR CFLAGS="-I $BBB_GIT/cci_mpf/SW/include/"
