@@ -8,7 +8,9 @@ myinst/
 tmp/
 *.vpd
 par/
-
+csrc/
+work/
+simv*
 
 ## Binaries by name
 InitRelease

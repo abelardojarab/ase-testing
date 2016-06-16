@@ -40,6 +40,7 @@ for vc_set in $fpgadiag_vc_arr ; do
 			"fpgadiag timed out -- FAILURE EXIT !!"
 			exit 1
 		    fi
+		    sleep 1
 		done
 	    done
 	done

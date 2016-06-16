@@ -12,5 +12,7 @@ valgrind -v --tool=memcheck \
     --show-reachable=yes \
     --show-leak-kinds=definite,possible \
     --undef-value-errors=yes \
-    ./nlb_test.out 1024 0 3
+    ./mmio_test.out
+
+#    ./nlb_test.out 1024 0 3
 
