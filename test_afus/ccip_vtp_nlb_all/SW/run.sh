@@ -6,9 +6,9 @@ fpgadiag_cnt_arr="64 1024 8192"
 fpgadiag_rdtype_arr="--rds --rdi"
 fpgadiag_wrtype_arr="--wt --wb"
 
-echo "##################################"
+echo "######################################"
 echo "#     Testing Hello_ALI_VTP_NLB      #"
-echo "##################################"
+echo "######################################"
 cd $BBB_GIT/cci_mpf/samples/Hello_ALI_VTP_NLB/SW
 timeout 1800 ./helloALIVTPnlb
 if [[ $? != 0 ]]; 
@@ -17,9 +17,9 @@ then
     exit 1
 fi
 
-echo "##################################"
-echo "#        Testing fpgadiag        #"
-echo "##################################"
+echo "###############################################"
+echo "#        Testing fpgadiag in lpbk1 mode       #"
+echo "###############################################"
 cd $MYINST_DIR/bin
 for vc_set in $fpgadiag_vc_arr ; do
     for mcl_set in $fpgadiag_mcl_arr ; do
@@ -40,4 +40,9 @@ for vc_set in $fpgadiag_vc_arr ; do
 	done
     done
 done
+
+
+echo "###############################################"
+echo "#        Testing fpgadiag in trput mode       #"
+echo "###############################################"
 

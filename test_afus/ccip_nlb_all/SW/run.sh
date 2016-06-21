@@ -6,12 +6,8 @@ fpgadiag_cnt_arr="64 1024 8192"
 fpgadiag_rdtype_arr="--rds --rdi"
 fpgadiag_wrtype_arr="--wt --wb"
 
-# echo "##################################"
-# echo "# Testing Peek-poke stress tests #"
-# echo "##################################"
-# cd $ASEVAL_GIT/apps/
-# ./stress.sh 25 short
-# ./stress.sh 10 long
+# Simulator PID
+ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
 echo "##################################"
 echo "#     Testing Hello_ALI_NLB      #"
@@ -34,14 +30,19 @@ for vc_set in $fpgadiag_vc_arr ; do
 	    for rd_set in $fpgadiag_rdtype_arr ; do
 		for wr_set in $fpgadiag_wrtype_arr ; do
 		    date
-		    echo "./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
-		    timeout 1800 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set
-		    if [[ $? != 0 ]] ; 
+		    if ps -p $ase_pid > /dev/null
 		    then
-			"fpgadiag timed out -- FAILURE EXIT !!"
+			echo "./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
+			timeout 1800 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set
+			if [[ $? != 0 ]] ; 
+			then
+			    "fpgadiag timed out -- FAILURE EXIT !!"
+			    exit 1
+			fi
+		    else
+			echo "** Simulator not running **"
 			exit 1
 		    fi
-		    sleep 1
 		done
 	    done
 	done

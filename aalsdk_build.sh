@@ -43,3 +43,6 @@ sed -i 's/#define  HWAFU/\/\/#define  HWAFU/g' HelloALINLB.cpp
 sed -i 's/\/\/#define  ASEAFU/#define  ASEAFU/g' HelloALINLB.cpp
 make prefix=$MYINST_DIR || exit 1
 
+cd $MYINST_DIR/lib/
+objdump -S libASE.so > libASE.obj
+
