@@ -19,7 +19,7 @@ gcc -pg -g -o nlb_test.out \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
-    -D ASE_DEBUG
+#    -D ASE_DEBUG
 
 gcc -g -o mmio_test.out \
     mmio_test.c \
