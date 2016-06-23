@@ -11,6 +11,7 @@ par/
 csrc/
 work/
 simv*
+DVEfiles/
 
 ## Binaries by name
 InitRelease
