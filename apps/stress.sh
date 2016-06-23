@@ -31,7 +31,7 @@ else
     TEST_TYPE=$2
     if [ "$2" != "short" ]; then
 	if [ "$2" != "long" ]; then
-	    echo "TEST_TYPE must be small OR long"
+	    echo "TEST_TYPE must be short OR long"
 	    exit
 	fi
     fi	
@@ -39,11 +39,19 @@ fi
 
 # Wait for Simulator to be running/ready
 echo "Waiting for simulator to be ready ... "
-while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
+for sleep in `seq 0 180`;
 do
-    sleep 1
+    if [ ! -f $ASE_WORKDIR/.ase_ready.pid ] 
+    then
+	sleep 1
+    fi
 done
-echo "Done"
+if [ ! -f $ASE_WORKDIR/.ase_ready.pid ] 
+then
+    echo "Simulator might probably not come up at all -- ending regression here !"
+    exit 1   
+fi
+echo "DONE"
 
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
@@ -91,6 +99,4 @@ do
     fi
 done
 echo "------------------------------------------------"
-
-$ASEVAL_GIT/kill_running_ase.sh
 

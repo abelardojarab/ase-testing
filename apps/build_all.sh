@@ -2,7 +2,7 @@
 
 rm -rf *.out output.*.log
 
-if [ $1 != "" ]
+if [[ $1 != "" ]]
 then
     ASE_SRCDIR=$1
 else
@@ -21,7 +21,7 @@ gcc -pg -g -o nlb_test.out \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 #    -D ASE_DEBUG
 
-gcc -pg -g -o mmio_test.out \
+gcc -g -o mmio_test.out \
     mmio_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
@@ -29,6 +29,7 @@ gcc -pg -g -o mmio_test.out \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
+#    -D ASE_DEBUG
 
 gcc -pg -g -o alloc_dealloc.out \
     alloc_dealloc.c \

@@ -95,7 +95,7 @@ for i in $TOOL_VERSION; do
 	sleep 1
     else
     	echo -n -e "\t[** BUILD FAIL **]" >> $ASEVAL_GIT/$SCRUB_LOG
-	mv log.txt $logname-build-FAIL.txt	
+	mv log.txt $ASE_SRCDIR/$logname-build-FAIL.txt	
     fi
     echo -e "" >> $ASEVAL_GIT/$SCRUB_LOG
 done

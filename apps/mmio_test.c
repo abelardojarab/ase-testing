@@ -1,6 +1,6 @@
 #include "ase_common.h"
 
-#define NUM_THREADS 16
+#define NUM_THREADS 4
 
 uint64_t exp_array[4] = {
   0x1000000000001071,
@@ -69,7 +69,7 @@ int main()
     }
   
   // Sleep 
-  sleep(600);
+  sleep(600*8);
 
   // Cancel all pthreads
   for(ii = 0; ii < NUM_THREADS; ii++)

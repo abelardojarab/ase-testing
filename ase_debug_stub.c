@@ -33,3 +33,8 @@ void umsg_dispatch(int a, int b, int c, int d, char *e)
 {
 
 }
+
+#if 0
+  int *killme = (int *)-1;
+  printf("Error caused %d\n", *killme);
+#endif
