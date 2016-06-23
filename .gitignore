@@ -7,6 +7,9 @@ aalsdk/
 myinst/
 tmp/
 *.vpd
+DVEfiles/
+csrc/
+simv*
 
 
 ## Binaries by name
