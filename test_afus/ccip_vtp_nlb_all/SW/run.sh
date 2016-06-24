@@ -8,6 +8,9 @@ fpgadiag_cnt_arr="64 1024 8192"
 fpgadiag_rdtype_arr="--rds --rdi"
 fpgadiag_wrtype_arr="--wt --wb"
 
+# Simulator PID
+ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
+
 echo "######################################"
 echo "#     Testing Hello_ALI_VTP_NLB      #"
 echo "######################################"
