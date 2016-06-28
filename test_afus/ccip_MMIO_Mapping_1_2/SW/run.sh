@@ -3,6 +3,15 @@
 # Application args array
 app_arg_array="1 2"
 
+# Wait for readiness
+echo "##################################"
+echo "#     Waiting for .ase_ready     #"
+echo "##################################"
+while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
+do
+    sleep 1
+done
+
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 

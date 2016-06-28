@@ -8,6 +8,15 @@ fpgadiag_cnt_arr="64 1024 8192"
 fpgadiag_rdtype_arr="--rds --rdi"
 fpgadiag_wrtype_arr="--wt --wb"
 
+# Wait for readiness
+echo "##################################"
+echo "#     Waiting for .ase_ready     #"
+echo "##################################"
+while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
+do
+    sleep 1
+done
+
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
