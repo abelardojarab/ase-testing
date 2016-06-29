@@ -19,7 +19,11 @@ echo "ASE_WORKDIR =" $ASE_WORKDIR
 
 # Check if ready file exists
 if [ -e $ASE_WORKDIR/.ase_ready.pid ] ; then
-    pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
+    if [ -f $ASE_SRCDIR/hw/ase_svfifo.sv ] ; then
+	pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
+    else
+	pid=`cat $ASE_WORKDIR/.ase_ready.pid`
+    fi
     echo "Killing Simulator PID " $pid
     kill $pid
 else
