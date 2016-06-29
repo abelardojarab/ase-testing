@@ -69,4 +69,13 @@ gcc -pg -g -o session_stress.out \
     ${ASE_SRCDIR}/sw/error_report.c \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
+gcc -pg -g -o umsg_test.out \
+    umsg_test.c \
+    ${ASE_SRCDIR}/sw/tstamp_ops.c \
+    ${ASE_SRCDIR}/sw/ase_ops.c \
+    ${ASE_SRCDIR}/sw/app_backend.c \
+    ${ASE_SRCDIR}/sw/mqueue_ops.c \
+    ${ASE_SRCDIR}/sw/error_report.c \
+    -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
+
 

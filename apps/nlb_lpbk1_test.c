@@ -60,8 +60,9 @@ int main(int argc, char *argv[])
 
   // Port control
   ase_portctrl("AFU_RESET 1");
-#ifdef ENABLE_UMSG
-  ase_portctrl("UMSG_MODE 255");
+#ifdef ENABLE_UMSG  
+  // ase_portctrl("UMSG_MODE 255");
+  ase_portctrl("UMSG_MODE 4294967295");
 #endif
   ase_portctrl("AFU_RESET 0");
 

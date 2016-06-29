@@ -69,7 +69,7 @@ int main()
     }
   
   // Sleep 
-  sleep(600*8);
+  sleep(180);
 
   // Cancel all pthreads
   for(ii = 0; ii < NUM_THREADS; ii++)
