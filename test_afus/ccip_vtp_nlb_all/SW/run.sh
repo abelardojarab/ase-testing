@@ -31,39 +31,43 @@ then
     exit 1
 fi
 
-echo "###############################################"
-echo "#        Testing fpgadiag in lpbk1 mode       #"
-echo "###############################################"
-cd $MYINST_DIR/bin
-for rdvc_set in $fpgadiag_rdvc_arr ; do
-    for wrvc_set in $fpgadiag_wrvc_arr ; do
-	for mcl_set in $fpgadiag_mcl_arr ; do
-	    for cnt_set in $fpgadiag_cnt_arr ; do
-		for rd_set in $fpgadiag_rdtype_arr ; do
-		    for wr_set in $fpgadiag_wrtype_arr ; do
-			date
-			if ps -p $ase_pid > /dev/null
-			then
-			    echo "./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
-			    timeout 1800 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set
-			    if [[ $? != 0 ]] ; 
+# Check if release is > 5.0.2, fpgadiag is known to be flaky on lower revs
+if [ -f $ASE_SRCDIR/hw/ase_svfifo.sv ]
+then
+    echo "###############################################"
+    echo "#        Testing fpgadiag in lpbk1 mode       #"
+    echo "###############################################"
+    cd $MYINST_DIR/bin
+    for rdvc_set in $fpgadiag_rdvc_arr ; do
+	for wrvc_set in $fpgadiag_wrvc_arr ; do
+	    for mcl_set in $fpgadiag_mcl_arr ; do
+		for cnt_set in $fpgadiag_cnt_arr ; do
+		    for rd_set in $fpgadiag_rdtype_arr ; do
+			for wr_set in $fpgadiag_wrtype_arr ; do
+			    date
+			    if ps -p $ase_pid > /dev/null
 			    then
-				"fpgadiag timed out -- FAILURE EXIT !!"
+				echo "./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
+				timeout 1800 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set
+				if [[ $? != 0 ]] ; 
+				then
+				    "fpgadiag timed out -- FAILURE EXIT !!"
+				    exit 1
+				fi
+			    else
+				echo "** Simulator not running **"
 				exit 1
 			    fi
-			else
-			    echo "** Simulator not running **"
-			    exit 1
-			fi
+			done
 		    done
 		done
 	    done
 	done
     done
-done
 
 
-echo "###############################################"
-echo "#        Testing fpgadiag in trput mode       #"
-echo "###############################################"
+    echo "###############################################"
+    echo "#        Testing fpgadiag in trput mode       #"
+    echo "###############################################"
 
+fi
