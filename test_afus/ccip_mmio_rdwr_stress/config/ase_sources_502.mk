@@ -13,12 +13,14 @@ ASEHW_FILE_LIST = \
 	$(ASE_SRCDIR)/hw/ccip_if_pkg.sv \
 	$(ASE_SRCDIR)/hw/ase_pkg.sv \
 	$(ASE_SRCDIR)/hw/outoforder_wrf_channel.sv \
-	$(ASE_SRCDIR)/hw/latency_pipe.sv \
+	$(ASE_SRCDIR)/hw/ase_fifo.sv \
+	$(ASE_SRCDIR)/hw/ase_top.sv \
 	$(ASE_SRCDIR)/hw/ccip_emulator.sv \
-	$(ASE_SRCDIR)/hw/ase_svfifo.sv \
 	$(ASE_SRCDIR)/hw/ccip_logger.sv \
 	$(ASE_SRCDIR)/hw/ccip_sniffer.sv \
-	$(ASE_SRCDIR)/hw/ase_top.sv \
+	$(ASE_SRCDIR)/hw/latency_pipe.sv \
+	$(ASE_SRCDIR)/hw/sdp_ram.sv \
+	$(ASE_SRCDIR)/hw/stream_checker.sv \
 
 
 ASE_INCDIR = $(ASE_SRCDIR)/hw/+
