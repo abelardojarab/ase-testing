@@ -12,6 +12,9 @@ csrc/
 work/
 simv*
 DVEfiles/
+*.gcno
+*.gcda
+ucli.key
 
 ## Binaries by name
 InitRelease
