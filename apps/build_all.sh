@@ -1,5 +1,7 @@
 #!/bin/sh
 
+COV_FLAGS="-fprofile-arcs -ftest-coverage -lgcov"
+
 rm -rf *.out output.*.log
 
 if [[ $1 != "" ]]
@@ -11,7 +13,7 @@ fi
 
 set -v
 
-gcc -pg -g -o nlb_test.out \
+gcc  -g -o nlb_test.out \
     nlb_lpbk1_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
@@ -31,7 +33,7 @@ gcc -g -o mmio_test.out \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 #    -D ASE_DEBUG
 
-gcc -pg -g -o alloc_dealloc.out \
+gcc  -g -o alloc_dealloc.out \
     alloc_dealloc.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
@@ -41,7 +43,7 @@ gcc -pg -g -o alloc_dealloc.out \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
     -D ASE_DEBUG
 
-gcc -pg -g -o alloc_stress_test.out \
+gcc  -g -o alloc_stress_test.out \
     alloc_stress_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
@@ -60,7 +62,7 @@ gcc -pg -g -o alloc_stress_test.out \
 #     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 #     -D ASE_DEBUG
 
-gcc -pg -g -o session_stress.out \
+gcc  -g -o session_stress.out \
     session_stress.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
@@ -69,7 +71,7 @@ gcc -pg -g -o session_stress.out \
     ${ASE_SRCDIR}/sw/error_report.c \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
-gcc -pg -g -o umsg_test.out \
+gcc  -g -o umsg_test.out \
     umsg_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \

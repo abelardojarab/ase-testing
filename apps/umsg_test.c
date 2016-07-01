@@ -1,7 +1,7 @@
 #include "ase_common.h"
 
 #define NUM_UMSG      8
-#define UMSG_DATA_MAX 1000000
+#define UMSG_DATA_MAX 0x100000000
 
 // Umsg sender thread
 void *umsg_thrasher(void *addr)
@@ -51,7 +51,7 @@ int main()
 	}      
     }
 
-  sleep(3);
+  sleep(60);
   
   // Join outstanding threads
   for(ii = 0; ii < NUM_UMSG ; ii++)
