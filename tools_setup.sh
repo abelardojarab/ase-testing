@@ -1,10 +1,13 @@
 #!/bin/sh
 
+## Check if TOOLKEY is supplied
 if [[ "$1" == "" ]];
 then
     echo "** ERROR : Incorrect usage ! **"
-    echo "Usage: source tools_setup.sh <TOOLKEY>"
-    exit 1
+    echo "Usage: source tools_setup.sh <TOOLKEY> <RELEASE_CODE>"    
+    echo "    TOOLKEY      = {vcsmx_H_2013_06_SP1_15, vcsmx_J_2014_12_SP3_5, vcsmx_K_2015_09_SP1, vcsmx_L_2016_06, vsim_questasim_10_5b, vsim_modelsim_se_10_5a, vcs_I_2014_03, vsim_modelsim_se_10_3e, vsim_questasim_10_4d}"
+    echo "    RELEASE_CODE = {BDX1, BDX2, SKX1}"
+    return
 fi
 
 TOOLKEY=$1
@@ -22,6 +25,17 @@ export SELECTED_PATH=${TOOL_PATH[$TOOLKEY]}
 export SELECTED_CLASS=${TOOL_CLASS[$TOOLKEY]}
 echo $SELECTED_PATH
 echo $SELECTED_CLASS
+
+## Check if Release Code is supplied
+if [[ "$2" == "" ]];
+then
+    ALTERA_VER="16.0"
+elif [[ "$2" == "BDX1" ]];
+then
+    ALTERA_VER="15.1.2"
+else
+    ALTERA_VER="16.0"
+fi
 
 ## Set paths
 if [[ "$SELECTED_CLASS" == "VCS" ]] ; 
@@ -46,12 +60,12 @@ export SIMULATOR=$SELECTED_CLASS
 ## Setup Altera settings
 export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@fmylic36b.fm.intel.com:1800@fmylic7001.fm.intel.com:1800@fmylic7008.fm.intel.com"
 export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@altera02p.elic.intel.com:1800@dan-host-1.sc.intel.com:1800@plxs0402.pdx.intel.com"
-export QUARTUS_HOME=/opt/altera/15.1.2/quartus/
+export QUARTUS_HOME=/opt/altera/$ALTERA_VER/quartus/
 export QUARTUS_ROOTDIR=$QUARTUS_HOME
 export QUARTUS_64BIT=1
 export QUARTUS_ROOTDIR_OVERRIDE=$QUARTUS_HOME
-export ALTERAOCLSDKROOT="/opt/altera/15.1.2/hld/"
-export PATH=$PATH:$QUARTUS_HOME/bin/:$QUARTUS_HOME/../hld/bin/
+export ALTERAOCLSDKROOT="/opt/altera/$ALTERA_VER/hld/"
+export PATH=$QUARTUS_HOME/bin/:$QUARTUS_HOME/../hld/bin/:$PATH
 
 ## License file path
 export LD_LIBRARY_PATH=$BBB_GIT/cci_mpf/SW/ 

@@ -1,0 +1,7 @@
+BDX1 = BDX-P System Release 5.0.2
+
+BDX2 = BDX-P Refresh 
+
+SKX1 = SKX-P Beta Release
+
+

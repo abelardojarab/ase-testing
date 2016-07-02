@@ -15,7 +15,10 @@ DVEfiles/
 *.gcno
 *.gcda
 ucli.key
+urgReport/
+*.obj
 
 ## Binaries by name
 InitRelease
+mmio_stress
 
