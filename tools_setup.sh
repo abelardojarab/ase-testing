@@ -27,15 +27,19 @@ echo $SELECTED_PATH
 echo $SELECTED_CLASS
 
 ## Check if Release Code is supplied
-if [[ "$2" == "" ]];
-then
-    ALTERA_VER="16.0"
-elif [[ "$2" == "BDX1" ]];
-then
-    ALTERA_VER="15.1.2"
-else
-    ALTERA_VER="16.0"
-fi
+ALTERA_VER=15.1.2
+# if [[ "$2" == "" ]];
+# then
+#     ALTERA_VER="16.0"
+#     RELEASE_CODE="BDX2"
+# elif [[ "$2" == "BDX1" ]];
+# then
+#     ALTERA_VER="15.1.2"
+#     RELEASE_CODE="BDX1"
+# else
+#     ALTERA_VER="16.0"
+#     RELEASE_CODE="$2"
+# fi
 
 ## Set paths
 if [[ "$SELECTED_CLASS" == "VCS" ]] ; 

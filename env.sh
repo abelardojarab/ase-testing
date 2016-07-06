@@ -18,6 +18,8 @@ export AALKERN_DIR=$AALSDK_GIT/aalkernel
 export MYINST_DIR=$BASEDIR/myinst
 export AALSAMP_DIR=$AALSDK_GIT/aalsamples
 
+export RELEASE_CODE="BDX2"
+
 echo "Directory settings =>"
 echo "AALSDK_GIT  : " $AALSDK_GIT
 echo "ASEVAL_GIT  : " $ASEVAL_GIT
