@@ -4,9 +4,9 @@
 if [[ "$1" == "" ]];
 then
     echo "** ERROR : Incorrect usage ! **"
-    echo "Usage: source tools_setup.sh <TOOLKEY> <RELEASE_CODE>"    
+    echo "Usage: source tools_setup.sh <TOOLKEY> <RELCODE>"    
     echo "    TOOLKEY      = {vcsmx_H_2013_06_SP1_15, vcsmx_J_2014_12_SP3_5, vcsmx_K_2015_09_SP1, vcsmx_L_2016_06, vsim_questasim_10_5b, vsim_modelsim_se_10_5a, vcs_I_2014_03, vsim_modelsim_se_10_3e, vsim_questasim_10_4d}"
-    echo "    RELEASE_CODE = {BDX1, BDX2, SKX1}"
+    echo "    RELCODE = {BDX1, BDX2, SKX1}"
     return
 fi
 
@@ -28,18 +28,18 @@ echo $SELECTED_CLASS
 
 ## Check if Release Code is supplied
 ALTERA_VER=15.1.2
-# if [[ "$2" == "" ]];
-# then
-#     ALTERA_VER="16.0"
-#     RELEASE_CODE="BDX2"
-# elif [[ "$2" == "BDX1" ]];
-# then
-#     ALTERA_VER="15.1.2"
-#     RELEASE_CODE="BDX1"
-# else
-#     ALTERA_VER="16.0"
-#     RELEASE_CODE="$2"
-# fi
+if [[ "$2" == "" ]];
+then
+    ALTERA_VER="16.0"
+    RELCODE="BDX2"
+elif [[ "$2" == "BDX1" ]];
+then
+    ALTERA_VER="15.1.2"
+    RELCODE="BDX1"
+else
+    ALTERA_VER="16.0"
+    RELCODE="$2"
+fi
 
 ## Set paths
 if [[ "$SELECTED_CLASS" == "VCS" ]] ; 
