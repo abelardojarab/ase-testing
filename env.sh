@@ -10,6 +10,7 @@ fi
 export AALSDK_GIT=$BASEDIR/aalsdk
 export ASEVAL_GIT=$BASEDIR/ase_regression
 export BBB_GIT=$BASEDIR/BuildingBlocks
+export BDX_GIT=$BASEDIR/bdx_fpga_piu
 
 export AALUSER_DIR=$AALSDK_GIT/aaluser
 export ASE_SRCDIR=$AALSDK_GIT/aaluser/ase
