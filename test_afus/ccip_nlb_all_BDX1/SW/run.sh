@@ -32,7 +32,8 @@ then
 fi
 
 # Check if release is > 5.0.2, fpgadiag is known to be flaky on lower revs
-if [ -f $ASE_SRCDIR/hw/ase_svfifo.sv ]
+# if [ -f $ASE_SRCDIR/hw/ase_svfifo.sv ]
+if [ $RELCODE == "BDX2" ]
 then
     echo "##################################"
     echo "#        Testing fpgadiag        #"
