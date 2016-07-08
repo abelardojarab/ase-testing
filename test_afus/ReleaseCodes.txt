@@ -1,3 +1,6 @@
+RELEASES
+================================================================
+
 BDX1 = System Release 5.0.2            | Original BDX-P release
 
 BDX2 = System Release 5.0.3            | BDX-P refresh
@@ -6,4 +9,13 @@ SKX1 = SKX-P Beta Release TBD          | Original SKX-P release
 
             
 
-
+TEST CONFIGS
+================================================================
+ccip_nlb_all                      
+- ccip_nlb_all_BDX1    
+- ccip_nlb_all_BDX2    
+ccip_async_nlb100_all            
+ccip_async_nlb300_all            
+ccip_vtp_nlb_all
+ccip_async_vtp_nlb_all  
+ccip_mmio_rdwr_stress  
