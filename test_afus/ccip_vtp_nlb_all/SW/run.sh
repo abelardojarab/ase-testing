@@ -31,8 +31,10 @@ then
     exit 1
 fi
 
-# Check if release is > 5.0.2, fpgadiag is known to be flaky on lower revs
-if [ -f $ASE_SRCDIR/hw/ase_svfifo.sv ]
+
+#######################################################################
+## For SKX1 release
+if [ $RELCODE == "SKX1" ]
 then
     echo "###############################################"
     echo "#        Testing fpgadiag in lpbk1 mode       #"
