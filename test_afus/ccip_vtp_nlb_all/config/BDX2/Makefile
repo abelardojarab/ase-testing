@@ -44,22 +44,38 @@
 
 include ase_sources.mk
 
-## ASE Version
-ASE_VERSION = 5.0.2-Beta
+# Base directory
+ASE_BASEDIR = $(PWD)
 
 # ASE switches (these tend to increase log sizes)
 ASE_DEBUG ?= 1
-ASE_PROFILE_ENABLE ?= 1
 ASE_DISABLE_LOGGER = 0
+
+# Coverage settings (lcov in SW and VCS-CM in HW)
+ASE_COVERAGE ?= 0
+ifeq ($(ASE_COVERAGE),1)
+ASE_PROFILE_ENABLE ?= 1
+ASE_LCOV_ENABLE ?= 1
+endif
 
 # Enable Altera gates library
 GLS_SIM = 1
+GLS_SAMPLE_LIB = $(QUARTUS_HOME)/eda/sim_lib/altera_primitives.v
 
 # Timescale
-TIMESCALE = 1ns/1ns
+TIMESCALE = 1ps/1ps
+
+# Work directory
+WORK = work
 
 # ASE Source directory
 ASE_SRCDIR = $(shell pwd)
+ASE_WORKDIR = $(ASE_SRCDIR)/$(WORK)
+
+# Configuration & regression file inputs
+ASE_CONFIG ?= $(ASE_SRCDIR)/ase.cfg
+ASE_SCRIPT ?= $(ASE_SRCDIR)/ase_regress.sh
+
 
 #########################################################################
 #                          Default options                              #
@@ -68,25 +84,26 @@ ASE_SRCDIR = $(shell pwd)
 SIMULATOR?=VCS
 CC=gcc
 
-## Include directory
-ifeq ($(SIMULATOR), VCS)
-TOOL_DPI_INCDIR=$(VCS_HOME)
-endif
-ifeq ($(SIMULATOR), QUESTA)
-TOOL_DPI_INCDIR=$(MTI_HOME)
-endif
+## RTL command
+SNPS_COMMAND = $(shell command -v vcs)
+MENT_COMMAND = $(shell command -v vsim)
 
 ## C Compiler options
-CC_OPT = -g -m64 -fPIC -D SIM_SIDE=1
-CC_OPT+= -I $(TOOL_DPI_INCDIR)/include
+CC_OPT = -g -m64 -fPIC -D SIM_SIDE=1 -D SIMULATOR=$(SIMULATOR)
 CC_OPT+= -Wall 
-# -std=c99
-# -D_POSIX_C_SOURCE=200809L
-# -D_XOPEN_SOURCE=700
 ifeq ($(ASE_DEBUG), 1)
-CC_OPT+= -D ASE_DEBUG=1
-# CC_OPT+= -pedantic
+  CC_OPT+= -D ASE_DEBUG=1
 endif
+ifeq ($(SIMULATOR), VCS)
+  CC_OPT+= -I $(VCS_HOME)/include/
+endif
+ifeq ($(SIMULATOR), QUESTA)
+  CC_OPT+= -I $(MTI_HOME)/include/
+endif
+ifeq ($(ASE_LCOV_ENABLE), 1)
+  CC_OPT+= -fprofile-arcs -ftest-coverage
+endif
+
 
 ## Print information ##
  $(info SIMULATOR=$(SIMULATOR))
@@ -100,12 +117,12 @@ endif
 ASE_SHOBJ_NAME = ase_libs
 ASE_SHOBJ_SO = $(ASE_SHOBJ_NAME).so
 
-# Work directory
-WORK = work
-
 # -lrt option is required in order to use shared memory /dev/shm,
 # -message queues and pthreads
-ASE_LD_SWITCHES= -lrt -lpthread -lstdc++
+ASE_LD_SWITCHES = -lrt -lpthread -lstdc++
+ifeq ($(ASE_LCOV_ENABLE), 1)
+  ASE_LD_SWITCHES+= -lgcov
+endif
 
 
 #########################################################################
@@ -116,16 +133,16 @@ SNPS_VHDLAN_OPT = -nc -verbose -full64
 SNPS_VHDLAN_OPT+= -work $(WORK)
 
 ## Verilog compile
-SNPS_VLOGAN_OPT = -nc -V -full64 +v2k -sverilog -l vlogan.log
+SNPS_VLOGAN_OPT = -nc -V -full64 +v2k -sverilog +define+$(SIMULATOR)
 SNPS_VLOGAN_OPT+= +incdir+$(DUT_INCDIR) +incdir+$(ASE_INCDIR)
 SNPS_VLOGAN_OPT+= +librescan -work $(WORK) -override_timescale=$(TIMESCALE)
 SNPS_VLOGAN_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
 SNPS_VLOGAN_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX  +define+CCI_SIMULATION=1 +define+SIM_MODE=1
 SNPS_VLOGAN_OPT+= +lint=all,noVCDE,noNS,NCEID,CAWM,TFIPC,IPDP,PCWM
+ifeq ($(ASE_DISABLE_LOGGER), 1)
+  SNPS_VLOGAN_OPT+= +define+ASE_DISABLE_LOGGER
+endif
 ifeq ($(ASE_DEBUG), 1)
-  ifeq ($(ASE_DISABLE_LOGGER), 1)
-   SNPS_VLOGAN_OPT+= +define+ASE_DISABLE_LOGGER
-  endif
   SNPS_VLOGAN_OPT+= +define+ASE_DEBUG +warn
 endif
 ifdef GLS_SIM
@@ -134,7 +151,7 @@ ifdef GLS_SIM
   SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/sgate.v
   SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/altera_mf.v
   SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/stratixv_atoms.v
-  SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/synopsys/stratixv_hssi_atoms_ncrypt.v
+  SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/twentynm_atoms.v
   SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/stratixv_hssi_atoms.v
   SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/stratixv_pcie_hip_atoms.v
   SNPS_VLOGAN_OPT+= $(QUARTUS_HOME)/eda/sim_lib/altera_lnsim.sv
@@ -142,21 +159,26 @@ endif
 
 ## VCS elaboration
 SNPS_VCS_OPT = -nc -V +vcs+lic+wait -full64 -debug_all -Mupdate -lca
-SNPS_VCS_OPT+= -l vcs_elab.log +vhdllib+$(WORK) -Mlib=$(WORK)
+SNPS_VCS_OPT+= -j 4
+SNPS_VCS_OPT+= -l vcs_elab.log +vhdllib+$(WORK) -Mlib=$(WORK) +lint=TFIPC-L
 SNPS_VCS_OPT+= -override_timescale=$(TIMESCALE) -o $(WORK)/ase_simv
 ifeq ($(ASE_DEBUG), 1)
   SNPS_VCS_OPT+=  -race
-  ifeq ($(ASE_PROFILE_ENABLE), 1)
-    SNPS_VCS_OPT+= +vcs+loopreport +vcs+loopdetect
-    SNPS_VCS_OPT+= -cm line+cond+fsm+tgl+branch+assert -cm_tgl mda
-    SNPS_VCS_OPT+= -cm_cond basic+allops -cm_dir $(WORK)/coverage/
-    SNPS_VCS_OPT+= -simprofile +prof
-  endif
-# SNPS_VCS_OPT+= -LDFLAGS="-m64"             #  !!! DO NOT EDIT !!!
 endif
+ifeq ($(ASE_PROFILE_ENABLE), 1)
+  SNPS_VCS_OPT+= +vcs+loopreport +vcs+loopdetect
+  SNPS_VCS_OPT+= -cm line+cond+fsm+tgl+branch+assert -cm_tgl mda
+  SNPS_VCS_OPT+= -cm_hier $(ASEVAL_GIT)/ase_coverage.cfg
+  SNPS_VCS_OPT+= -simprofile +prof
+endif
+# SNPS_VCS_OPT+= -LDFLAGS="-m64"             #  !!! DO NOT EDIT !!!
 
 ## Simulation options
-VCS_SIM_OPT = -l run.log -ucli -do $(ASE_SRCDIR)/vcs_run.tcl
+VCS_SIM_OPT = -ucli -do $(ASE_SRCDIR)/vcs_run.tcl
+VCS_SIM_OPT+= -l run.log
+ifeq ($(ASE_PROFILE_ENABLE), 1)
+  VCS_SIM_OPT+= -cm line+cond+fsm+tgl+branch+assert
+endif
 
 
 #########################################################################
@@ -166,25 +188,44 @@ VCS_SIM_OPT = -l run.log -ucli -do $(ASE_SRCDIR)/vcs_run.tcl
 MENT_VCOM_OPT = -nologo -work $(WORK)
 
 ## VLOG compile
-MENT_VLOG_OPT = -64 -nologo +librescan -work $(WORK)
+# MENT_VLOG_OPT = -64 
+MENT_VLOG_OPT+= -nologo +librescan -work $(WORK) +define+$(SIMULATOR)
 MENT_VLOG_OPT+= -dpiheader work/dpiheader.h
 MENT_VLOG_OPT+= +incdir+$(ASE_INCDIR)+$(DUT_INCDIR)+$(WORK)
 MENT_VLOG_OPT+= -sv  -timescale $(TIMESCALE) -l vlog.log
 MENT_VLOG_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
+ifeq ($(ASE_DEBUG), 1)
+  MENT_VLOG_OPT+= +define+ASE_DEBUG -hazards
+endif
+ifdef GLS_SIM
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/altera_primitives.v
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/220model.v
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/sgate.v
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/altera_mf.v
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/stratixv_atoms.v
+#  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/synopsys/stratixv_hssi_atoms_ncrypt.v
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/stratixv_hssi_atoms.v
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/stratixv_pcie_hip_atoms.v
+  MENT_VLOG_OPT+= $(QUARTUS_HOME)/eda/sim_lib/altera_lnsim.sv
+endif
 
 ## VSIM elaboration, and run options
-MENT_VSIM_OPT = -64 -c -l run.log
-MENT_VSIM_OPT+= -sv_lib $(WORK)/$(ASE_SHOBJ_NAME) -do vsim_run.tcl
+# MENT_VSIM_OPT = -64 
+MENT_VSIM_OPT+= -c -l run.log -dpioutoftheblue 1 
+MENT_VSIM_OPT+= -sv_lib $(ASE_SHOBJ_NAME) -do $(ASE_SRCDIR)/vsim_run.tcl
+ifeq ($(ASE_DEBUG), 1)
+  MENT_VLOG_OPT+= -hazards
+endif
+# -voptargs="+acc"
 
 #########################################################################
-#                         Valgring options                              #
+#                         Valgrind options                              #
 #########################################################################
 VALGRIND_OPTS = --tool=memcheck
 VALGRIND_OPTS+= -v --log-file=valgrind.log --error-limit=no
 VALGRIND_OPTS+= --track-fds=yes --trace-children=yes
 VALGRIND_OPTS+= --leak-check=full --track-origins=yes
 VALGRIND_OPTS+= --show-reachable=yes
-# VALGRIND_OPTS+= --gen-suppressions=all
 VALGRIND_OPTS+= --show-leak-kinds=definite,possible
 VALGRIND_OPTS+= --undef-value-errors=yes
 
@@ -260,13 +301,6 @@ CLANG_OPT+= \
 	-enable-checker alpha.security.taint.TaintPropagation \
 
 
-#	-enable-checker debug.ViewCallGraph \
-	-enable-checker debug.DumpCFG \
-	-enable-checker debug.ViewCFG \
-	-enable-checker alpha.cplusplus.NewDeleteLeaks \
-	-enable-checker alpha.deadcode.IdempotentOperations \
-	-enable-checker alpha.osx.cocoa.MissingSuperCall \
-
 #########################################################################
 #                            Build Targets                              #
 #########################################################################
@@ -275,6 +309,7 @@ all: check build
 
 # Check
 check: header
+# Ensure GCC is available
 ifneq ($(CC), gcc)
 	@echo "#                                                          #"
 	@echo "# CC=$(CC) not supported                                   #"
@@ -283,6 +318,7 @@ ifneq ($(CC), gcc)
 	@echo "############################################################"
 	exit 1
 endif
+# Echo simulator setting
 ifneq ($(SIMULATOR), VCS)
   ifneq ($(SIMULATOR), QUESTA)
 	@echo "#                                                          #"
@@ -291,6 +327,42 @@ ifneq ($(SIMULATOR), VCS)
 	@echo "#                                                          #"
 	@echo "############################################################"
 	exit 1
+  endif
+endif
+# Check gate simulation libraries
+ifdef GLS_SIM
+  ifndef QUARTUS_HOME
+	@echo "** ERROR **: env(QUARTUS_HOME) has not been set."
+	@echo "** ERROR **: GLS_SIM needs QUARTUS_HOME environment variable to be set."
+    ifdef QUARTUS_ROOT
+	@echo "** ERROR **: env(QUARTUS_ROOT) is set up. Copy its contents to env(QUARTUS_HOME)."
+	@echo "** ERROR **: This makefile references libraries based on env(QUARTUS_HOME)."
+    endif
+  else
+    ifeq ($(wildcard $(GLS_SAMPLE_LIB)),)
+	@echo "** ERROR **: env(QUARTUS_HOME) not set up correctly."
+	@echo "** ERROR **: Cannot find Quartus library files in known locations"
+    endif
+  endif
+endif
+# Check if some RTL simulator exists
+ifeq ($(SIMULATOR), VCS)
+  ifndef VCS_HOME
+	@echo "**ERROR** : env(VCS_HOME) is not set ! svdpi.h cannot be found !"
+  endif
+  ifndef SNPS_COMMAND
+	@echo "**ERROR** : Synopsys commands (vlogan, vcs) not found !"
+  endif
+else
+  ifeq ($(SIMULATOR), QUESTA)
+    ifndef MTI_HOME
+	@echo "**ERROR** : env(MTI_HOME) is not set ! svdpi.h cannot be found !"
+    endif
+    ifndef MENT_COMMAND
+	@echo "**ERROR** : Modelsim commands (vlog, vsim) not found !"
+    endif
+  else
+     @echo "**ERROR**: Unknown RTL simulator tool in use --- this is unsupported !"
   endif
 endif
 
@@ -307,7 +379,7 @@ header:
 
 # Help information
 help: header
-	@echo "#                                                          #"
+	@echo "#                |                                         #"
 	@echo "#  COMMAND       |   DESCRIPTION                           #"
 	@echo "# -------------------------------------------------------- #"
 	@echo "# make           | Build the HW Model using RTL supplied   #"
@@ -325,6 +397,18 @@ help: header
 	@echo "# make clean     | Clean simulation files                  #"
 	@echo "#                |                                         #"
 	@echo "# make distclean | Clean ASE sub-distribution              #"
+	@echo "#                |                                         #"
+	@echo "# ======================================================== #"
+	@echo "# CONFIG         |   DESCRIPTION                           #"
+	@echo "# -------------------------------------------------------- #"
+	@echo "# ASE_CONFIG     | Directly input an ASE configuration     #"
+	@echo "#                |   file path (ase.cfg)                   #"
+	@echo "#                |                                         #"
+	@echo "# ASE_SCRIPT     | Directly input an ASE regression file   #"
+	@echo "#                |   path (ase_regress.sh, for ASE_MODE=4) #"
+	@echo "#                |                                         #"
+	@echo "# SIMULATOR      | Directly input a simulator brand        #"
+	@echo "#                |   (select between 'VCS' or 'QUESTA')    #"
 	@echo "#                                                          #"
 	@echo "############################################################"
 
@@ -336,6 +420,10 @@ sw_build:
 	cd $(WORK) ; $(CC) $(CC_OPT) -c $(ASESW_FILE_LIST) || exit 1 ; cd -
 	cd $(WORK) ; $(CC) -g -shared -o $(ASE_SHOBJ_SO) `ls *.o` $(ASE_LD_SWITCHES) ; cd -
 	nm $(WORK)/$(ASE_SHOBJ_SO) > $(WORK)/$(ASE_SHOBJ_NAME).nm
+ifeq ($(ASE_DEBUG), 1)
+	objdump -S $(WORK)/$(ASE_SHOBJ_SO) > $(WORK)/$(ASE_SHOBJ_NAME).obj
+endif
+
 
 ## VCS build template ##
 vcs_build:
@@ -345,12 +433,12 @@ vcs_build:
 	@echo "#                                                          #"
 	@echo "############################################################"
 	make sw_build
-	vlogan $(SNPS_VLOGAN_OPT) $(ASEHW_FILE_LIST)
+	vlogan $(SNPS_VLOGAN_OPT) $(ASEHW_FILE_LIST) -l vlogan-ase.log
 ifdef DUT_VHD_SRC_LIST
 	vhdlan $(SNPS_VHDLAN_OPT) -f $(DUT_VHD_SRC_LIST)
 endif
 ifdef DUT_VLOG_SRC_LIST
-	vlogan $(SNPS_VLOGAN_OPT) -f $(DUT_VLOG_SRC_LIST)
+	vlogan $(SNPS_VLOGAN_OPT) -f $(DUT_VLOG_SRC_LIST) -l vlogan-afu.log
 endif
 ifeq ($(CC), gcc)
 	vcs $(SNPS_VCS_OPT) $(ASE_TOP) $(WORK)/$(ASE_SHOBJ_SO) $(ASE_LD_SWITCHES)
@@ -364,15 +452,14 @@ questa_build:
 	@echo "#              QuestaSim-GCC build initiated               #"
 	@echo "#                                                          #"
 	@echo "############################################################"
-	vlib $(WORK)
-	vmap work $(WORK)
 	make sw_build
-	vlog $(MENT_VLOG_OPT) $(ASEHW_FILE_LIST)
+	cd $(WORK) ; vlib $(WORK) ; vmap work $(WORK) ; cd -
+	cd $(WORK) ; vlog $(MENT_VLOG_OPT) $(ASEHW_FILE_LIST) ; cd -
 ifdef DUT_VHD_SRC_LIST
-	vcom $(MENT_VCOM_OPT) -f $(DUT_VHD_SRC_LIST)
+	cd $(WORK) ; vcom $(MENT_VCOM_OPT) -f $(DUT_VHD_SRC_LIST) ; cd -
 endif
 ifdef DUT_VLOG_SRC_LIST
-	vlog $(MENT_VLOG_OPT) -f $(DUT_VLOG_SRC_LIST)
+	cd $(WORK) ; vlog $(MENT_VLOG_OPT) -f $(DUT_VLOG_SRC_LIST) ; cd -
 endif
 
 
@@ -393,15 +480,18 @@ endif
 ## Run ASE Simulator ##
 sim: check
 ifeq ($(SIMULATOR), VCS)
-	cd ./$(WORK)/; ./ase_simv $(VCS_SIM_OPT) +CONFIG=$(ASE_SRCDIR)/ase.cfg +SCRIPT=$(ASE_SRCDIR)/ase_regress.sh ; cd -
+	cd $(ASE_WORKDIR) ; ./ase_simv $(VCS_SIM_OPT) +CONFIG=$(ASE_CONFIG) +SCRIPT=$(ASE_SCRIPT) ; cd -
 else
   ifeq ($(SIMULATOR), QUESTA)
-	vsim $(MENT_VSIM_OPT) $(ASE_TOP)
+	cd $(ASE_WORKDIR) ; vsim $(MENT_VSIM_OPT) +CONFIG=$(ASE_CONFIG) +SCRIPT=$(ASE_SCRIPT) $(ASE_TOP) ; cd -
   else
 	@echo "############################################################"
 	@echo "#         SIMULATOR=$(SIMULATOR) not supported             #"
 	@echo "############################################################"
   endif
+endif
+ifeq ($(ASE_COVERAGE), 1)
+	make coverage
 endif
 
 # Open Wave file
@@ -410,7 +500,7 @@ ifeq ($(SIMULATOR), VCS)
 	dve -vpd `find . -name inter.vpd` || dve -vpd `find . -name inter.vpd` -full64
 else
   ifeq ($(SIMULATOR), QUESTA)
-	vsim -view vsim.wlf
+	vsim -view `find . -name vsim.wlf`
   endif
 endif
 
@@ -424,6 +514,8 @@ clean: header
 	rm -rf transcript modelsim.ini vsim.wlf ucli.key vsim_stacktrace.vstf
 	rm -rf profile* simprofile* scanbuild/ DVEfiles/ csrc/
 	rm -rf .ase_* *.o ase_seed.txt warnings.txt
+	rm -rf transcript *.log .ase_ipc_local ase_seed.txt
+	rm -rf vsim.wlf *_smq __hdl_xmr.tab
 
 distclean: header clean
 	./distclean.sh
@@ -440,25 +532,31 @@ scan-build:
 
 # Coverage
 coverage:
-	urg -dir ./work/coverage.vdb
-#	firefox urgReport/dashboard.html &
+	cd $(WORK) ; lcov --base-directory . --directory . --capture --output-file ase_libs.info ; genhtml -o lcov_coverage/ ase_libs.info ; cd -
+	cd $(WORK) ; urg -full64 -dir ase_simv.vdb ; cd -
+
+# GUI call for coverage
+cov_gui: coverage_gui
+
+coverage_gui:
+	firefox ./$(WORK)/urgReport/dashboard.html &
+	firefox ./$(WORK)/lcov_coverage/index.html &
+	firefox ./$(WORK)/profileReport.html &
+	dve -dir work/ase_simv.vdb/ -full64 &
 
 # Valgrind run
 valgrind_run:
-	cd ./$(WORK)/; valgrind $(VALGRIND_OPTS) ./ase_simv $(VCS_SIM_OPT) +CONFIG=$(ASE_SRCDIR)/ase.cfg +SCRIPT=$(ASE_SRCDIR)/ase_regress.sh ; cd -
+	cd ./$(WORK)/; valgrind $(VALGRIND_OPTS) ./ase_simv $(VCS_SIM_OPT) +CONFIG=$(ASE_CONFIG) +SCRIPT=$(ASE_SCRIPT) ; cd -
 
 # Test
 test: all sim
 
 # On long regression runs, dont create a run.log
 long_sim:
-	cd ./$(WORK)/; ./ase_simv -ucli -do $(ASE_SRCDIR)/vcs_run.tcl +CONFIG=$(ASE_SRCDIR)/ase.cfg +SCRIPT=$(ASE_SRCDIR)/ase_regress.sh ; cd -
-
-splint:
-	cd sw ; splint -standard +posixlib -preproc -syntax -limit 10000 -nullassign -formatconst -retvalint +gnuextensions protocol_backend.c | tee ../splint.log ; cd -
+	cd ./$(WORK)/; ./ase_simv -ucli -do $(ASE_SRCDIR)/vcs_run.tcl +CONFIG=$(ASE_CONFIG) +SCRIPT=$(ASE_SCRIPT) ; cd -
 
 cppcheck:
-	cd sw ; cppcheck *.c -DSIM_SIDE=1 -D__x86_64__ --enable=all -v --check-config | tee ../lint.log ; cd -
+	cd sw ; cppcheck *.c -DSIM_SIDE=1 -D__x86_64__ --enable=all -v --check-config | tee ../lint.log -I /usr/include/ ; cd -
 
 gdb_sim:
-	cd ./$(WORK)/; gdb --args ./ase_simv $(VCS_SIM_OPT) +CONFIG=$(ASE_SRCDIR)/ase.cfg +SCRIPT=$(ASE_SRCDIR)/ase_regress.sh ; cd -
+	cd ./$(WORK)/; gdb -ex run --args ./ase_simv $(VCS_SIM_OPT) +CONFIG=$(ASE_CONFIG) +SCRIPT=$(ASE_SCRIPT) ; cd -
