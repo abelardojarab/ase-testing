@@ -40,7 +40,7 @@ then
     ## Listing options
     fpgadiag_vc_arr="--va --vl0 --vh0 --vh1"
     fpgadiag_mcl_arr="1 2 4"
-    fpgadiag_cnt_arr="64"
+    fpgadiag_cnt_arr="64 1024 8192"
     fpgadiag_rdtype_arr="--rds --rdi"
     fpgadiag_wrtype_arr="--wt --wb"
     ## Run options
