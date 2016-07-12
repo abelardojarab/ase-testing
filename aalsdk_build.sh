@@ -19,6 +19,8 @@ cd $BASEDIR
 rm -rf $MYINST_DIR
 
 cd $AALSDK_GIT
+find . -name configure -exec rm -rf {} \;
+find . -name mybuild -exec rm -rf {} \;
 ./prep-build --deep-clean
 ./prep-build
 
