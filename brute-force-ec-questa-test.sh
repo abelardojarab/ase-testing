@@ -88,7 +88,7 @@ for i in $TOOL_VERSION; do
     	    sleep 1
     	done
     	cd $ASEVAL_GIT/apps/
-    	./nlb_scrub.sh
+    	timeout 600 ./nlb_scrub.sh
     	if [ $? -eq 0 ]; then
     	    echo -e -n "\t[RUN PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
     	else
