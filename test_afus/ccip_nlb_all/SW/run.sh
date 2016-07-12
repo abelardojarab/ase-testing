@@ -1,13 +1,5 @@
 #!/bin/sh
 
-fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1"
-fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1"
-fpgadiag_mcl_arr="1 2 4"
-# fpgadiag_cnt_arr="64"
-fpgadiag_cnt_arr="64 1024 8192"
-fpgadiag_rdtype_arr="--rds --rdi"
-fpgadiag_wrtype_arr="--wt --wb"
-
 # Wait for readiness
 echo "##################################"
 echo "#     Waiting for .ase_ready     #"
@@ -20,6 +12,7 @@ done
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
+## Ensure Hello_ALI_NLB works in the release
 echo "##################################"
 echo "#     Testing Hello_ALI_NLB      #"
 echo "##################################"
@@ -31,13 +24,68 @@ then
     exit 1
 fi
 
-# Check if release is > 5.0.2, fpgadiag is known to be flaky on lower revs
-# if [ -f $ASE_SRCDIR/hw/ase_svfifo.sv ]
+#######################################################################
+## For BDX2 release
 if [ $RELCODE == "BDX2" ]
 then
-    echo "##################################"
-    echo "#        Testing fpgadiag        #"
-    echo "##################################"
+    echo "#############################################"
+    echo "#           Testing with NLB Scrub          #"
+    echo "#############################################"
+    $ASEVAL_GIT/apps/
+    ./build_all.sh
+    ./nlb_scrub.sh full
+    # echo "#############################################"
+    # echo "#        Testing fpgadiag on $RELCODE       #"
+    # echo "#############################################"
+    # ## Listing options
+    # fpgadiag_vc_arr="--va --vl0 --vh0 --vh1"
+    # fpgadiag_mcl_arr="1 2 4"
+    # fpgadiag_cnt_arr="64"
+    # fpgadiag_rdtype_arr="--rds --rdi"
+    # fpgadiag_wrtype_arr="--wt --wb"
+    # ## Run options
+    # cd $MYINST_DIR/bin
+    # for vc_set in $fpgadiag_vc_arr ; do
+    # 	for mcl_set in $fpgadiag_mcl_arr ; do
+    # 	    for cnt_set in $fpgadiag_cnt_arr ; do
+    # 		for rd_set in $fpgadiag_rdtype_arr ; do
+    # 		    for wr_set in $fpgadiag_wrtype_arr ; do
+    # 			date
+    # 			if ps -p $ase_pid > /dev/null
+    # 			then
+    # 			    echo "./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
+    # 			    timeout 1800 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=30 --cont
+    # 			    if [[ $? != 0 ]] ; 
+    # 			    then
+    # 				"fpgadiag timed out -- FAILURE EXIT !!"
+    # 				exit 1
+    # 			    fi
+    # 			else
+    # 			    echo "** Simulator not running **"
+    # 			    exit 1
+    # 			fi
+    # 		    done
+    # 		done
+    # 	    done
+    # 	done
+    # done
+fi
+
+#######################################################################
+## For SKX1 release
+if [ $RELCODE == "SKX1" ]
+then
+    echo "#######################################"
+    echo "#        Testing fpgadiag lpbk1       #"
+    echo "#######################################"
+    ## Listing options
+    fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1"
+    fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1"
+    fpgadiag_mcl_arr="1 2 4"
+    fpgadiag_cnt_arr="64 1024 8192"
+    fpgadiag_rdtype_arr="--rds --rdi"
+    fpgadiag_wrtype_arr="--wt --wb"
+    ## Run options
     cd $MYINST_DIR/bin
     for rdvc_set in $fpgadiag_rdvc_arr ; do
 	for wrvc_set in $fpgadiag_wrvc_arr ; do
