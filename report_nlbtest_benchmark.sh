@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -v
+set -e
+
 if [ -z "$AALSDK_GIT" ]; then
     echo "env(AALSDK_GIT) has not been set !"
     exit 1
@@ -15,7 +18,9 @@ if [ -z "$ASEVAL_GIT" ]; then
     exit 1
 fi
 
-PERF_REPORT=ase_performance.rpt
+PERF_REPORT=$ASEVAL_GIT/ase_performance.rpt
+RELCODE=BDX2
+
 rm -rf $PERF_REPORT
 touch $PERF_REPORT
 
@@ -36,11 +41,10 @@ ASE_DEBUG="0 1"
 VCS_RUN_TCL=" $ASEVAL_GIT/sim_tcl/vcs_nodumpwave.tcl $ASEVAL_GIT/sim_tcl/vcs_dumpwave.tcl"
 
 ## Config setting
-ASE_CFG_FILE="$ASEVAL_GIT/configs/ase_sw_simkill_cl_view_0.cfg $ASEVAL_GIT/configs/ase_sw_simkill_cl_view_1.cfg"
+ASE_CFG_FILE="$ASEVAL_GIT/ase_configs/ase_sw_simkill_cl_view_0.cfg $ASEVAL_GIT/ase_configs/ase_sw_simkill_cl_view_1.cfg"
 
 ## Test configs
 numcl_array="64000"
-# numcl_array="16384"
 vc_array="0 1 2 3"
 mcl_array="0 1 3"
 
@@ -48,6 +52,9 @@ mcl_array="0 1 3"
 cd $ASEVAL_GIT/apps/
 ./build_all.sh $ASE_SRCDIR/
 cd $CURRDIR
+
+## Copy AFU configuration
+cp $ASEVAL_GIT/test_afus/ccip_nlb_all/$RELCODE/* $ASE_SRCDIR/
 
 ## --------------------------------------------- ##
 for asedbg in $ASE_DEBUG
@@ -75,15 +82,18 @@ do
 	    for numcl_set in $numcl_array ; do
 		for vc_set in $vc_array ; do
 		    for mcl_set in $mcl_array ; do
-			xterm -iconic -e "cd $ASE_WORKDIR ; ./ase_simv -ucli -do $simtcl +CONFIG=$cfg +SCRIPT=$ASE_SRCDIR/ase_regress.sh" &
+			cp $cfg $ASE_SRCDIR/ase.cfg
+			xterm -e "cd $ASE_WORKDIR/ ; make sim " &
 			while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
 			do
 			    sleep 1
 			done
-			ASE_WORKDIR=$ASE_WORKDIR $ASEVAL_GIT/apps/nlb_test.out $numcl_set $vc_set $mcl_set > output.log
+			cd $ASEVAL_GIT/apps/
+			ASE_WORKDIR=$ASE_WORKDIR ./nlb_test.out $numcl_set $vc_set $mcl_set > output.log
 			simtime=`grep -i nsec output.log`
 			echo -e "ASE_DEBUG=$asedbg \tWAVEDUMP=$wavedump \t$enable_cl_view \t./nlb_test $numcl_set $vc_set $mcl_set \t $simtime" >> $PERF_REPORT
-			sleep 3
+			sleep 1
+			$ASEVAL_GIT/kill_running_ase.sh
 		    done
 		done
 	    done
