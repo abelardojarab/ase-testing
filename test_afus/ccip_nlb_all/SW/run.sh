@@ -28,47 +28,47 @@ fi
 ## For BDX2 release
 if [ $RELCODE == "BDX2" ]
 then
-    echo "#############################################"
-    echo "#           Testing with NLB Scrub          #"
-    echo "#############################################"
-    $ASEVAL_GIT/apps/
-    ./build_all.sh
-    ./nlb_scrub.sh full
     # echo "#############################################"
-    # echo "#        Testing fpgadiag on $RELCODE       #"
+    # echo "#           Testing with NLB Scrub          #"
     # echo "#############################################"
-    # ## Listing options
-    # fpgadiag_vc_arr="--va --vl0 --vh0 --vh1"
-    # fpgadiag_mcl_arr="1 2 4"
-    # fpgadiag_cnt_arr="64"
-    # fpgadiag_rdtype_arr="--rds --rdi"
-    # fpgadiag_wrtype_arr="--wt --wb"
-    # ## Run options
-    # cd $MYINST_DIR/bin
-    # for vc_set in $fpgadiag_vc_arr ; do
-    # 	for mcl_set in $fpgadiag_mcl_arr ; do
-    # 	    for cnt_set in $fpgadiag_cnt_arr ; do
-    # 		for rd_set in $fpgadiag_rdtype_arr ; do
-    # 		    for wr_set in $fpgadiag_wrtype_arr ; do
-    # 			date
-    # 			if ps -p $ase_pid > /dev/null
-    # 			then
-    # 			    echo "./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
-    # 			    timeout 1800 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=30 --cont
-    # 			    if [[ $? != 0 ]] ; 
-    # 			    then
-    # 				"fpgadiag timed out -- FAILURE EXIT !!"
-    # 				exit 1
-    # 			    fi
-    # 			else
-    # 			    echo "** Simulator not running **"
-    # 			    exit 1
-    # 			fi
-    # 		    done
-    # 		done
-    # 	    done
-    # 	done
-    # done
+    # $ASEVAL_GIT/apps/
+    # ./build_all.sh
+    # ./nlb_scrub.sh full
+    echo "#############################################"
+    echo "#        Testing fpgadiag on $RELCODE       #"
+    echo "#############################################"
+    ## Listing options
+    fpgadiag_vc_arr="--va --vl0 --vh0 --vh1"
+    fpgadiag_mcl_arr="1 2 4"
+    fpgadiag_cnt_arr="64"
+    fpgadiag_rdtype_arr="--rds --rdi"
+    fpgadiag_wrtype_arr="--wt --wb"
+    ## Run options
+    cd $MYINST_DIR/bin
+    for vc_set in $fpgadiag_vc_arr ; do
+    	for mcl_set in $fpgadiag_mcl_arr ; do
+    	    for cnt_set in $fpgadiag_cnt_arr ; do
+    		for rd_set in $fpgadiag_rdtype_arr ; do
+    		    for wr_set in $fpgadiag_wrtype_arr ; do
+    			date
+    			if ps -p $ase_pid > /dev/null
+    			then
+    			    echo "./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
+    			    timeout 1800 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set
+    			    if [[ $? != 0 ]] ; 
+    			    then
+    				"fpgadiag timed out -- FAILURE EXIT !!"
+    				exit 1
+    			    fi
+    			else
+    			    echo "** Simulator not running **"
+    			    exit 1
+    			fi
+    		    done
+    		done
+    	    done
+    	done
+    done
 fi
 
 #######################################################################
