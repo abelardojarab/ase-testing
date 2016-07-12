@@ -25,38 +25,40 @@ fi
 ## Check if inputs OK
 if [ -z "$1" ]
 then
-    echo "Usage: ./stress.sh <num_tests> <short|long>"
+    echo "Usage: ./stress.sh <num_tests> <tiny|short|long>"
     exit
 else
     TEST_TYPE=$2
-    if [ "$2" != "short" ]; then
-	if [ "$2" != "long" ]; then
-	    echo "TEST_TYPE must be short OR long"
-	    exit
+    if [ "$2" != "tiny" ]; then
+	if [ "$2" != "short" ]; then
+	    if [ "$2" != "long" ]; then
+		echo "TEST_TYPE must be {tiny, short, long}"
+		exit
+	    fi
 	fi
-    fi	
+    fi
 fi
 
 # Wait for Simulator to be running/ready
 echo "Waiting for simulator to be ready ... "
 for sleep in `seq 0 180`;
 do
-    if [ ! -f $ASE_WORKDIR/.ase_ready.pid ] 
+    if [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
     then
 	sleep 1
     fi
 done
-if [ ! -f $ASE_WORKDIR/.ase_ready.pid ] 
+if [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
 then
     echo "Simulator might probably not come up at all -- ending regression here !"
-    exit 1   
+    exit 1
 fi
 echo "DONE"
 
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
-# 
+#
 echo "Stress test will run $NUM_TESTS tests"
 for i in `seq 1 $NUM_TESTS`;
 do
@@ -72,18 +74,24 @@ do
 	mcl_set=${mcl_arr[$index]}
 	mcl_cnt=$(($mcl_set + 1))
 
+	if [ $TEST_TYPE == "tiny" ] ; then
+	    num_cl=1
+	    vc_set=0
+	    mcl_set=0
+	fi
 	if [ $TEST_TYPE == "long" ] ; then
-	    num_cl=`shuf -i 12000-16000 -n 1`	    
+	    num_cl=`shuf -i 12000-16000 -n 1`
+	    num_cl=$(($num_cl * $mcl_cnt))
 	fi
 	if [ $TEST_TYPE == "short" ] ; then
 	    num_cl=`shuf -i 256-1024 -n 1`
+	    num_cl=$(($num_cl * $mcl_cnt))
 	fi
 
-	num_cl=$(($num_cl * $mcl_cnt))
-	
+
 	echo ./nlb_test.out $num_cl $vc_set $mcl_set
-	./nlb_test.out $num_cl $vc_set $mcl_set > output.$i.log
-	if [ "$?" != 0 ] ; 
+	./nlb_test.out $num_cl $vc_set $mcl_set
+	if [ "$?" != 0 ] ;
 	then
 	    echo "***** Test error *****"
 	    $ASEVAL_GIT/kill_running_ase.sh
@@ -91,7 +99,7 @@ do
 	else
 	    echo "Test PASS"
 	fi
-	sleep 1
+#	sleep 1
     else
 	echo "Simulator not running... EXIT";
 	$ASEVAL_GIT/kill_running_ase.sh
@@ -99,4 +107,3 @@ do
     fi
 done
 echo "------------------------------------------------"
-
