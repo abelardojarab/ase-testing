@@ -19,7 +19,7 @@ export AALKERN_DIR=$AALSDK_GIT/aalkernel
 export MYINST_DIR=$BASEDIR/myinst
 export AALSAMP_DIR=$AALSDK_GIT/aalsamples
 
-export RELCODE="BDX2"
+export RELCODE="SKX1"
 
 echo "Directory settings =>"
 echo "AALSDK_GIT  : " $AALSDK_GIT
