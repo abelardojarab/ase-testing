@@ -23,7 +23,7 @@ ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 echo "######################################"
 echo "#     Testing Hello_ALI_VTP_NLB      #"
 echo "######################################"
-cd $BBB_GIT/cci_mpf/samples/Hello_ALI_VTP_NLB/SW
+cd $BBB_GIT/BBB_cci_mpf/sample/Hello_ALI_VTP_NLB/SW
 timeout 3600 ./helloALIVTPnlb
 if [[ $? != 0 ]]; 
 then

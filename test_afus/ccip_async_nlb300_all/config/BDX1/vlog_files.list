@@ -6,9 +6,9 @@ $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX1/HW/arbiter.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX1/HW/test_sw1.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX1/HW/test_rdwr.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX1/HW/nlb_lpbk.sv
-$BBB_GIT/ccip_async/HW/ccip_afifo_channel.sv
-$BBB_GIT/ccip_async/HW/ccip_async_shim.sv
-$BBB_GIT/ccip_async/samples/async_nlb300.sv
+$BBB_GIT/BBB_ccip_async/hw/rtl/ccip_afifo_channel.sv
+$BBB_GIT/BBB_ccip_async/hw/rtl/ccip_async_shim.sv
+$BBB_GIT/BBB_ccip_async/samples/async_nlb300.sv
 
 
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX1/HW/nlb_gram_sdp.v
