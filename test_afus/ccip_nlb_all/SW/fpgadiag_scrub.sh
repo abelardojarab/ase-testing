@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Simulator PID
+ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
+
 ## Listing options
 fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1"
 fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1"

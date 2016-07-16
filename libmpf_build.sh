@@ -15,10 +15,10 @@ if [ -z "$ASEVAL_GIT" ]; then
     exit 1
 fi
 
-cd $BBB_GIT/cci_mpf/SW/
+cd $BBB_GIT/BBB_cci_mpf/sw/
 make clean
 make prefix=$MYINST_DIR
 
-cd $BBB_GIT/cci_mpf/samples/Hello_ALI_VTP_NLB/SW/
+cd $BBB_GIT/BBB_cci_mpf/sample/Hello_ALI_VTP_NLB/SW/
 make clean
-make prefix=$MYINST_DIR CFLAGS="-I $BBB_GIT/cci_mpf/SW/include/"
+make prefix=$MYINST_DIR CFLAGS="-I $BBB_GIT/BBB_cci_mpf/sw/include/"
