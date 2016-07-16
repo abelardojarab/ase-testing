@@ -1,13 +1,5 @@
 #!/bin/sh
 
-fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1"
-fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1"
-fpgadiag_mcl_arr="1 2 4"
-# fpgadiag_cnt_arr="64"
-fpgadiag_cnt_arr="64 1024 8192"
-fpgadiag_rdtype_arr="--rds --rdi"
-fpgadiag_wrtype_arr="--wt --wb"
-
 # Wait for readiness
 echo "##################################"
 echo "#     Waiting for .ase_ready     #"
@@ -32,13 +24,22 @@ then
 fi
 
 
+
 #######################################################################
 ## For SKX1 release
 if [ $RELCODE == "SKX1" ]
 then
-    echo "###############################################"
-    echo "#        Testing fpgadiag in lpbk1 mode       #"
-    echo "###############################################"
+    echo "##########################################################"
+    echo "#    Testing SKX1 NLB+MPF with fpgadiag in lpbk1 mode    #"
+    echo "##########################################################"
+    ## Listing options
+    fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1"
+    fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1"
+    fpgadiag_mcl_arr="1 2 4"
+    fpgadiag_cnt_arr="64 1024 8192"
+    fpgadiag_rdtype_arr="--rds --rdi"
+    fpgadiag_wrtype_arr="--wt --wb"
+    ## Run options
     cd $MYINST_DIR/bin
     for rdvc_set in $fpgadiag_rdvc_arr ; do
 	for wrvc_set in $fpgadiag_wrvc_arr ; do
@@ -66,10 +67,4 @@ then
 	    done
 	done
     done
-
-
-    echo "###############################################"
-    echo "#        Testing fpgadiag in trput mode       #"
-    echo "###############################################"
-
 fi
