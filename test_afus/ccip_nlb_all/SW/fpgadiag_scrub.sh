@@ -7,7 +7,7 @@ ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1"
 fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1"
 fpgadiag_mcl_arr="1 2 4"
-fpgadiag_cnt_arr="256"
+fpgadiag_cnt_arr="8192"
 fpgadiag_rdtype_arr="--rds --rdi"
 fpgadiag_wrtype_arr="--wt --wb"
 ## Run options
@@ -22,7 +22,7 @@ for rdvc_set in $fpgadiag_rdvc_arr ; do
 			if ps -p $ase_pid > /dev/null
 			then
 			    echo "./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
-			    timeout 1800 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set
+			    timeout 500 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set
 			    if [[ $? != 0 ]] ; 
 			    then
 				"fpgadiag timed out -- FAILURE EXIT !!"
