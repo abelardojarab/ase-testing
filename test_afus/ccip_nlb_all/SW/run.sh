@@ -58,7 +58,6 @@ then
     			    if [[ $errcode != 0 ]] 
     			    then
 				echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				errno $errcode
 				echo "Last command:  ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
     				exit 1
     			    fi
@@ -96,7 +95,6 @@ then
     			    if [[ $errcode != 0 ]] 
     			    then
 				echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				errno $errcode
 				echo "Last command:  ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=20 --cont"
     				exit 1
     			    fi
@@ -142,7 +140,6 @@ then
     				if [[ $errcode != 0 ]] ; 
     				then
     				    echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-    				    errno $errcode
     				    echo "Last command: ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
     				    exit 1
     				fi
@@ -183,7 +180,6 @@ then
 				if [[ $errcode != 0 ]] ; 
 				then
 				    echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				    errno $errcode
 				    echo "Last command: ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=20 --cont"
 				    exit 1
 				fi
