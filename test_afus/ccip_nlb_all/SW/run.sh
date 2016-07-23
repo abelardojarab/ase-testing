@@ -77,7 +77,7 @@ then
     ## Listing options
     fpgadiag_vc_arr="--va --vl0 --vh0 --vh1"
     fpgadiag_mcl_arr="1 2 4"
-    fpgadiag_cnt_arr="64 1024 8192"
+    fpgadiag_cnt_arr="4096"
     fpgadiag_rdtype_arr="--rds --rdi"
     fpgadiag_wrtype_arr="--wt --wb"
     ## Run options
@@ -90,12 +90,12 @@ then
     			date
     			if ps -p $ase_pid > /dev/null
     			then
-    			    timeout 600 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=20 --cont
+    			    timeout 600 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=60 --cont
 			    errcode=$?
     			    if [[ $errcode != 0 ]] 
     			    then
 				echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				echo "Last command:  ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=20 --cont"
+				echo "Last command:  ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=60 --cont"
     				exit 1
     			    fi
     			else
@@ -175,12 +175,12 @@ then
 			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				timeout 600 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=20 --cont
+				timeout 600 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=60 --cont
 				errcode=$?
 				if [[ $errcode != 0 ]] ; 
 				then
 				    echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				    echo "Last command: ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=20 --cont"
+				    echo "Last command: ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=60 --cont"
 				    exit 1
 				fi
 			    else
