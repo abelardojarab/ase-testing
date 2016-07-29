@@ -15,9 +15,10 @@ done
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
 timeout 300 ./mmio_stress
-if [[ $? != 0 ]]; 
+errcode=$?
+if [[ $errcode != 0 ]]
 then
-    "mmio_stress: FAILURE EXIT !!"
+    echo "** mmio_stress: FAILURE EXIT !! Error code $errcode **"
     exit 1
 fi
 
