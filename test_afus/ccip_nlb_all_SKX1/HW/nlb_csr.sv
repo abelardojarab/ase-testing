@@ -31,6 +31,7 @@
 //                  capable of doing 32 and 64 bit rd/wr the register file.
 //
 // ***************************************************************************
+`default_nettype none
 `include "vendor_defines.vh"
 import ccip_if_pkg::*;
 module nlb_csr #(parameter CCIP_VERSION_NUMBER=0)
@@ -55,6 +56,7 @@ module nlb_csr #(parameter CCIP_VERSION_NUMBER=0)
     cr2re_interrupt0,
     cr2re_cfg,
     cr2re_ctl,
+    cr2re_stride,
     cr2re_dsm_base,
     cr2re_dsm_base_valid,
     cr2s1_csr_write,
@@ -85,6 +87,7 @@ output logic                 cr2cp_MmioDout_v;        //   CSR read data valid
 (* `KEEP_WIRE *) output wire  [31:0]  cr2re_interrupt0;
 (* `KEEP_WIRE *) output wire  [63:0]  cr2re_cfg;
 (* `KEEP_WIRE *) output wire  [31:0]  cr2re_ctl;
+(* `KEEP_WIRE *) output wire  [31:0]  cr2re_stride;
 (* `KEEP_WIRE *) output wire  [63:0]  cr2re_dsm_base;
 (* `KEEP_WIRE *) output reg           cr2re_dsm_base_valid;
 (* `KEEP_WIRE *) output reg           cr2s1_csr_write;
@@ -136,7 +139,7 @@ localparam      CSR_SWTEST_MSG       = 16'h158;    // 32b             // RW   Wr
 localparam      CSR_STATUS0          = 16'h160;    // 32b                RO   num_read, num_writes
 localparam      CSR_STATUS1          = 16'h168;    // 32b                RO   num_Rdpend, num_Wrpend 
 localparam      CSR_ERROR            = 16'h170;    // 32b                RO   error
- 
+localparam      CSR_STRIDE           = 16'h178;    // 32b           //  stride value    
 //---------------------------------------------------------
 localparam      NO_STAGED_CSR  = 16'hXXX;       // used for NON late action CSRs
 localparam      CFG_SEG_SIZE   = 16'h180>>3;    // Range specified in number of 8B CSRs
@@ -157,17 +160,21 @@ localparam      FEATURE_0_BEG  = 18'h0000;
 // At compile time, user can decide which test mode is synthesized.
 `ifndef SIM_MODE // PAR_MODE
     `ifdef NLB400_MODE_0
-    localparam       NLB_AFU_ID_H    = 64'hC000_C966_0D82_4272;
-    localparam       NLB_AFU_ID_L    = 64'h9AEF_FE5F_8457_0612;
+            `ifdef  OLD_AFU_ID
+                    localparam       NLB_AFU_ID_H    = 64'hC000_C966_0D82_4272;
+                    localparam       NLB_AFU_ID_L    = 64'h9AEF_FE5F_8457_0612; 
+            `else   localparam       NLB_AFU_ID_H    = 64'hD842_4DC4_A4A3_C413;
+                    localparam       NLB_AFU_ID_L    = 64'hF89E_4336_83F9_040B;
+            `endif
     `elsif NLB400_MODE_3
-    localparam       NLB_AFU_ID_H    = 64'h751E_795F_7DA4_4CC6;
-    localparam       NLB_AFU_ID_L    = 64'h8309_9351_32BC_A9B6;
+    localparam       NLB_AFU_ID_H    = 64'hF7DF_405C_BD7A_CF72;
+    localparam       NLB_AFU_ID_L    = 64'h22F1_44B0_B93A_CD18;
     `elsif NLB400_MODE_7
-    localparam       NLB_AFU_ID_H    = 64'hA944_F6E7_15D3_4D95;
-    localparam       NLB_AFU_ID_L    = 64'h9452_15DB_D47C_76BD;
+    localparam       NLB_AFU_ID_H    = 64'h7BAF_4DEA_A57C_E91E;
+    localparam       NLB_AFU_ID_L    = 64'h168A_455D_9BDA_88A3;
     `elsif NLB400_MODE_5
-    localparam       NLB_AFU_ID_H    = 64'h41BA_FB9D_D97E_43CF;
-    localparam       NLB_AFU_ID_L    = 64'h967D_22E8_37CD_2182;
+    localparam       NLB_AFU_ID_H    = 64'hA0B8_4916_A8A2_12A1;
+    localparam       NLB_AFU_ID_L    = 64'hA2EC_457C_84E7_47BC;
     `else
         ** Select a valid NLB Test Mode
     `endif	
@@ -205,6 +212,7 @@ initial begin
 end
 
 assign     cr2re_ctl             = func_csr_connect_4B(CSR_CTL,csr_reg[CSR_CTL>>3]);
+assign     cr2re_stride          = func_csr_connect_4B(CSR_STRIDE,csr_reg[CSR_STRIDE>>3]);
 assign     cr2re_dsm_base[31:0]  = func_csr_connect_4B(CSR_AFU_DSM_BASEL,csr_reg[CSR_AFU_DSM_BASEL>>3]);
 assign     cr2re_dsm_base[63:32] = func_csr_connect_4B(CSR_AFU_DSM_BASEH,csr_reg[CSR_AFU_DSM_BASEH>>3]);
 assign     cr2re_src_address     = csr_reg[CSR_SRC_ADDR>>3];
@@ -412,6 +420,15 @@ begin
                   {{32{RW}},
                    {16{RsvdP}},
                    {16{RW}}
+                  },
+                  64'h0
+                 );
+          
+                set_attr(CSR_STRIDE,
+                   NO_STAGED_CSR,
+                   1'b1,
+                  {{58{RsvdP}},
+                   {6{RW}}
                   },
                   64'h0
                  );
