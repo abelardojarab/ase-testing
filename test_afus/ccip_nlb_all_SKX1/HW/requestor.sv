@@ -215,7 +215,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     reg  [31:0]             Num_C1stall;                            // Number of clocks for which channel1 was throttled
     reg  signed [31:0]      Num_RdCredits;                          // For LPBK1: number of read credits
     reg                     RdHdr_valid;
-    reg                     WrHdr_valid_T1, WrHdr_valid_T2, WrHdr_valid_T3 , WrHdr_valid_T4;
+    reg                     WrHdr_valid_T1, WrHdr_valid_T2, WrHdr_valid_T3;
     reg  [31:0]             wrfifo_addr;
     t_ccip_clData           wrfifo_data;
     reg                     txFifo_RdAck;
@@ -273,7 +273,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     wire                    txFifo_AlmFull;
     wire                    txFifo_WrEn     = (ab2re_WrEn| ab2re_WrFence) && ~txFifo_Full;
     wire [15:0]             txFifo_WrTID;
-    reg [ADDR_LMT-1:0]     txFifo_WrAddr,txFifo_WrAddr_q;
+    wire [ADDR_LMT-1:0]     txFifo_WrAddr;
     wire                    txFifo_WrFence;
     wire                    txFifo_WrSop;
     wire [1:0]              txFifo_WrLen;
@@ -296,13 +296,13 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     wire                    tx_errorValid    = ErrorVector!=0;
     reg    [14:0]           dsm_number=0;
     
-    logic [15:0]            txFifo_WrTID_q,txFifo_WrTID_qq;
-    logic                   txFifo_WrFence_q, txFifo_WrFence_qq;
-    logic                   txFifo_WrSop_q, txFifo_WrSop_qq;
-    logic [1:0]             txFifo_WrLen_q, txFifo_WrLen_qq;
+    logic [15:0]            txFifo_WrTID_q;
+    logic                   txFifo_WrFence_q;
+    logic                   txFifo_WrSop_q;
+    logic [1:0]             txFifo_WrLen_q;
     logic                   txFifo_cxEn_q;
     logic [2:0]             txFifo_cxQword_q;
-    t_ccip_clData  txFifo_WrDin_q , txFifo_WrDin_qq;
+    t_ccip_clData  txFifo_WrDin_q;
   
     logic                   test_stop;
     logic                   WrFence_sent;
@@ -322,29 +322,24 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     (* noprune *) logic [8:0]   Num_WrPend;
     (* noprune *) logic [8:0]   Num_RdPend;
         
-    // NLB supports 64MB data transfers   
+    // NLB supports 64MB data transfers   :- requirement is that the addresses have to be 2MB aligned 
+    // ADDR COMPUTE:
     // RdAddr computation takes one cycle :- Delay Rd valid generation from req to upstream by 1 clk
-    // WrAddr computation takes two cycle :- Delay Wr valid popped from FIFO by 1 cycle before fwd'ing to upstream
+    // WrAddr computation takes one cycle :- Delay Wr valid popped from FIFO by 1 cycle before fwd'ing to upstream
     always @(posedge Clk_400)
     begin
-      RdAddr               <= (cr_src_address[41:0] + ab2re_RdAddr[19:0]);
+      RdAddr               <= {(cr_src_address[41:15] + ab2re_RdAddr[19:15]), ab2re_RdAddr[14:0]};
       ab2re_RdLen_q        <= ab2re_RdLen;
       ab2re_RdTID_q        <= ab2re_RdTID;
       ab2re_RdEn_q         <= ab2re_RdEn;
       RdHdr_valid_q        <= RdHdr_valid;
-
-      txFifo_WrAddr_q      <= txFifo_WrAddr;
-      WrAddr               <= {(cr_dst_address[41:0] + txFifo_WrAddr_q[19:0])};
+      
+      WrAddr               <= {(cr_dst_address[41:15] + txFifo_WrAddr[19:15]), txFifo_WrAddr[14:0]};
       txFifo_WrLen_q       <= txFifo_WrLen;
       txFifo_WrSop_q       <= txFifo_WrSop;
       txFifo_WrFence_q     <= txFifo_WrFence;
       txFifo_WrDin_q       <= txFifo_WrDin; 
-      txFifo_WrTID_q       <= txFifo_WrTID;
-      txFifo_WrLen_qq      <= txFifo_WrLen_q;
-      txFifo_WrSop_qq      <= txFifo_WrSop_q;
-      txFifo_WrFence_qq    <= txFifo_WrFence_q;
-      txFifo_WrDin_qq      <= txFifo_WrDin_q; 
-      txFifo_WrTID_qq      <= txFifo_WrTID_q;  
+      txFifo_WrTID_q       <= txFifo_WrTID;  
     end
     
     always @(posedge Clk_400)
@@ -378,7 +373,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
       re2ab_WrRspFormat= cp2af_sRxPort_T1.c1.hdr.format;
       re2ab_WrRspCLnum = cp2af_sRxPort_T1.c1.hdr.cl_num[1:0];
       re2ab_CfgValid   = re2ab_CfgValid_d;
-      sop = txFifo_WrFence_qq ? 0 : txFifo_WrSop_qq;
+      sop = txFifo_WrFence_q ? 0 : txFifo_WrSop_q;
       
     end
      
@@ -405,7 +400,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         cr_rd_chsel              = cr2re_cfg[14:12]; 
         cr_wrdin_msb             = cr2re_cfg[15];
        cr_wrpushI_en         = cr2re_cfg[16];
-       cr_wr_chsel              = cr2re_cfg[19:17];
+        cr_wr_chsel              = cr2re_cfg[19:17];
         
 
     end
@@ -484,7 +479,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         test_cmplt       <= 1;        
         
         if (test_stop == 0)
-        test_stop        <= test_cmplt & (read_only_test | (!(|txFifo_WrLen_qq) & WrHdr_valid_T4));
+        test_stop        <= test_cmplt & (read_only_test | (!(|txFifo_WrLen_q) & WrHdr_valid_T3));
 
         WrData_dsm <={ ab2re_ErrorInfo,                             // [511:256] upper half cache line
                        24'h00_0000,penalty_end,                     // [255:224] test end overhead in # clks
@@ -505,8 +500,8 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         af2cp_sTxPort.c0.hdr        <= 0;
         af2cp_sTxPort.c0.valid      <= 0;
 	        		
-        af2cp_sTxPort.c1.data[511:256] <= dsm_status_wren_a ? WrData_dsm[511:256] : txFifo_WrDin_qq[511:256]; 
-        af2cp_sTxPort.c1.data[255:0]   <= dsm_status_wren_b ? WrData_dsm[255:0]   : txFifo_WrDin_qq[255:0]; 
+        af2cp_sTxPort.c1.data[511:256] <= dsm_status_wren_a ? WrData_dsm[511:256] : txFifo_WrDin_q[511:256]; 
+        af2cp_sTxPort.c1.data[255:0]   <= dsm_status_wren_b ? WrData_dsm[255:0]   : txFifo_WrDin_q[255:0]; 
     
             // Channel 1
             if ( send_interrupt
@@ -561,14 +556,14 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
                     af2cp_sTxPort.c1.hdr.cl_len        <= eCL_LEN_1;
                   end
         
-                else if( WrHdr_valid_T4 & !test_stop )                         // Write to Destination Workspace
+                else if( WrHdr_valid_T3 & !test_stop )                         // Write to Destination Workspace
                 begin                                                          //-------------------------------------
                     af2cp_sTxPort.c1.hdr.vc_sel        <= sop? t_ccip_vc'(wr_ch_type) : af2cp_sTxPort.c1.hdr.vc_sel ; //for multi-cl write dont randomise vc within a packet
                     af2cp_sTxPort.c1.hdr.req_type      <= wrreq_type;
                     af2cp_sTxPort.c1.hdr.address[41:0] <= WrAddr;
-                    af2cp_sTxPort.c1.hdr.mdata[15:0]   <= txFifo_WrTID_qq;
+                    af2cp_sTxPort.c1.hdr.mdata[15:0]   <= txFifo_WrTID_q;
                     af2cp_sTxPort.c1.hdr.sop           <= sop;
-                    af2cp_sTxPort.c1.hdr.cl_len        <= t_ccip_clLen'(txFifo_WrLen_qq);
+                    af2cp_sTxPort.c1.hdr.cl_len        <= t_ccip_clLen'(txFifo_WrLen_q);
                     af2cp_sTxPort.c1.valid             <= 1'b1;
                     Num_Writes                         <= Num_Writes + 1'b1;
                 end
@@ -788,7 +783,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
 
             penalty_end <= penalty_end + 1'b1;
             if( cp2af_sRxPort.c0.rspValid 
-              | cp2af_sRxPort.c1.rspValid | cp2af_sRxPort.c0.mmioWrValid
+              | cp2af_sRxPort.c1.rspValid
               )
             begin
                 penalty_end     <= 8'h2;
@@ -826,13 +821,11 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         WrHdr_valid_T1 <= txFifo_RdAck;
         WrHdr_valid_T2 <= WrHdr_valid_T1 & re2xy_go;
         WrHdr_valid_T3 <= WrHdr_valid_T2;
-        WrHdr_valid_T4 <= WrHdr_valid_T3;
     if(!test_Reset_n)
         begin
             WrHdr_valid_T1 <= 0;
             WrHdr_valid_T2 <= 0;
             WrHdr_valid_T3 <= 0;
-            WrHdr_valid_T4 <= 0;
         end
     end
 
