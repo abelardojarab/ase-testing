@@ -84,12 +84,12 @@ then
     			date
     			if ps -p $ase_pid > /dev/null
     			then
-    			    timeout 90 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=30 --cont
+    			    timeout 90 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=10 --cont
 			    errcode=$?
     			    if [[ $errcode != 0 ]] 
     			    then
 				echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				echo "Last command:  ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=60 --cont"
+				echo "Last command:  ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=10 --cont"
     				exit 1
     			    fi
     			else
@@ -169,12 +169,12 @@ then
 			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				timeout 90 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=30 --cont
+				timeout 90 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=10 --cont
 				errcode=$?
 				if [[ $errcode != 0 ]] ; 
 				then
 				    echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				    echo "Last command: ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=60 --cont"
+				    echo "Last command: ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=10 --cont"
 				    exit 1
 				fi
 			    else
