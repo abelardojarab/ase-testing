@@ -10,10 +10,8 @@ $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/requestor.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/arbiter.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/ccip_std_afu.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/test_sw1.sv
-$ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/ccip_debug.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/test_rdwr.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/nlb_lpbk.sv
-$ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/green_ccip_if_reg.sv
 
 
 $ASEVAL_GIT/test_afus/ccip_nlb_all_BDX2/HW/nlb_gram_sdp.v
