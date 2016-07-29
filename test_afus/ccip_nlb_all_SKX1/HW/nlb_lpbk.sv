@@ -234,8 +234,6 @@
 // 7. Read N cache lines. Wait for all read completions.
 // 6. Stop timer Send test completion.
 //
-
-`default_nettype none
 `include "vendor_defines.vh"
 import ccip_if_pkg::*;
 module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
@@ -297,8 +295,7 @@ module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
    wire [31:0]                  re2xy_src_addr;
    wire [31:0]                  re2xy_dst_addr;
    wire [31:0]                  re2xy_NumLines;
-   wire [31:0]                  re2xy_stride;
-   wire                         re2xy_Cont,re2xy_wrdin_msb;
+   wire                         re2xy_Cont;
    wire [7:0]                   re2xy_test_cfg;
    wire [2:0]                   re2ab_Mode;
    wire                         ab2re_TestCmp;
@@ -313,7 +310,6 @@ module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
    wire  [31:0]                 cr2re_interrupt0;
    wire  [63:0]                 cr2re_cfg;
    wire  [31:0]                 cr2re_ctl;
-   wire  [31:0]                 cr2re_stride;
    wire  [63:0]                 cr2re_dsm_base;
    wire                         cr2re_dsm_base_valid;
    wire                         re2cr_wrlock_n;
@@ -366,7 +362,6 @@ inst_requestor(
        cr2re_interrupt0,
        cr2re_cfg,
        cr2re_ctl,
-       cr2re_stride,
        cr2re_dsm_base,
        cr2re_dsm_base_valid,
 
@@ -394,9 +389,7 @@ inst_requestor(
        re2ab_WrRsp,                    // [ADDR_LMT-1:0]        arbiter:        write response header
        re2xy_go,                       //                       requestor:      start the test
        re2xy_NumLines,                 // [31:0]                requestor:      number of cache lines
-       re2xy_stride,             // [31:0]              requestor:      stride value
        re2xy_Cont,                     //                       requestor:      continuous mode
-       re2xy_wrdin_msb,         //                     requestor:    modifies msb(1) of wrdata to differntiate b/n different multiple afu write patterns
        re2xy_src_addr,                 // [31:0]                requestor:      src address
        re2xy_dst_addr,                 // [31:0]                requestor:      destination address
        re2xy_test_cfg,                 // [7:0]                 requestor:      8-bit test cfg register.
@@ -461,9 +454,7 @@ inst_arbiter (
        re2xy_src_addr,                 // [31:0]                requestor:         src address
        re2xy_dst_addr,                 // [31:0]                requestor:         destination address
        re2xy_NumLines,                 // [31:0]                requestor:         number of cache lines
-       re2xy_stride,                   // [31:0]              requestor:      stride value
        re2xy_Cont,                     //                       requestor:         continuous mode
-       re2xy_wrdin_msb,         //                     requestor:    modifies msb(1) of wrdata to differntiate b/n different multiple afu write patterns
        re2xy_test_cfg,                 // [7:0]                 requestor:         8-bit test cfg register.
        re2ab_Mode,                     // [2:0]                 requestor:         test mode
        ab2re_TestCmp,                  //                       arbiter:           Test completion flag
@@ -530,7 +521,6 @@ inst_nlb_csr (
     cr2re_interrupt0,
     cr2re_cfg,
     cr2re_ctl,
-    cr2re_stride,
     cr2re_dsm_base,
     cr2re_dsm_base_valid,
     cr2s1_csr_write,
