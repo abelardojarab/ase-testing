@@ -13,10 +13,10 @@ $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_lpbk.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/ccip_debug.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_csr.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/ccip_std_afu.sv
-$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/ccip_interface_reg.sv
+$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/green_ccip_if_reg.sv
 
 
-$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_C1Tx_fifo.sv
+$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_C1Tx_fifo.v
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/synth/lpbk1_RdRspRAM2PORT.v
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_160/synth/lpbk1_RdRspRAM2PORT_ram_2port_160_5m77a5a.v
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
