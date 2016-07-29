@@ -90,7 +90,7 @@ then
     			date
     			if ps -p $ase_pid > /dev/null
     			then
-    			    timeout 600 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=60 --cont
+    			    timeout 90 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=60 --cont
 			    errcode=$?
     			    if [[ $errcode != 0 ]] 
     			    then
@@ -175,7 +175,7 @@ then
 			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				timeout 600 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=60 --cont
+				timeout 90 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=60 --cont
 				errcode=$?
 				if [[ $errcode != 0 ]] ; 
 				then
