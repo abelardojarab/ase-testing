@@ -62,3 +62,5 @@ $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2por
 $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
 $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_gram_sdp.v
 
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_ram_dualport_byteena.sv
+
