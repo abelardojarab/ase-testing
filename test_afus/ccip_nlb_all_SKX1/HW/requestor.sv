@@ -815,10 +815,10 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         re2ab_RdSent= RdHdr_valid;
 
         txFifo_RdAck = re2xy_go && rnd_delay  && !cp2af_sRxPort.c1TxAlmFull && txFifo_Dout_v;
-        wrreq_type   = txFifo_WrFence_q ? eREQ_WRFENCE
-                      :cr_wrlineI_en    ? eREQ_WRLINE_I 
-                      : cr_wrpushI_en   ? eREQ_WRPUSH_I
-                                        : eREQ_WRLINE_M;
+        wrreq_type   = txFifo_WrFence_qq ? eREQ_WRFENCE
+                      :cr_wrlineI_en     ? eREQ_WRLINE_I 
+                      : cr_wrpushI_en    ? eREQ_WRPUSH_I
+                                         : eREQ_WRLINE_M;
 
     end
     always @(posedge Clk_400)
