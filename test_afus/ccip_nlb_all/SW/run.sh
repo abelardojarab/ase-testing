@@ -17,7 +17,7 @@ echo "##################################"
 echo "#     Testing Hello_ALI_NLB      #"
 echo "##################################"
 cd $AALSAMP_DIR/Hello_ALI_NLB/SW/
-timeout 10 ./helloALInlb
+/usr/bin/timeout 10 ./helloALInlb
 if [[ $? != 0 ]]; 
 then
     "helloALInlb timed out -- FAILURE EXIT !!"
@@ -47,7 +47,7 @@ then
     			date
     			if ps -p $ase_pid > /dev/null
     			then
-    			    cmd="timeout 600 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
+    			    cmd="/usr/bin/timeout 600 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
     			    eval $cmd
     			    errcode=$?
     			    if [[ $errcode != 0 ]] 
@@ -85,7 +85,7 @@ then
     			date
     			if ps -p $ase_pid > /dev/null
     			then
-    			    cmd="timeout 20 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=10 --cont"
+    			    cmd="/usr/bin/timeout 20 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set --timeout-sec=10 --cont"
 			    echo "Run: " $cmd
 			    eval $cmd
 			    errcode=$?
@@ -132,14 +132,14 @@ then
     			    date
     			    if ps -p $ase_pid > /dev/null
     			    then
-    				cmd="timeout 600 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
-				echo "Run: " $cmd
-				eval $cmd
+    				cmd="/usr/bin/timeout 600 ./fpgadiag --target=ase --mode=lpbk1 --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
+    				echo "Run: " $cmd
+    				eval $cmd
     				errcode=$?
     				if [[ $errcode != 0 ]]
     				then
     				    echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-				    echo "Last command: " $cmd
+    				    echo "Last command: " $cmd
     				    exit 1
     				fi
     			    else
@@ -174,7 +174,7 @@ then
 			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				cmd="timeout 20 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=10 --cont"
+				cmd="/usr/bin/timeout 20 ./fpgadiag --target=ase --mode=trput --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --timeout-sec=10 --cont"
 				echo "Run: " $cmd
 				eval $cmd
 				errcode=$?
