@@ -134,7 +134,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     input  t_ccip_mmioData  cr2re_dsm_base;
     input  logic            cr2re_dsm_base_valid;
     
-    input  [ADDR_LMT-1:0]   ab2re_WrAddr;           // [ADDR_LMT-1:0]        arbiter:       Writes are guaranteed to be accepted
+   input  logic [ADDR_LMT-1:0] ab2re_WrAddr;           // [ADDR_LMT-1:0]        arbiter:       Writes are guaranteed to be accepted
     input  t_ccip_mdata     ab2re_WrTID;            // [15:0]                arbiter:       meta data
     input  t_ccip_clData    ab2re_WrDin;            // [511:0]               arbiter:       Cache line data
     input  logic            ab2re_WrFence;          //                       arbiter:       write fence 

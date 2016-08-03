@@ -72,7 +72,7 @@ export ALTERAOCLSDKROOT="/opt/altera/$ALTERA_VER/hld/"
 export PATH=$QUARTUS_HOME/bin/:$QUARTUS_HOME/../hld/bin/:$PATH
 
 ## License file path
-export LD_LIBRARY_PATH=$BBB_GIT/cci_mpf/SW/ 
+export LD_LIBRARY_PATH=$BBB_GIT/BBB_cci_mpf/sw/
 
 ## Print variables
 echo "QUARTUS_HOME         : " $QUARTUS_HOME
