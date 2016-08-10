@@ -10,6 +10,7 @@ setenv ASE_WORKDIR $AALSDK_GIT/aaluser/ase/work
 setenv AALKERN_DIR $AALSDK_GIT/aalkernel
 setenv MYINST_DIR  $BASEDIR/myinst
 setenv AALSAMP_DIR $AALSDK_GIT/aalsamples
+setenv RELCODE     "SKX1"
 
 echo "Directory settings =>"
 echo "AALSDK_GIT  : " $AALSDK_GIT
@@ -21,4 +22,5 @@ echo "ASE_WORKDIR : " $ASE_WORKDIR
 echo "AALKERN_DIR : " $AALKERN_DIR
 echo "MYINST_DIR  : " $MYINST_DIR
 echo "AALSAMP_DIR : " $AALSAMP_DIR
+echo "RELCODE     : " $RELCODE
 
