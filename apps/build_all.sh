@@ -11,9 +11,9 @@ else
     ASE_SRCDIR=../../aalsdk/aaluser/ase/
 fi
 
-set -v
+set -e
 
-gcc  -g -o nlb_test.out \
+gcc $COV_FLAGS -g -o nlb_test.out \
     nlb_lpbk1_test.c \
     ${ASE_SRCDIR}/sw/tstamp_ops.c \
     ${ASE_SRCDIR}/sw/ase_ops.c \
@@ -41,7 +41,7 @@ gcc  -g -o alloc_dealloc.out \
     ${ASE_SRCDIR}/sw/mqueue_ops.c \
     ${ASE_SRCDIR}/sw/error_report.c \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
-    -D ASE_DEBUG
+#    -D ASE_DEBUG
 
 gcc  -g -o alloc_stress_test.out \
     alloc_stress_test.c \
