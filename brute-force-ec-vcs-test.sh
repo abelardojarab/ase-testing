@@ -5,7 +5,7 @@
 # Do not list any with "Beta" in the name
 # Do not list all the "-x" version, just list the largest one
 
-source ~/bashrc_aliases/quartus_15_pro.csh
+source ~/bashrc_aliases/quartus_16.csh
 
 SCRUB_LOG=vcs-scrub.txt
 
