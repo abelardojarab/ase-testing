@@ -5,20 +5,18 @@ $BBB_GIT/BBB_cci_mpf/hw/rtl/cci_mpf_csrs_pkg.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-if/cci_mpf_if_pkg.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-if/ccip_feature_list_pkg.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-if/cci_csr_if_pkg.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pkg.sv
+
+
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/include_files/common/sys_cfg_pkg.svh
 
 
 
 
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_lpbk1.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/arbiter.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_rdwr.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/requestor.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_sw1.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_lpbk.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_csr.sv
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_atomic.sv
+
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_afu.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_fiu.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_dbg_history.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_rsp_order.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp/cci_mpf_shim_vtp.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp/cci_mpf_svc_vtp_pipe.sv
@@ -29,8 +27,13 @@ $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_detect_eop.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge/cci_mpf_shim_edge_fiu.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge/cci_mpf_shim_edge_afu.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_csr.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro/cci_mpf_shim_wro_buffer_and_hash.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro/cci_mpf_shim_wro_cam_group.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro/cci_mpf_shim_wro.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_null.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_lockstep_afu.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pwrite/cci_mpf_shim_pwrite.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vc_map.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_mux.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci_mpf_pipe_std.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-if/ccis_wires_to_mpf.sv
@@ -41,8 +44,10 @@ $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_lutram.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_filter_cam.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo_bram.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_arb_rr.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_ram_dualport_byteena.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_heap.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_repl_lru_pseudo.sv
+$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_filter_decode.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo1.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_filter_counting.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_repl_random.sv
@@ -53,14 +58,19 @@ $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo_lutram.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_lfsr.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_fifo2.sv
 $BBB_GIT/BBB_cci_mpf/sample/afu/ccip_mpf_nlb.sv
-
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_lpbk1.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/arbiter.sv
 $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_C1Tx_fifo.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_151/synth/lpbk1_RdRspRAM2PORT_ram_2port_151_davj2sq.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/synth/lpbk1_RdRspRAM2PORT.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_151/synth/req_C1TxRAM2PORT_ram_2port_151_xaxn5ri.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_151/synth/req_C1TxRAM2PORT_ram_2port_151_t3axzby.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
-$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_gram_sdp.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_rdwr.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/requestor.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/test_sw1.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_lpbk.sv
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_csr.sv
 
-$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-prims/cci_mpf_prim_ram_dualport_byteena.sv
+
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/synth/lpbk1_RdRspRAM2PORT.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_160/synth/lpbk1_RdRspRAM2PORT_ram_2port_160_5m77a5a.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160/synth/req_C1TxRAM2PORT_ram_2port_160_nfprwsy.v
+$ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/nlb_gram_sdp.v
 
