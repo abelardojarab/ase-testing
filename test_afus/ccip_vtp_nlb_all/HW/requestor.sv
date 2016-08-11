@@ -1,13 +1,30 @@
 // ***************************************************************************
+// Copyright (c) 2013-2016, Intel Corporation
 //
-//        Copyright (C) 2008-2014 Intel Corporation All Rights Reserved.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// ***************************************************************************
+// * Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+// * Neither the name of Intel Corporation nor the names of its contributors
+// may be used to endorse or promote products derived from this software
+// without specific prior written permission.
 //
-// Engineer :           Pratik Marolia
-// Modified by :        Narayanan Ravichandran
-// Create Date:         Thu Jul 28 20:31:17 PDT 2011
-// Last Modified :      Fri 03 Oct 2014 10:38:55 AM PDT
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+//
 // Module Name:         requestor.v
 // Project:             NLB AFU v1.1
 //                      Compliant with CCI v2.1
@@ -21,7 +38,7 @@
 //
 //
 //
-
+`default_nettype none
 import ccip_if_pkg::*;
 module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH=512)
 (
@@ -89,13 +106,6 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     re2ab_WrRspFormat,
     re2ab_WrRspCLnum,
     re2xy_multiCL_len,
-  
-    re2ab_CXsubmode,
-    re2ab_qword,
-    re2ab_numCX,
-    re2ab_cxSuccess,
-    ab2re_cxQword,
-    ab2re_cxEn,
 
     re2cr_num_reads,
     re2cr_num_writes,
@@ -104,101 +114,76 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     re2cr_error
 );
     //--------------------------------------------------------------------------------------------------------------
-    input                   Clk_400;                //                      ccip_intf:        Clk_400
-    input                   SoftReset;              //                      ccip_intf:        system SoftReset
+    input  logic            Clk_400;                //                      ccip_intf:        Clk_400
+    input  logic            SoftReset;              //                      ccip_intf:        system SoftReset
     
-    output t_if_ccip_Tx      af2cp_sTxPort;
-    input  t_if_ccip_Rx      cp2af_sRxPort;
+    output t_if_ccip_Tx     af2cp_sTxPort;
+    input  t_if_ccip_Rx     cp2af_sRxPort;
 
-    input  [63:0]           cr2re_src_address;
-    input  [63:0]           cr2re_dst_address;
-    input  [31:0]           cr2re_num_lines;
-    input  [31:0]           cr2re_inact_thresh;
-    input  [31:0]           cr2re_interrupt0;
-    input  [63:0]           cr2re_cfg;
-    input  [31:0]           cr2re_ctl;
-    input  [63:0]           cr2re_dsm_base;
-    input                   cr2re_dsm_base_valid;
+    input  t_ccip_mmioData  cr2re_src_address;
+    input  t_ccip_mmioData  cr2re_dst_address;
+    input  logic [31:0]     cr2re_num_lines;
+    input  logic [31:0]     cr2re_inact_thresh;
+    input  logic [31:0]     cr2re_interrupt0;
+    input  t_ccip_mmioData  cr2re_cfg;
+    input  logic [31:0]     cr2re_ctl;
+    input  t_ccip_mmioData  cr2re_dsm_base;
+    input  logic            cr2re_dsm_base_valid;
     
-    input  [ADDR_LMT-1:0]   ab2re_WrAddr;           // [ADDR_LMT-1:0]        arbiter:       Writes are guaranteed to be accepted
-    input  [15:0]           ab2re_WrTID;            // [15:0]                arbiter:       meta data
-    input  [DATA_WIDTH-1:0] ab2re_WrDin;            // [511:0]               arbiter:       Cache line data
-    input                   ab2re_WrFence;          //                       arbiter:       write fence 
-    input                   ab2re_WrEn;             //                       arbiter:       write enable
-    output                  re2ab_WrSent;           //                       arbiter:       write issued
-    output                  re2ab_WrAlmFull;        //                       arbiter:       write fifo almost full
+    input  logic [ADDR_LMT-1:0]   ab2re_WrAddr;           // [ADDR_LMT-1:0]        arbiter:       Writes are guaranteed to be accepted
+    input  t_ccip_mdata     ab2re_WrTID;            // [15:0]                arbiter:       meta data
+    input  t_ccip_clData    ab2re_WrDin;            // [511:0]               arbiter:       Cache line data
+    input  logic            ab2re_WrFence;          //                       arbiter:       write fence 
+    input  logic            ab2re_WrEn;             //                       arbiter:       write enable
+    output logic            re2ab_WrSent;           //                       arbiter:       write issued
+    output logic            re2ab_WrAlmFull;        //                       arbiter:       write fifo almost full
     
-    input  [ADDR_LMT-1:0]   ab2re_RdAddr;           // [ADDR_LMT-1:0]        arbiter:       Reads may yield to writes
-    input  [15:0]           ab2re_RdTID;            // [15:0]                arbiter:       meta data
-    input                   ab2re_RdEn;             //                       arbiter:       read enable
-    output                  re2ab_RdSent;           //                       arbiter:       read issued
+    input  logic [ADDR_LMT-1:0]   ab2re_RdAddr;           // [ADDR_LMT-1:0]        arbiter:       Reads may yield to writes
+    input  t_ccip_mdata     ab2re_RdTID;            // [15:0]                arbiter:       meta data
+    input  logic            ab2re_RdEn;             //                       arbiter:       read enable
+    output logic            re2ab_RdSent;           //                       arbiter:       read issued
     
-    output                  re2ab_RdRspValid;       //                       arbiter:       read response valid
-    output                  re2ab_UMsgValid;        //                       arbiter:       UMsg valid
-    output                  re2ab_CfgValid;         //                       arbiter:       Cfg valid
-    output [15:0]           re2ab_RdRsp;            // [15:0]                arbiter:       read response header
-    output [DATA_WIDTH-1:0] re2ab_RdData;           // [511:0]               arbiter:       read data
-    output                  re2ab_stallRd;          //                       arbiter:       stall read requests FOR LPBK1
+    output logic            re2ab_RdRspValid;       //                       arbiter:       read response valid
+    output logic            re2ab_UMsgValid;        //                       arbiter:       UMsg valid
+    output logic            re2ab_CfgValid;         //                       arbiter:       Cfg valid
+    output t_ccip_mdata     re2ab_RdRsp;            // [15:0]                arbiter:       read response header
+    output t_ccip_clData    re2ab_RdData;           // [511:0]               arbiter:       read data
+    output logic            re2ab_stallRd;          //                       arbiter:       stall read requests FOR LPBK1
     
-    output                  re2ab_WrRspValid;       //                       arbiter:       write response valid
-    output [15:0]           re2ab_WrRsp;            // [15:0]                arbiter:       write response header
+    output logic            re2ab_WrRspValid;       //                       arbiter:       write response valid
+    output t_ccip_mdata     re2ab_WrRsp;            // [15:0]                arbiter:       write response header
     
-    output                  re2xy_go;               //                       requestor:     start of frame recvd
-    output [31:0]           re2xy_NumLines;         // [31:0]                requestor:     number of cache lines
-    output                  re2xy_Cont;             //                       requestor:     continuous mode
-    output [31:0]           re2xy_src_addr;         // [31:0]                requestor:     src address
-    output [31:0]           re2xy_dst_addr;         // [31:0]                requestor:     destination address
-    output [7:0]            re2xy_test_cfg;         // [7:0]                 requestor:     8-bit test cfg register.
-    output [2:0]            re2ab_Mode;             // [2:0]                 requestor:     test mode
-    input                   ab2re_TestCmp;          //                       arbiter:       Test completion flag
-    input  [255:0]          ab2re_ErrorInfo;        // [255:0]               arbiter:       error information
-    input                   ab2re_ErrorValid;       //                       arbiter:       test has detected an error
+    (* maxfan=1 *) output   logic re2xy_go;         //                       requestor:     start of frame recvd
+    output logic [31:0]     re2xy_NumLines;         // [31:0]                requestor:     number of cache lines
+    output logic            re2xy_Cont;             //                       requestor:     continuous mode
+    output logic [31:0]     re2xy_src_addr;         // [31:0]                requestor:     src address
+    output logic [31:0]     re2xy_dst_addr;         // [31:0]                requestor:     destination address
+    output logic [7:0]      re2xy_test_cfg;         // [7:0]                 requestor:     8-bit test cfg register.
+    output logic [2:0]      re2ab_Mode;             // [2:0]                 requestor:     test mode
+    input  logic            ab2re_TestCmp;          //                       arbiter:       Test completion flag
+    input  logic [255:0]    ab2re_ErrorInfo;        // [255:0]               arbiter:       error information
+    input  logic            ab2re_ErrorValid;       //                       arbiter:       test has detected an error
     
-    output                  test_Reset_n;
-    output                  re2cr_wrlock_n;
+    output logic            test_Reset_n;
+    output logic            re2cr_wrlock_n;
   
-    input [1:0]             ab2re_RdLen;
-    input                   ab2re_RdSop;
-    input [1:0]             ab2re_WrLen;
-    input                   ab2re_WrSop;
-    output                  re2ab_RdRspFormat;
-    output [1:0]            re2ab_RdRspCLnum;
-    output                  re2ab_WrRspFormat;
-    output [1:0]            re2ab_WrRspCLnum;
-    output [1:0]            re2xy_multiCL_len;
-    
-    output  logic           re2ab_CXsubmode;
-    output  logic [2:0]     re2ab_qword;
-    output  logic [15:0]    re2ab_numCX;
-  
-    output  logic           re2ab_cxSuccess;
-    input   logic [2:0]     ab2re_cxQword;
-    input   logic           ab2re_cxEn; 
+    input logic [1:0]       ab2re_RdLen;
+    input logic             ab2re_RdSop;
+    input logic [1:0]       ab2re_WrLen;
+    input logic             ab2re_WrSop;
+    output logic            re2ab_RdRspFormat;
+    output logic [1:0]      re2ab_RdRspCLnum;
+    output logic            re2ab_WrRspFormat;
+    output logic [1:0]      re2ab_WrRspCLnum;
+    output logic [1:0]      re2xy_multiCL_len;
+
     output  logic [31:0]    re2cr_num_Rdpend;
     output  logic [31:0]    re2cr_num_Wrpend;
     output  logic [31:0]    re2cr_num_reads;
     output  logic [31:0]    re2cr_num_writes;
     output  logic [31:0]    re2cr_error;
+    
     //----------------------------------------------------------------------------------------------------------------------
-    
-    //---------------------------------------------------------
-    // CCI-S Request Encodings  ***** DO NOT MODIFY ******
-    //---------------------------------------------------------
-    localparam       WrThru              = 4'h1;
-    localparam       WrLine              = 4'h2;
-    localparam       RdLine_S            = 4'h4;
-    localparam       WrFence             = 4'h5;
-    localparam       RdLine_I            = 4'h6;
-    localparam       RdLine_O            = 4'h7;
-    localparam       Intr                = 4'h8;    // FPGA to CPU interrupt
-    
-    //--------------------------------------------------------
-    // CCI-S Response Encodings  ***** DO NOT MODIFY ******
-    //--------------------------------------------------------
-    localparam      RSP_READ             = 4'h0;
-    localparam      RSP_CSR              = 4'h1;
-    localparam      RSP_WRITE            = 4'h2;
-    
     //---------------------------------------------------------
     // Default Values ****** May be MODIFIED ******* 
     //---------------------------------------------------------
@@ -209,6 +194,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
    
     //----------------------------------------------------------------------------------
     // Device Status Memory (DSM) Address Map ***** DO NOT MODIFY *****
+    // This is a shared memory region where AFU writes and SW reads from. It is used for sharing status.
     // Physical address = value at CSR_AFU_DSM_BASE + Byte offset
     //----------------------------------------------------------------------------------
     //                                     Byte Offset                 Attribute    Width   Comments
@@ -219,15 +205,14 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     reg  [31:0]             ErrorVector;
     reg  [31:0]             Num_Reads;                              // Number of reads performed
     reg  [31:0]             Num_Writes;                             // Number of writes performed
-    reg  [31:0]             Num_ticks_low, Num_ticks_high;
+    reg  [19:0]             Num_ticks_low, Num_ticks_high;
     reg  [31:0]             Num_C0stall;                            // Number of clocks for which Channel0 was throttled
     reg  [31:0]             Num_C1stall;                            // Number of clocks for which channel1 was throttled
     reg  signed [31:0]      Num_RdCredits;                          // For LPBK1: number of read credits
-    reg                     re2ab_stallRd;
     reg                     RdHdr_valid;
     reg                     WrHdr_valid_T1, WrHdr_valid_T2, WrHdr_valid_T3;
     reg  [31:0]             wrfifo_addr;
-    reg  [DATA_WIDTH-1:0]   wrfifo_data;
+    t_ccip_clData           wrfifo_data;
     reg                     txFifo_RdAck;
     wire                    txFifo_Dout_v;
     reg                     tx_c0_req_valid, tx_c1_req_valid;
@@ -236,7 +221,6 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     t_if_ccip_Rx            cp2af_sRxPort_T1;
 
     reg                     re2ab_CfgValid_d;
-    reg                     re2ab_RdSent;
     reg                     status_write;
     reg                     interrupt_sent;
     reg                     send_interrupt;
@@ -248,15 +232,17 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     reg                     penalty_start_f;
     reg   [7:0]             penalty_start;
     reg   [7:0]             penalty_end;
-(* maxfan=256 *) reg        dsm_status_wren;
+(* dont_merge, maxfan=256 *) reg dsm_status_wren_a;
+(* dont_merge, maxfan=256 *) reg dsm_status_wren_b;
+(* dont_merge, maxfan=256 *) reg dsm_status_wren_c;
     t_ccip_c0_req           rdreq_type;
     t_ccip_c0_req           rnd_rdreq_type;
     reg                     rnd_rdreq_sel;
     
     integer                 i;
-    reg   [63:0]            cr_dsm_base;                            // a00h, a04h - DSM base address
-    reg   [63:0]            cr_src_address;                         // a20h - source buffer address
-    reg   [63:0]            cr_dst_address;                         // a24h - destn buffer address
+    t_ccip_mmioData         cr_dsm_base;                            // a00h, a04h - DSM base address
+    t_ccip_mmioData         cr_src_address;                         // a20h - source buffer address
+    t_ccip_mmioData         cr_dst_address;                         // a24h - destn buffer address
     reg   [31:0]            cr_num_lines;                           // a28h - Number of cache lines
     reg   [1:0]             cr_multiCL_len;   
     reg   [31:0]            cr_ctl = 0;                             // a2ch - control register to start and stop the test
@@ -272,74 +258,39 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     reg   [1:0]             cr_chsel;
     reg   [41:0]            ds_stat_address;                        // 040h - test status is written to this address
         
-    wire                    txFifo_Full;
+(* maxfan=512 *) wire       txFifo_Full;
     wire                    txFifo_AlmFull;
-    wire                    re2ab_WrSent    = !txFifo_Full;             // stop accepting new requests, after status write=1
     wire                    txFifo_WrEn     = (ab2re_WrEn| ab2re_WrFence) && ~txFifo_Full;
     wire [15:0]             txFifo_WrTID;
     wire [ADDR_LMT-1:0]     txFifo_WrAddr;
     wire                    txFifo_WrFence;
     wire                    txFifo_WrSop;
     wire [1:0]              txFifo_WrLen;
-    wire                    txFifo_cxEn;
-    wire [2:0]              txFifo_cxQword;
     
     logic [41:0]            RdAddr;      
     logic                   RdHdr_valid_q;
+    logic [1:0]             ab2re_RdLen_q;
     logic                   ab2re_RdEn_q;
     logic [15:0]            ab2re_RdTID_q;
     logic [41:0]            WrAddr;      
         
     t_ccip_c1_req           wrreq_type;  
-    wire [DATA_WIDTH-1:0]   txFifo_WrDin;
-    reg  [DATA_WIDTH-1:0]   WrData_dsm;
+    t_ccip_clData           txFifo_WrDin;
+    t_ccip_clData           WrData_dsm;
 
-    reg                     test_Reset_n;
     reg                     test_go;        
-    reg  [2:0]              re2ab_Mode;     
-    reg  [7:0]              re2xy_test_cfg;
-    reg  [31:0]             re2xy_NumLines;  
-    reg  [1:0]              re2xy_multiCL_len;
-    reg                     re2xy_Cont;
-    reg  [31:0]             re2xy_src_addr;  
-    reg  [31:0]             re2xy_dst_addr;    
   
-    reg                     re2xy_go;
-    wire                    re2ab_WrAlmFull  = txFifo_AlmFull;
     wire                    rnd_delay        = ~cr_delay_en || (delay_lfsr[0] || delay_lfsr[2] || delay_lfsr[3]);
     wire                    tx_errorValid    = ErrorVector!=0;
-    reg                     re2cr_wrlock_n;
     reg    [14:0]           dsm_number=0;
     
-    logic                   re2ab_RdRspValid;
-    logic                   re2ab_UMsgValid;
-    logic  [15:0]           re2ab_RdRsp;
-    logic  [DATA_WIDTH-1:0] re2ab_RdData;
-    logic                   re2ab_WrRspValid;
-    logic  [15:0]           re2ab_WrRsp;
-    logic                   re2ab_CfgValid;
-  
-    logic                   ab2re_RdSop;
-    logic [1:0]             ab2re_WrLen;
-    logic [1:0]             ab2re_RdLen, ab2re_RdLen_q;
-    logic                   ab2re_WrSop;
-                        
-    logic                   re2ab_RdRspFormat=0;
-    logic [1:0]             re2ab_RdRspCLnum;
-    logic                   re2ab_WrRspFormat;
-    logic [1:0]             re2ab_WrRspCLnum;
-
-    logic                   cr_CXsubmode;
-    logic [2:0]             cr_qword;
-    logic [15:0]            cr_numCX;
-  
     logic [15:0]            txFifo_WrTID_q;
     logic                   txFifo_WrFence_q;
     logic                   txFifo_WrSop_q;
     logic [1:0]             txFifo_WrLen_q;
     logic                   txFifo_cxEn_q;
     logic [2:0]             txFifo_cxQword_q;
-    logic [DATA_WIDTH-1:0]  txFifo_WrDin_q;
+    t_ccip_clData  txFifo_WrDin_q;
   
     logic                   test_stop;
     logic                   WrFence_sent;
@@ -355,9 +306,9 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     logic                   rx_c1_resp_valid_q;
     
     (* noprune *) logic [2:0]   num_rd_sent;
-    (* noprune *) logic [2:0]   num_wr_recvd;
-    (* noprune *) logic [10:0]  Num_WrPend;
-    (* noprune *) logic [10:0]  Num_RdPend;
+    (* maxfan=1 *) logic [2:0]  num_wr_recvd;
+    (* noprune *) logic [8:0]   Num_WrPend;
+    (* noprune *) logic [8:0]   Num_RdPend;
         
     // NLB supports 64MB data transfers   :- requirement is that the addresses have to be 2MB aligned 
     // ADDR COMPUTE:
@@ -372,8 +323,6 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
       RdHdr_valid_q        <= RdHdr_valid;
       
       WrAddr               <= {(cr_dst_address[41:15] + txFifo_WrAddr[19:15]), txFifo_WrAddr[14:0]};
-      txFifo_cxQword_q     <= txFifo_cxQword;
-      txFifo_cxEn_q        <= txFifo_cxEn; 
       txFifo_WrLen_q       <= txFifo_WrLen;
       txFifo_WrSop_q       <= txFifo_WrSop;
       txFifo_WrFence_q     <= txFifo_WrFence;
@@ -391,15 +340,15 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
       re2xy_NumLines       <= cr_num_lines;
       re2xy_multiCL_len    <= cr_multiCL_len;
       re2xy_Cont           <= cr_cont;
-      re2xy_src_addr       <= cr_src_address;
-      re2xy_dst_addr       <= cr_dst_address;
-      re2ab_CXsubmode      <= cr_CXsubmode;
-      re2ab_qword          <= cr_qword;
-      re2ab_numCX          <= cr_numCX;
+      re2xy_src_addr       <= cr_src_address[31:0];
+      re2xy_dst_addr       <= cr_dst_address[31:0];
     end
 
     always_comb 
     begin
+      re2ab_RdRspFormat=0;
+      re2ab_WrAlmFull  = txFifo_AlmFull;
+      re2ab_WrSent     = !txFifo_Full;
       re2ab_RdRspValid = cp2af_sRxPort_T1.c0.rspValid && (cp2af_sRxPort_T1.c0.hdr.resp_type==eRSP_RDLINE);
       re2ab_UMsgValid  = cp2af_sRxPort_T1.c0.rspValid && cp2af_sRxPort_T1.c0.hdr.resp_type==eRSP_UMSG;
       re2ab_RdRsp      = cp2af_sRxPort_T1.c0.hdr.mdata[15:0];
@@ -410,62 +359,41 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
       re2ab_WrRspFormat= cp2af_sRxPort_T1.c1.hdr.format;
       re2ab_WrRspCLnum = cp2af_sRxPort_T1.c1.hdr.cl_num[1:0];
       re2ab_CfgValid   = re2ab_CfgValid_d;
-      re2ab_cxSuccess  = cp2af_sRxPort_T1.c0.hdr[23];    // FIXME
-
-      re2cr_num_Rdpend       = 0;
-      re2cr_num_Wrpend       = 0;
-      re2cr_num_Rdpend[10:0] = Num_RdPend;
-      re2cr_num_Wrpend[10:0] = Num_WrPend;
-      re2cr_num_reads        = Num_Reads;
-      re2cr_num_writes       = Num_Writes;
-      re2cr_error            = ErrorVector;
+      
     end
-    
-    // CX success counter
-    (* noprune *) logic [15:0]  Num_CX_success;
-
-    always @(posedge Clk_400)
-    begin
-      if(!test_Reset_n)
-      begin
-      Num_CX_success <= 0; 
-      end
-    
-//    else
-//    begin
-//      if (cp2af_sRxPort_T1.c0.rspValid && cp2af_sRxPort_T1.c0.hdr.resp_type==eRSP_ATOMIC && cp2af_sRxPort_T1.c0.hdr[23])  // FIXME
-//      Num_CX_success <= Num_CX_success + 1'b1;
-//    end
-    end
-
-  
+     
     always @(*)
     begin
-        cr_ctl              = cr2re_ctl;
-        cr_dsm_base         = cr2re_dsm_base;
-        cr_src_address      = cr2re_src_address;
-        cr_dst_address      = cr2re_dst_address;
-        cr_num_lines        = cr2re_num_lines;
-        cr_inact_thresh     = cr2re_inact_thresh;
-        cr_interrupt0       = cr2re_interrupt0;
+        cr_ctl                = cr2re_ctl;
+        cr_dsm_base           = cr2re_dsm_base;
+        cr_src_address        = cr2re_src_address;
+        cr_dst_address        = cr2re_dst_address;
+        cr_num_lines          = cr2re_num_lines;
+        cr_inact_thresh       = cr2re_inact_thresh;
+        cr_interrupt0         = cr2re_interrupt0;
         
-        cr_wrthru_en        = cr2re_cfg[0];
-        cr_cont             = cr2re_cfg[1];
-        cr_mode             = cr2re_cfg[4:2];
-        cr_multiCL_len      = cr2re_cfg[6:5];          
-        cr_delay_en         = 1'b0;// FIXME: cr2re_cfg[8];
-        cr_rdsel            = cr2re_cfg[10:9];
-        cr_test_cfg         = cr2re_cfg[27:20];
+        cr_wrthru_en          = cr2re_cfg[0];
+        cr_cont               = cr2re_cfg[1];
+        cr_mode               = cr2re_cfg[4:2];
+        cr_multiCL_len        = cr2re_cfg[6:5];          
+        cr_delay_en           = 1'b0;
+        cr_rdsel              = cr2re_cfg[10:9];
+        cr_test_cfg           = cr2re_cfg[27:20];
         cr_interrupt_on_error = cr2re_cfg[28];
         cr_interrupt_testmode = cr2re_cfg[29];
         cr_chsel              = cr2re_cfg[13:12]; 
-        cr_CXsubmode        = cr2re_cfg[16];
-        cr_qword            = cr2re_cfg[19:17];
-        cr_numCX            = cr2re_cfg[47:32];
+
     end
 
     always @(posedge Clk_400)
     begin    
+        re2cr_num_Rdpend       <= 0;
+        re2cr_num_Wrpend       <= 0;
+        re2cr_num_Rdpend[8:0]  <= Num_RdPend;
+        re2cr_num_Wrpend[8:0]  <= Num_WrPend;
+        re2cr_num_reads        <= Num_Reads;
+        re2cr_num_writes       <= Num_Writes;
+        re2cr_error      <= ErrorVector;
         ds_stat_address  <= dsm_offset2addr(DSM_STATUS,cr_dsm_base);
         cr_rdsel_q       <= cr_rdsel;
         delay_lfsr <= {delay_lfsr[4:0], (delay_lfsr[5] ^ delay_lfsr[4]) };
@@ -488,7 +416,9 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             re2xy_go    <= 1'b0;
         
         send_interrupt <= status_write && ((cr_interrupt_on_error & tx_errorValid) | cr_interrupt_testmode);
-        dsm_status_wren<= ab2re_TestCmp | test_stop;              // Update Status upon test completion
+        dsm_status_wren_a<= ab2re_TestCmp | test_stop;              // Update Status upon test completion
+        dsm_status_wren_b<= ab2re_TestCmp | test_stop;              // Update Status upon test completion
+        dsm_status_wren_c<= ab2re_TestCmp | test_stop;              // Update Status upon test completion
 
         // Wait for multi CL request to complete 
         // If Error detected or SW forced test termination
@@ -502,7 +432,18 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         
         if (test_stop == 0)
         test_stop        <= test_cmplt & (read_only_test | (!(|txFifo_WrLen_q) & WrHdr_valid_T3));
-        
+
+        WrData_dsm <={ ab2re_ErrorInfo,                             // [511:256] upper half cache line
+                       24'h00_0000,penalty_end,                     // [255:224] test end overhead in # clks
+                       24'h00_0000,penalty_start,                   // [223:192] test start overhead in # clks
+                       Num_Writes,                                  // [191:160] Total number of Writes sent / Total Num CX sent
+                       Num_Reads,                                   // [159:128] Total number of Reads sent
+                       24'h00_0000,Num_ticks_high, Num_ticks_low,   // [127:64]  number of clks
+                       ErrorVector,                                 // [63:32]   errors detected            
+                       16'h0000, dsm_number,                        // [15:1]    unique id for each dsm status write
+                       1'h1                                         // [0]       test completion flag
+                 };
+
         
         //Tx Path
         //--------------------------------------------------------------------------
@@ -510,22 +451,11 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         af2cp_sTxPort.c1.valid      <= 0;
         af2cp_sTxPort.c0.hdr        <= 0;
         af2cp_sTxPort.c0.valid      <= 0;
-        af2cp_sTxPort.c1.data       <= dsm_status_wren ? WrData_dsm : txFifo_WrDin_q;
-        
+
+        af2cp_sTxPort.c1.data[511:256] <= dsm_status_wren_a ? WrData_dsm[511:256] : txFifo_WrDin_q[511:256]; 
+        af2cp_sTxPort.c1.data[255:0]   <= dsm_status_wren_b ? WrData_dsm[255:0]   : txFifo_WrDin_q[255:0]; 
     
             // Channel 1
-            WrData_dsm        <= { ab2re_ErrorInfo,               // [511:256] upper half cache line
-                                   24'h00_0000,penalty_end,       // [255:224] test end overhead in # clks
-                                   24'h00_0000,penalty_start,     // [223:192] test start overhead in # clks
-                                   Num_Writes,                    // [191:160] Total number of Writes sent / Total Num CX sent
-                                   Num_Reads,                     // [159:128] Total number of Reads sent
-                                   Num_ticks_high, Num_ticks_low, // [127:64]  number of clks
-                                   ErrorVector,                   // [63:32]   errors detected            
-                                   Num_CX_success,                // [31:16]   CX success Counter
-                                   dsm_number,                    // [15:1]    unique id for each dsm status write
-                                   1'h1                           // [0]       test completion flag
-                             };
-
             if ( send_interrupt
                  & !interrupt_sent
                  & !cp2af_sRxPort_T1.c1TxAlmFull
@@ -541,7 +471,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
 
             else if (re2xy_go & rnd_delay )
             begin
-                  if( dsm_status_wren                                           // Write Fence
+                  if( dsm_status_wren_c                                          // Write Fence
                      & !cp2af_sRxPort_T1.c1TxAlmFull
                      & !WrFence_sent
                   )
@@ -580,8 +510,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         
                 else if( WrHdr_valid_T3 & !test_stop )                         // Write to Destination Workspace
                 begin                                                          //-------------------------------------
-                    af2cp_sTxPort.c1.hdr.rsvd2[5:3]    <= txFifo_cxEn_q ? txFifo_cxQword_q[2:0] : 0;             // FIXME
-                    af2cp_sTxPort.c1.hdr.vc_sel        <= txFifo_cxEn_q ? eVC_VL0 : t_ccip_vc'(cr_chsel);
+                    af2cp_sTxPort.c1.hdr.vc_sel        <= t_ccip_vc'(cr_chsel);
                     af2cp_sTxPort.c1.hdr.req_type      <= wrreq_type;
                     af2cp_sTxPort.c1.hdr.address[41:0] <= WrAddr;
                     af2cp_sTxPort.c1.hdr.mdata[15:0]   <= txFifo_WrTID_q;
@@ -728,11 +657,11 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             ErrorVector[3]  <= ab2re_ErrorValid;
 
         /* synthesis translate_off */
-       // if(af2cp_sTxPort.c1.valid )
-          // $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
+        if(af2cp_sTxPort.c1.valid )
+            $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
 
-          // if(af2cp_sTxPort.c0.valid)
-          // $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
+        if(af2cp_sTxPort.c0.valid)
+            $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
 
         /* synthesis translate_on */
 
@@ -776,7 +705,9 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             Num_C1stall             <= 0;
             Num_RdCredits           <= (2**PEND_THRESH-8);           // Max num rdcredits is 128. But 128 multiCL Reads could in turn lead to 512 writes
                                                                      // So, TxWriteFIFO is made 512 deep and RdCredit return is adjusted accordingly
-            dsm_status_wren         <= 0;     
+            dsm_status_wren_a       <= 0;     
+            dsm_status_wren_b       <= 0;     
+            dsm_status_wren_c       <= 0;     
             test_stop               <= 0;
             WrFence_sent            <= 0;  
             test_cmplt              <= 0;
@@ -854,22 +785,18 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     // Tx Write request fifo. Some tests may have writes dependent on reads, i.e. a read response will generate a write request
     // If the CCI-S write channel is stalled, then the write requests will be queued up in this Tx fifo.
 
-    
     // NOTE: RAM inside the FIFO is currently sized to handle 556 bits (din/dout) and 512 deep 
     // Regenerate the RAM with additional bits if you increase the width/depth of this FIFO
     
     // FIFO Bitmap - 556 bits wide and 512 bits deep
-    // [555:553]   - ab2re_cxQword
-    // [552]       - ab2re_cxEn
+    
     // [551:550]   - ab2re_WrLen
     // [549]       - ab2re_WrSop
     // [548]       - ab2re_WrFence
     // [547:36]    - ab2re_WrDin
     // [35:16]     - ab2re_WrAddr
     // [15:0]      - ab2re_WrTID
-    wire [3+1+2+1+1+512+ADDR_LMT+15:0]txFifo_Din= { ab2re_cxQword,
-                                                    ab2re_cxEn,
-                                                    ab2re_WrLen,
+    wire [3+1+2+1+1+512+ADDR_LMT+15:0]txFifo_Din= { ab2re_WrLen,
                                                     ab2re_WrSop,
                                                     ab2re_WrFence,
                                                     ab2re_WrDin,
@@ -877,8 +804,6 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
                                                     ab2re_WrTID
                                                   };
     wire [3+1+2+1+1+512+ADDR_LMT+15:0]txFifo_Dout;
-    assign                  txFifo_cxQword  = txFifo_Dout[3+1+2+1+1+DATA_WIDTH+ADDR_LMT+16-1:1+1+2+1+1+DATA_WIDTH+ADDR_LMT+16-1];
-    assign                  txFifo_cxEn     = txFifo_Dout[1+2+1+1+DATA_WIDTH+ADDR_LMT+16-1];
     assign                  txFifo_WrLen    = txFifo_Dout[2+1+1+DATA_WIDTH+ADDR_LMT+16-1: 1+1+1+DATA_WIDTH+ADDR_LMT+16-1];
     assign                  txFifo_WrSop    = txFifo_Dout[1+1+DATA_WIDTH+ADDR_LMT+16-1];
     assign                  txFifo_WrFence  = txFifo_Dout[1+DATA_WIDTH+ADDR_LMT+16-1];
@@ -886,20 +811,20 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     assign                  txFifo_WrAddr   = txFifo_Dout[16+:ADDR_LMT];
     assign                  txFifo_WrTID    = txFifo_Dout[15:0];
   
-    wire  [9-1:0] txFifo_count;                // TODO: was PEND_THRESH (7)
+    wire  [9-1:0] txFifo_count;                
     nlb_C1Tx_fifo #(.DATA_WIDTH  (3+1+2+1+1+DATA_WIDTH+ADDR_LMT+16),
                      .CTL_WIDTH   (0),
-                     .DEPTH_BASE2 (9),         // TODO: was PEND_THRESH (7)
+                     .DEPTH_BASE2 (9),         
                      .GRAM_MODE   (3),
-                     .FULL_THRESH (2**9-3)     // TODO: was PEND_THRESH (7)  
+                     .FULL_THRESH (2**9-8)     
     )nlb_writeTx_fifo
     (                                          //--------------------- Input  ------------------
-        .Resetb         (test_Reset_n),
-        .Clk            (Clk_400),    
-        .fifo_din       (txFifo_Din),          
-        .fifo_ctlin     (),
-        .fifo_wen       (txFifo_WrEn),      
-        .fifo_rdack     (txFifo_RdAck),
+        .Resetb            (test_Reset_n),
+        .Clk               (Clk_400),    
+        .fifo_din          (txFifo_Din),          
+        .fifo_ctlin        (),
+        .fifo_wen          (txFifo_WrEn),      
+        .fifo_rdack        (txFifo_RdAck),
                                                //--------------------- Output  ------------------
         .T2_fifo_dout      (txFifo_Dout),        
         .T0_fifo_ctlout    (),
@@ -924,7 +849,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     //----------------------------------------------------------------
     // For signal tap
     //----------------------------------------------------------------
-//    `ifdef DEBUG_NLB
+/*
 
         (* noprune *) reg [3:0]                 DEBUG_nlb_error;
         (* noprune *) reg [31:0]                DEBUG_Num_Reads;
@@ -988,6 +913,6 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
                 DEBUG_txFifo_RdCount<= 0;
             end
         end
-//    `endif // DEBUG_NLB
+*/
 
 endmodule

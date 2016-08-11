@@ -1,9 +1,30 @@
 // ***************************************************************************
+// Copyright (c) 2013-2016, Intel Corporation
 //
-//        Copyright (C) 2008-2013 Intel Corporation All Rights Reserved.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// Engineer:            Pratik Marolia
-// Create Date:         Thu Jul 28 20:31:17 PDT 2011
+// * Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+// * Neither the name of Intel Corporation nor the names of its contributors
+// may be used to endorse or promote products derived from this software
+// without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+//
 // Module Name:         test_sw1.v
 // Project:             NLB AFU 
 // Description:         hw + sw ping pong test. FPGA initializes a location X,
@@ -232,10 +253,10 @@ module test_sw1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 
             Vwrfsm_WRFENCE:         // Fence- guarantees data is written
             begin
+              wrDin <= {{14{32'h0000_0000}},{64{1'b1}}};
               if(ab2s1_WrSent)
               begin
                     WrFSM       <= Vwrfsm_UPDTFLAG;
-                    wrDin <= {{14{32'h0000_0000}},{64{1'b1}}};
               end
             end
            
@@ -304,9 +325,9 @@ module test_sw1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
            2'h1:            // CSR Write
                rd_go   <= cr2s1_csr_write;
            2'h2:            // UMsg Mode 0 (with Data)
-               rd_go    <= ab2s1_UMsgValid && ab2s1_RdRsp[15]==1'b0 && ab2s1_RdRsp[5:0]==1'b0;
+               rd_go    <= ab2s1_UMsgValid && ab2s1_RdRsp[15]==1'b0 && ab2s1_RdRsp[2:0]==3'h0;
            2'h3:            // UMsg Mode 1 (with Hint+Data)
-               rd_go    <= ab2s1_UMsgValid && ab2s1_RdRsp[15]==1'b1 && ab2s1_RdRsp[5:0]==1'b0;
+               rd_go    <= ab2s1_UMsgValid && ab2s1_RdRsp[15]==1'b1 && ab2s1_RdRsp[2:0]==3'h0;
        endcase
 
        case(RdFSM)       /* synthesis parallel_case */
@@ -361,15 +382,16 @@ module test_sw1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
             ab2s1_RdRsp_q        <= ab2s1_RdRsp;
             Num_RdRsp_q          <= Num_RdRsp;
             
+				 s12ab_ErrorInfo[31:0]   <= ab2s1_RdData_q[15:0];
+             s12ab_ErrorInfo[63:32]  <= ab2s1_RdRspAddr_q[15:0];
+             s12ab_ErrorInfo[95:64]  <= ab2s1_RdRsp_q;
+             s12ab_ErrorInfo[127:96] <= Num_RdRsp_q;
+				
             if(ab2s1_RdRspValid_q && (RdFSM == Vrdfsm_READ || RdFSM == Vrdfsm_RESP))
             begin		 
                if (ab2s1_RdData_q[15:0] != ab2s1_RdRspAddr_q[15:0]) 
                begin
                    ErrorValid <= 1'b1;
-                   s12ab_ErrorInfo[31:0]   <= ab2s1_RdData_q[15:0];
-                   s12ab_ErrorInfo[63:32]  <= ab2s1_RdRspAddr_q[15:0];
-                   s12ab_ErrorInfo[95:64]  <= ab2s1_RdRsp_q;
-                   s12ab_ErrorInfo[127:96] <= Num_RdRsp_q;
                end
                
                else 
@@ -382,7 +404,6 @@ module test_sw1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 
       if (!test_Resetb)
        begin
-         s12ab_ErrorInfo<= 0;
          ErrorValid     <= 0;
          s12ab_RdAddr   <= 0;
          RdFSM          <= Vrdfsm_WAIT;          

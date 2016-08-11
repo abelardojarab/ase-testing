@@ -1,9 +1,30 @@
 // ***************************************************************************
+// Copyright (c) 2013-2016, Intel Corporation
 //
-//        Copyright (C) 2008-2013 Intel Corporation All Rights Reserved.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// Engineer:            Pratik Marolia, Sharath Jayprakash
-// Create Date:         Thu Jul 28 20:31:17 PDT 2011
+// * Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+// * Neither the name of Intel Corporation nor the names of its contributors
+// may be used to endorse or promote products derived from this software
+// without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+//
 // Module Name:         test_rdwr.v
 // Project:             NLB AFU 
 // Description:         streaming read/write test
@@ -141,6 +162,13 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    logic                      ab2rw_RdRspValid_q;
    logic    [1:0]             RdFSM_q;  
    
+   logic                      rw2ab_WrEn_q;       
+   logic                      ab2rw_WrSent_q;
+   logic                      ab2rw_WrRspValid_q;
+   logic                      ab2rw_WrRspFormat_q; 
+   logic    [1:0]             ab2rw_WrRspCLnum_q;
+   logic    [1:0]             WrFSM_q;
+   
    assign rw2ab_RdTID = {Rdmdata, 1'b1};
    assign rw2ab_WrTID = {Wrmdata, 1'b0};
 
@@ -149,7 +177,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 
    always @(posedge Clk_400)
    begin
-     rw2ab_ErrorInfo  <= 0;   
+     rw2ab_ErrorInfo  <= 'hx;   
      if (!test_Resetb)
        begin
          rw2ab_ErrorValid <= 0;
@@ -158,7 +186,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
      else
        begin
          rw2ab_ErrorValid <= 0;
-         rw2ab_TestCmp    <= (((WrFSM == 2'h2 && Num_WrPend == 0) && (RdFSM_q == 2'h2 && Num_RdPend == 0)));
+         rw2ab_TestCmp    <= (((WrFSM_q == 2'h2 && Num_WrPend == 0) && (RdFSM_q == 2'h2 && Num_RdPend == 0)));
        end
    end
    
@@ -238,6 +266,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    
    always @(posedge Clk_400)
    begin
+         WrFSM_q          <= WrFSM;
          case(WrFSM)       /* synthesis parallel_case */
          2'h0:
          begin
@@ -298,22 +327,28 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
          if ((rw2ab_WrEn && ab2rw_WrSent))
            Wrmdata           <= Wrmdata + 1'b1;
 		     
+         rw2ab_WrEn_q        <= rw2ab_WrEn;
+         ab2rw_WrSent_q      <= ab2rw_WrSent;
+         ab2rw_WrRspValid_q  <= ab2rw_WrRspValid;
+         ab2rw_WrRspFormat_q <= ab2rw_WrRspFormat;
+         ab2rw_WrRspCLnum_q  <= ab2rw_WrRspCLnum;
+         
          // Track write responses 
-         if (rw2ab_WrEn && ab2rw_WrSent)                                  // One write sent
+         if (rw2ab_WrEn_q && ab2rw_WrSent_q)                              // One write sent
          begin
-           if(!ab2rw_WrRspValid)                                          // No write response
+           if(!ab2rw_WrRspValid_q)                                        // No write response
              Num_WrPend <= Num_WrPend + 1'b1;               
-           else if (ab2rw_WrRspValid && ab2rw_WrRspFormat) 
-             Num_WrPend <= Num_WrPend - ab2rw_WrRspCLnum;                 // Packed write response
+           else if (ab2rw_WrRspValid_q && ab2rw_WrRspFormat_q) 
+             Num_WrPend <= Num_WrPend - ab2rw_WrRspCLnum_q;               // Packed write response
            //else
            //Num_WrPend <= Num_WrPend;                                    // Unpacked write response
          end		 
          
          else if( (rw2ab_TestCmp == 1'b0) )                               // no write sent and test is live
          begin
-           if (ab2rw_WrRspValid && ab2rw_WrRspFormat)                     // Packed write response
-             Num_WrPend <= Num_WrPend - (ab2rw_WrRspCLnum + 1'b1);
-           else if (ab2rw_WrRspValid)                                     // unpacked write response
+           if (ab2rw_WrRspValid_q && ab2rw_WrRspFormat_q)                 // Packed write response
+             Num_WrPend <= Num_WrPend - (ab2rw_WrRspCLnum_q + 1'b1);
+           else if (ab2rw_WrRspValid_q)                                   // unpacked write response
              Num_WrPend <= Num_WrPend - 1'b1;
            //else 
            //Num_WrPend <= Num_WrPend;                                    // No write response

@@ -1,10 +1,30 @@
 // ***************************************************************************
+// Copyright (c) 2013-2016, Intel Corporation
 //
-//        Copyright (C) 2008-2013 Intel Corporation All Rights Reserved.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
+// * Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+// * Neither the name of Intel Corporation nor the names of its contributors
+// may be used to endorse or promote products derived from this software
+// without specific prior written permission.
 //
-// Engineer:            Pratik Marolia
-// Create Date:         Thu Jul 28 20:31:17 PDT 2011
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+//
 // Module Name:         arbiter.v
 // Project:             NLB AFU 
 // Description:
@@ -16,7 +36,6 @@
 //  ------------------------------------------------------------------------------------------------------------------------------------------------
 //
 // This module instantiates different test AFUs, and connect them up to the arbiter.
-`include "nlb_cfg_pkg.vh"
 
 module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 (
@@ -68,15 +87,7 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
        re2ab_RdRspCLnum,
        re2ab_WrRspFormat,
        re2ab_WrRspCLnum,
-       re2xy_multiCL_len,                         // Default is 0 which implies single CL  
-     
-       re2ab_CXsubmode,
-       re2ab_qword,
-       re2ab_numCX,
-       re2ab_cxSuccess,
-     
-       ab2re_cxQword,
-       ab2re_cxEn
+       re2xy_multiCL_len                          // Default is 0 which implies single CL  
 );
    
    input                   Clk_400;               //                      ccip_intf:            Clk_400
@@ -130,14 +141,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    input [1:0]             re2ab_WrRspCLnum;  // for unpacked wr rsp, could be OoO
    input [1:0]             re2xy_multiCL_len; 
    
-   input  logic            re2ab_CXsubmode;
-   input  logic [2:0]      re2ab_qword;
-   input  logic [15:0]     re2ab_numCX;
-   input  logic            re2ab_cxSuccess;
-   
-   output logic [2:0]      ab2re_cxQword; 
-   output logic            ab2re_cxEn; 
-   
    //------------------------------------------------------------------------------------------------------------------------
    
    // Test Modes
@@ -146,7 +149,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    localparam              M_READ          = 3'b001;
    localparam              M_WRITE         = 3'b010;
    localparam              M_TRPUT         = 3'b011;
-   localparam              M_ATOMIC        = 3'b101;
    localparam              M_SW1           = 3'b111;
    //--------------------------------------------------------
 
@@ -313,36 +315,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    wire [255:0]            s12ab_ErrorInfo;        // [255:0]               arbiter:           error information
    wire                    s12ab_ErrorValid;       //                       arbiter:           test has detected an error
    
-   //------------------------------------------------------------------------------------------------------------------------
-   //      test_atomic signal declarations
-   //------------------------------------------------------------------------------------------------------------------------
-   
-   wire [ADDR_LMT-1:0]     at2ab_WrAddr;           // [ADDR_LMT-1:0]        app_cnt:           write address
-   wire [15:0]             at2ab_WrTID;            // [15:0]                app_cnt:           meta data
-   wire [511:0]            at2ab_WrDin;            // [511:0]               app_cnt:           Cache line data
-   wire                    at2ab_WrEn;             //                       app_cnt:           write enable
-   reg                     ab2at_WrSent;           //                       app_cnt:           write issued
-   reg                     ab2at_WrAlmFull;        //                       app_cnt:           write fifo almost full
-   
-   wire [ADDR_LMT-1:0]     at2ab_RdAddr;           // [ADDR_LMT-1:0]        app_cnt:           Reads may yield to writes
-   wire [15:0]             at2ab_RdTID;            // [15:0]                app_cnt:           meta data
-   wire                    at2ab_RdEn;             //                       app_cnt:           read enable
-   reg                     ab2at_RdSent;           //                       app_cnt:           read issued
-   
-   reg                     ab2at_RdRspValid;       //                       app_cnt:           read response valid
-   reg [15:0]              ab2at_RdRsp;            // [15:0]                app_cnt:           read response header
-   reg [ADDR_LMT-1:0]      ab2at_RdRspAddr;        // [ADDR_LMT-1:0]        app_cnt:           read response address
-   reg [511:0]             ab2at_RdData;           // [511:0]               app_cnt:           read data
-   
-   reg                     ab2at_WrRspValid;       //                       app_cnt:           write response valid
-   reg [15:0]              ab2at_WrRsp;            // [15:0]                app_cnt:           write response header
-   reg [ADDR_LMT-1:0]      ab2at_WrRspAddr;        // [Addr_LMT-1:0]        app_cnt:           write response address
-   
-   wire                    at2ab_TestCmp;          //                       arbiter:           Test completion flag
-   wire [255:0]            at2ab_ErrorInfo;        // [255:0]               arbiter:           error information
-   wire                    at2ab_ErrorValid;       //                       arbiter:           test has detected an error
-   //------------------------------------------------------------------------------------------------------------------------
-
    // local variables
    reg                     re2ab_RdRspValid_q, re2ab_RdRspValid_qq;
    reg                     re2ab_WrRspValid_q, re2ab_WrRspValid_qq;
@@ -356,7 +328,7 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    logic [1:0]             re2ab_RdRspCLnum_q,  re2ab_RdRspCLnum_qq;
    logic                   re2ab_WrRspFormat_q, re2ab_WrRspFormat_qq;
    logic [1:0]             re2ab_WrRspCLnum_q, re2ab_WrRspCLnum_qq;
-   logic                   re2ab_cxSuccess_q, re2ab_cxSuccess_qq;
+
    //------------------------------------------------------------------------------------------------------------------------
    // Arbitrataion Memory instantiation
    //------------------------------------------------------------------------------------------------------------------------
@@ -416,8 +388,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
              re2ab_WrRspFormat_qq    <= 0;
              re2ab_WrRspCLnum_q      <= 0;
              re2ab_WrRspCLnum_qq     <= 0;
-             re2ab_cxSuccess_q       <= 0;
-             re2ab_cxSuccess_qq      <= 0;
           end
         else
           begin
@@ -437,8 +407,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
              re2ab_WrRspFormat_qq    <= re2ab_WrRspFormat_q;
              re2ab_WrRspCLnum_q      <= re2ab_WrRspCLnum;
              re2ab_WrRspCLnum_qq     <= re2ab_WrRspCLnum_q;
-             re2ab_cxSuccess_q       <= re2ab_cxSuccess;
-             re2ab_cxSuccess_qq      <= re2ab_cxSuccess_q;
           end
      end
    
@@ -454,14 +422,13 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
         ab2re_RdTID     = 0;
         ab2re_RdEn      = 0;
         ab2re_TestCmp   = 0;
-        ab2re_ErrorInfo = 'hx;
+        ab2re_ErrorInfo = 'h0;
         ab2re_ErrorValid= 0;
     
         ab2re_RdLen     = 0;
         ab2re_RdSop     = 0;
         ab2re_WrLen     = 0;
         ab2re_WrSop     = 0; 
-        ab2re_cxEn      = 0;
     
         // M_LPBK1
         ab2l1_WrSent    = 0;
@@ -512,18 +479,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
         ab2s1_WrRspValid= 0;
         ab2s1_WrRsp     = 0;
         ab2s1_WrRspAddr = 0;
-    
-    // M_ATOMIC
-        ab2at_WrSent    = 0;
-        ab2at_WrAlmFull = 0;
-        ab2at_RdSent    = 0;
-        ab2at_RdRspValid= 0;
-        ab2at_RdRsp     = 0;
-        ab2at_RdRspAddr = 0;
-        ab2at_RdData    = 'hx;
-        ab2at_WrRspValid= 0;
-        ab2at_WrRsp     = 0;
-        ab2at_WrRspAddr = 0;
 
         // ---------------------------------------------------------------------------------------------------------------------
         //      Input to tests        
@@ -641,40 +596,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
              ab2re_WrLen        = 0;
              ab2re_WrSop        = 1;
          end
-     
-     if(re2ab_Mode==M_ATOMIC)
-          begin
-              // Input
-             ab2at_WrSent       = re2ab_WrSent;
-             ab2at_WrAlmFull    = re2ab_WrAlmFull;
-             ab2at_RdSent       = re2ab_RdSent;
-             ab2at_RdRspValid   = re2ab_RdRspValid_qq;
-             ab2at_RdRsp        = re2ab_RdRsp_qq;
-             ab2at_RdRspAddr    = arbmem_rd_dout;
-             ab2at_RdData       = re2ab_RdData_qq;
-             ab2at_WrRspValid   = re2ab_WrRspValid_qq;
-             ab2at_WrRsp        = re2ab_WrRsp_qq;
-             ab2at_WrRspAddr    = arbmem_wr_dout;
-             
-       // Output
-             ab2re_WrAddr       = at2ab_WrAddr;
-             ab2re_WrTID        = at2ab_WrTID;
-             ab2re_WrDin        = at2ab_WrDin;
-             ab2re_WrFence      = 0;
-             ab2re_WrEn         = at2ab_WrEn;
-             ab2re_RdAddr       = at2ab_RdAddr;
-             ab2re_RdTID        = at2ab_RdTID;
-             ab2re_RdEn         = at2ab_RdEn;
-             ab2re_TestCmp      = at2ab_TestCmp;
-             ab2re_ErrorInfo    = at2ab_ErrorInfo;
-             ab2re_ErrorValid   = at2ab_ErrorValid;
-             ab2re_RdLen        = 0;
-             ab2re_RdSop        = 1;
-             ab2re_WrLen        = 0;
-             ab2re_WrSop        = 1;
-             ab2re_cxEn         = at2ab_WrEn;
-         end
-     
 
      `else  // NOT SIM_MODE
        // PAR MODE
@@ -787,38 +708,6 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
              ab2re_RdSop        = 1;
              ab2re_WrLen        = 0;
              ab2re_WrSop        = 1;
-             
-    `elsif NLB400_MODE_5
-              // Input
-             ab2at_WrSent       = re2ab_WrSent;
-             ab2at_WrAlmFull    = re2ab_WrAlmFull;
-             ab2at_RdSent       = re2ab_RdSent;
-             ab2at_RdRspValid   = re2ab_RdRspValid_qq;
-             ab2at_RdRsp        = re2ab_RdRsp_qq;
-             ab2at_RdRspAddr    = arbmem_rd_dout;
-             ab2at_RdData       = re2ab_RdData_qq;
-             ab2at_WrRspValid   = re2ab_WrRspValid_qq;
-             ab2at_WrRsp        = re2ab_WrRsp_qq;
-             ab2at_WrRspAddr    = arbmem_wr_dout;
-             
-       // Output
-             ab2re_WrAddr       = at2ab_WrAddr;
-             ab2re_WrTID        = at2ab_WrTID;
-             ab2re_WrDin        = at2ab_WrDin;
-             ab2re_WrFence      = 0;
-             ab2re_WrEn         = at2ab_WrEn;
-             ab2re_RdAddr       = at2ab_RdAddr;
-             ab2re_RdTID        = at2ab_RdTID;
-             ab2re_RdEn         = at2ab_RdEn;
-             ab2re_TestCmp      = at2ab_TestCmp;
-             ab2re_ErrorInfo    = at2ab_ErrorInfo;
-             ab2re_ErrorValid   = at2ab_ErrorValid;
-       
-             ab2re_RdLen        = 0;
-             ab2re_RdSop        = 1;
-             ab2re_WrLen        = 0;
-             ab2re_WrSop        = 1;
-             ab2re_cxEn         = at2ab_WrEn;
       `else
           *** In PAR Mode, Select a valid NBL400_MODE: 0, 3, 7
       `endif
@@ -969,48 +858,5 @@ module arbiter #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
            s12ab_ErrorValid,               //                       arb:               test has detected an error
            cr2s1_csr_write,
            test_Resetb                     //                       requestor:         rest the app
-    );
-  
-  test_atomic #(.PEND_THRESH(PEND_THRESH),
-                  .ADDR_LMT   (ADDR_LMT),
-                  .MDATA      (MDATA)
-                 )
-    
-  test_atomic (
-           .Clk_16UI            (Clk_400),      
-           
-           .test_Resetb         (test_Resetb),   
-           .re2xy_go            (re2xy_go),     
-           .ab2at_submode       (re2ab_CXsubmode),    // CX   
-           .ab2at_qword         (re2ab_qword),        // CX  
-           .ab2at_numCX         (re2ab_numCX),        // CX
-           
-           .at2ab_RdAddr        (at2ab_RdAddr),    
-           .at2ab_RdTID         (at2ab_RdTID),  
-           .at2ab_RdEn          (at2ab_RdEn),
-           
-           .ab2at_RdSent        (ab2at_RdSent),    
-           .ab2at_RdRspValid    (ab2at_RdRspValid),      
-           .ab2at_RdRsp         (ab2at_RdRsp),      
-           .ab2at_RdRspAddr     (ab2at_RdRspAddr),    
-           .ab2at_RdData        (ab2at_RdData),
-           .ab2at_cxSuccess     (re2ab_cxSuccess_qq),    // CX
-       
-           .at2ab_WrAddr        (at2ab_WrAddr),
-           .at2ab_WrTID         (at2ab_WrTID), 
-           .at2ab_WrDin         (at2ab_WrDin),     
-           .at2ab_cxReq         (at2ab_WrEn), 
-           .at2ab_cxQword       (ab2re_cxQword),      // CX
-           
-           .ab2at_WrSent        (ab2at_WrSent),
-           .ab2at_WrAlmFull     (ab2at_WrAlmFull),
-           .ab2at_WrRspValid    (ab2at_WrRspValid),      
-           .ab2at_WrRsp         (ab2at_WrRsp),  
-           .ab2at_WrRspAddr     (ab2at_WrRspAddr),         
-           
-           .at2ab_TestCmp       (at2ab_TestCmp),
-           .at2ab_ErrorInfo     (at2ab_ErrorInfo),   
-           .at2ab_ErrorValid    (at2ab_ErrorValid)
-    );
-  
+    );  
 endmodule

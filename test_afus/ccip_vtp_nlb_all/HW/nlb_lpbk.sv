@@ -1,10 +1,30 @@
 // ***************************************************************************
+// Copyright (c) 2013-2016, Intel Corporation
 //
-//        Copyright (C) 2008-2012 Intel Corporation All Rights Reserved.
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// Engineer:            Pratik Marolia
-// Create Date:         Tue Feb 21 17:18:22 PDT 2012
-// Edited on:           Thurs Oct 29 11:28:01 PDT 2015
+// * Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice,
+// this list of conditions and the following disclaimer in the documentation
+// and/or other materials provided with the distribution.
+// * Neither the name of Intel Corporation nor the names of its contributors
+// may be used to endorse or promote products derived from this software
+// without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+//
 // Module Name:         nlb_lpbk.v
 // Project:             NLB_400 AFU
 //                      Compliant with CCI-P spec v0.58
@@ -36,12 +56,8 @@
 //   |    |          |<--------->|         | | +->|Test_rdwr   |        |                       
 //   |    +----------+           +---------+ |    +------------+        |                       
 //   |                                    /\ |    +------------+        |               
-//   |                                    |  +--->| Test_SW1   |        |
-//   |                                    |       +------------+        |
-//   |                                    |       +------------+        |                       
-//   |                                    ------->| Test_atomic|        |
-//   |                                            +------------+        |
-//   |                                                                  |                       
+//   |                                       +--->| Test_SW1   |        |
+//   |                                            +------------+        |                     
 //   |                                                                  |
 //   | nlb_lpbk                                                         |
 //   +------------------------------------------------------------------+
@@ -123,14 +139,9 @@
 //
 //
 // CSR_CFG:
-// [47:32]  RW    cr_numCX - Num HW CX operations for Mode5 
 // [29]     RW    cr_interrupt_testmode - used to test interrupt. Generates an interrupt at end of each test.
 // [28]     RW    cr_interrupt_on_error - send an interrupt when error detected
 // [27:20]  RW    cr_test_cfg  -may be used to configure the behavior of each test mode
-// [19:17]  RW    cr_qword     - Qword offset for Mode5
-// [16]     RW    cr_CXsubmode - select sub-mode for Mode5
-//                           0 - default - separate token
-//                           1 - shared token
 // [13:12]  RW    cr_chsel     -select virtual channel
 // [10:9]   RW    cr_rdsel     -configure read request type. 0- RdLine_S, 1- RdLine_I, 2- RdLine_O, 3- Mixed mode
 // [8]      RW    cr_delay_en  -enable random delay insertion between requests
@@ -141,7 +152,6 @@
 // [0]      RW    cr_wrthru_en -switch between WrLine_I & WrLine_M  request types. 
 //                              0- WrLine_M
 //                              1- WrLine_I
-//
 //
 // CSR_INACT_THRESHOLD:
 // [31:0]   RW  inactivity threshold limit. The idea is to detect longer duration of stalls during a test run. Inactivity counter will count number of consecutive idle cycles,
@@ -187,9 +197,7 @@
 // 2.     READ          3'b001                          2^N                                             14'h3fff
 // 3.     WRITE         3'b010                          2^N                                             14'h3fff
 // 4.     TRPUT         3'b011                          2^N                                             14'h3fff
-// 5.     ATOMIC        3'b101                          
-// 6.     LPBK3         3'b110                          smaller of 2^(N-16) or 14'h80                   14'h10
-// 7.     SW1           3'b111                          2^N                                             14'h3ffe
+// 5.     SW1           3'b111                          2^N                                             14'h3ffe
 //
 // 1. LPBK1:
 // This is a memory copy test. AFU copies CSR_NUM_LINES from source buffer to destination buffer. On test completion, the software compares the source and destination buffers.
@@ -205,45 +213,6 @@
 // 4. TRPUT:
 // This test combines the read and write streams. There is NO data checking and no dependency between read & writes. It reads CSR_NUM_LINES starting from CSR_SRC_ADDR location and 
 // writes CSR_NUM_LINES to CSR_DST_ADDR. It is also used to measure 50% Read + 50% Write bandwdith.
-//
-// 5. LPBK2: -- DEFEATURED --
-// This is a cache coherency test, both CPU and Test are fighting for the same set of cache lines. 
-// Upper Limit on # cache lines (CSR_NUM_LINES) = 128
-// For this test set CSR_SRC_ADDR= CSR_DST_ADDR, because to test coherency we would like to read and write same set of addresses.
-// This test will read CSR_NUM_LINES starting from CSR_SRC_ADDR but it will write to only half of those cache lines.
-//
-// A. Lets classify the cache lines into two sets, ones that can be owned by FPGA and ones that can be owned by CPU.
-// cacheline address[0] = 1- Line is owned by FPGA
-// cacheline address[0] = 0- Line is owned by CPU
-//
-// B. Also lets divide the cache data into two fields: deterministic and random data fields.
-// Determinitistic data fields: data[31:0] = data[256+31:256]
-// Random data fields: data[255:32] & data [511:288]
-//
-// C. Rules of the game:
-//   1. Both agents, FPGA and CPU can read all cache lines.
-//   2. A cache line can only be written by its owner as determined by section A above. The agent must write the cache line address to deterministic data fields. The random data
-//      fields can ofcourse be random.
-//   3. Reading owned lines - An agent reading owned lines must check the deterministic data fields and full or part of the random fields.
-//      Reading not owned lines - An agent reading these lines, must only check the deterministic data fields.
-//      If error is detected then set the errorvalid signal and send out the error report. Look at the test modules for details on error report.
-//
-// This test must be used in cont mode. The test ends only when it detects an error or it is stopped using csr_ctl.
-//
-// 6. LPBK3: -- DEFEATURED--
-// This test is identical to LPBK2 test with two exceptions:
-// 1. This test uses only those cache lines that maps to set 0 only. For example, if CSR_SRC_ADDR='hf000 and CSR_NUM_LINES='h4 then it will select cache lines:
-//   'hf000 + 'h0*'h400 = 'hf000
-//   'hf000 + 'h1*'h400 = 'hf400
-//   'hf000 + 'h2*'h400 = 'hf800
-//   'hf000 + 'h3*'h400 = 'hfc00
-//
-// *Note that you select large enough memory space to accomodate CSR_NUM_LINES.
-// 2. The ownership classification is based of address bit [10] instead of address bit[0] in lpbk2.
-//   cacheline address[10] = 1- Line is owned by FPGA
-//   cacheline address[10] = 0- Line is owned by CPU
-// 
-// The test rules and other constraints are same as LPBK2. 
 //
 // 7. SW1:
 // This test measures the full round trip data movement latency between CPU & FPGA. 
@@ -295,8 +264,6 @@ module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
    localparam              M_READ          = 3'b001;
    localparam              M_WRITE         = 3'b010;
    localparam              M_TRPUT         = 3'b011;
-   localparam              M_LPBK2         = 3'b101;
-   localparam              M_LPBK3         = 3'b110;
    //--------------------------------------------------------
    
    wire                         Clk_400;
@@ -358,13 +325,6 @@ module nlb_lpbk #(parameter TXHDR_WIDTH=61, RXHDR_WIDTH=18, DATA_WIDTH =512)
    logic                        re2ab_WrRspFormat;
    logic [1:0]                  re2ab_WrRspCLnum;
    logic [1:0]                  re2xy_multiCL_len;
-   
-   logic                        re2ab_CXsubmode;
-   logic [2:0]                  re2ab_qword;
-   logic [15:0]                 re2ab_numCX;
-   logic                        re2ab_cxSuccess;
-   logic [2:0]                  ab2re_cxQword; 
-   logic                        ab2re_cxEn;
 
    logic [31:0]                 re2cr_num_reads;
    logic [31:0]                 re2cr_num_writes;
@@ -452,19 +412,11 @@ inst_requestor(
        re2ab_WrRspCLnum,
        re2xy_multiCL_len,
        
-       re2ab_CXsubmode,
-       re2ab_qword,
-       re2ab_numCX,
-       re2ab_cxSuccess,
-       ab2re_cxQword,
-       ab2re_cxEn,
-
        re2cr_num_reads,
        re2cr_num_writes,
        re2cr_num_Rdpend,
        re2cr_num_Wrpend,
        re2cr_error
-
 );
 
 arbiter #(.PEND_THRESH(PEND_THRESH),
@@ -520,14 +472,7 @@ inst_arbiter (
        re2ab_RdRspCLnum,
        re2ab_WrRspFormat,
        re2ab_WrRspCLnum,
-       re2xy_multiCL_len,
-       
-       re2ab_CXsubmode,
-       re2ab_qword,
-       re2ab_numCX,
-       re2ab_cxSuccess,
-       ab2re_cxQword,
-       ab2re_cxEn
+       re2xy_multiCL_len
 );
 
 t_ccip_c0_ReqMmioHdr       cp2cr_MmioHdr;
@@ -585,7 +530,6 @@ inst_nlb_csr (
     re2cr_num_Rdpend,
     re2cr_num_Wrpend,
     re2cr_error
-
 );
 
 endmodule
