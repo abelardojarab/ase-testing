@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source $ASEVAL_GIT/test_afus/ccip_nlb_all/SW/fpgadiag_include.sh
+
 LOGNAME="$PWD/test_status.log"
 
 # Delete log if exists
@@ -12,25 +14,21 @@ ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 retcode=0
 
 ## Listing options
-fpgadiag_mode="trput"
-fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1 --rvr"
-fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1 --wvr"
-fpgadiag_mcl_arr="1 2 4"
-fpgadiag_rdtype_arr="--rds --rdi"
-fpgadiag_wrtype_arr="--wt --wb"
+fpgadiag_mode="trput read write"
+# fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1 --rvr"
+# fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1 --wvr"
+# fpgadiag_mcl_arr="1 2 4"
+# fpgadiag_rdtype_arr="--rds --rdi"
+# fpgadiag_wrtype_arr="--wt --wb"
+
+
 ## Run options
 cd $MYINST_DIR/bin
 for nlb_mode in $fpgadiag_mode ; do
     ## ----------------------------------------------- ##
-    if [ $nlb_mode == "lpbk1" ] ; then
-	mode_str="--mode=lpbk1"
-	timeout_val=600
-	fpgadiag_cnt_arr="32768"
-    elif [ $nlb_mode == "trput" ] ; then
-	mode_str="--mode=trput --timeout-sec=3 --cont"
-	timeout_val=10
-	fpgadiag_cnt_arr="4096"
-    fi
+    mode_str="--mode=trput --timeout-sec=3 --cont"
+    timeout_val=10
+    fpgadiag_cnt_arr="1024"
     ## ----------------------------------------------- ##
     for rdvc_set in $fpgadiag_rdvc_arr ; do
 	for wrvc_set in $fpgadiag_wrvc_arr ; do
@@ -41,18 +39,20 @@ for nlb_mode in $fpgadiag_mode ; do
 			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
-				eval $cmd > output.log
+				stride=`shuf -i 1-32 -n 1`
+				# stride=1
+				cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --sa=$stride"
+				eval $cmd | tee output.log
 				errcode=$?
 				simtime=`grep -i nsec output.log`
 				if [[ $errcode != 0 ]] 
 				then
-				    echo -e " [** FAIL **]  $simtime  $cmd \n" >> $LOGNAME
+				    echo -e " [** FAIL **]  $simtime  $cmd " >> $LOGNAME
+				    exit 1
 				    retcode=1
 				else
-				    echo -e " [PASS]        $simtime  $cmd \n" >> $LOGNAME
+				    echo -e " [PASS]        $simtime  $cmd " >> $LOGNAME
 				fi
-				rm output.log
 			    else
 			    	echo "** Simulator not running **"
 			    	exit 1
