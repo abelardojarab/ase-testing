@@ -4,7 +4,7 @@
 if [[ "$1" == "" ]];
 then
     echo "** ERROR : Incorrect usage ! **"
-    echo "Usage: source tools_setup.sh <TOOLKEY> <RELCODE>"    
+    echo "Usage: source tools_setup.sh <TOOLKEY> <RELCODE>"
     echo "    TOOLKEY      = {vcsmx_H_2013_06_SP1_15, vcsmx_J_2014_12_SP3_5, vcsmx_K_2015_09_SP1, vcsmx_L_2016_06, vsim_questasim_10_5b, vsim_modelsim_se_10_5a, vcs_I_2014_03, vsim_modelsim_se_10_3e, vsim_questasim_10_4d}"
     echo "    RELCODE = {BDX1, BDX2, SKX1}"
     return
@@ -42,10 +42,10 @@ else
 fi
 
 ## Set paths
-if [[ "$SELECTED_CLASS" == "VCS" ]] ; 
+if [[ "$SELECTED_CLASS" == "VCS" ]] ;
 then
     ## Synopsys license
-    export SNPSLMD_LICENSE_FILE="26586@plxs0402.pdx.intel.com:26586@plxs0405.pdx.intel.com:26586@plxs0406.pdx.intel.com:26586@plxs0408.pdx.intel.com:26586@plxs0414.pdx.intel.com:26586@plxs0415.pdx.intel.com:26586@plxs0416.pdx.intel.com:26586@plxs0418.pdx.intel.com"    
+    export SNPSLMD_LICENSE_FILE="26586@plxs0402.pdx.intel.com:26586@plxs0405.pdx.intel.com:26586@plxs0406.pdx.intel.com:26586@plxs0408.pdx.intel.com:26586@plxs0414.pdx.intel.com:26586@plxs0415.pdx.intel.com:26586@plxs0416.pdx.intel.com:26586@plxs0418.pdx.intel.com:26586@synopsys69p.elic.intel.com:26586@synopsys68p.elic.intel.com:26586@fmylic43.fm.intel.com:26586@irslic006.ir.intel.com"
     export VCS_HOME=$SELECTED_PATH
     export PATH=${VCS_HOME}/bin/:${PATH}
 elif [[ "$SELECTED_CLASS" == "QUESTA" ]] ;
@@ -83,4 +83,3 @@ echo "MGLS_LICENSE_FILE    : " $MGLS_LICENSE_FILE
 echo "PATH                 : " $PATH
 echo "LD_LIBRARY_PATH      : " $LD_LIBRARY_PATH
 echo "LM_LICENSE_FILE      : " $LM_LICENSE_FILE
-
