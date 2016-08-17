@@ -30,4 +30,13 @@ else
     echo "** ERROR => Simulator process not found ! **"
 fi
 
-
+# Disk cleanup
+if [ $USER == "lab" ] ; then
+    echo "####################################################"
+    echo "# Proceeding with cleaning up simulation for space #"
+    echo "####################################################"
+    cd $ASE_SRCDIR
+    make clean    
+else
+    echo "Looks like a manual run, will NOT clean up simulation workspace"
+fi
