@@ -288,7 +288,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
          begin
            if(ab2rw_WrSent)
              begin
-                 if ((re2xy_multiCL_len == 0) || (rw2ab_WrLen == 2'b1))
+                 if ((re2xy_multiCL_len == 0) || (rw2ab_WrLen == 2'b0))
 
                   begin
                    // Next request starts a new packet. Use the stride.

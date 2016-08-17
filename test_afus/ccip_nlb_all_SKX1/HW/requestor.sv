@@ -134,7 +134,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     input  t_ccip_mmioData  cr2re_dsm_base;
     input  logic            cr2re_dsm_base_valid;
     
-   input  logic [ADDR_LMT-1:0] ab2re_WrAddr;           // [ADDR_LMT-1:0]        arbiter:       Writes are guaranteed to be accepted
+    input  logic [ADDR_LMT-1:0]   ab2re_WrAddr;      // [ADDR_LMT-1:0]        arbiter:       Writes are guaranteed to be accepted
     input  t_ccip_mdata     ab2re_WrTID;            // [15:0]                arbiter:       meta data
     input  t_ccip_clData    ab2re_WrDin;            // [511:0]               arbiter:       Cache line data
     input  logic            ab2re_WrFence;          //                       arbiter:       write fence 
@@ -373,7 +373,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
       re2ab_RdRsp      = cp2af_sRxPort_T1.c0.hdr.mdata[15:0];
       re2ab_RdRspCLnum = cp2af_sRxPort_T1.c0.hdr.cl_num[1:0]; 
       re2ab_RdData     = cp2af_sRxPort_T1.c0.data;
-      re2ab_WrRspValid = cp2af_sRxPort_T1.c1.rspValid && cp2af_sRxPort_T1.c1.hdr.resp_type==eRSP_WRLINE;;
+      re2ab_WrRspValid = cp2af_sRxPort_T1.c1.rspValid && cp2af_sRxPort_T1.c1.hdr.resp_type==eRSP_WRLINE;
       re2ab_WrRsp      = cp2af_sRxPort_T1.c1.hdr.mdata[15:0];
       re2ab_WrRspFormat= cp2af_sRxPort_T1.c1.hdr.format;
       re2ab_WrRspCLnum = cp2af_sRxPort_T1.c1.hdr.cl_num[1:0];
@@ -570,7 +570,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
                     af2cp_sTxPort.c1.hdr.sop           <= sop;
                     af2cp_sTxPort.c1.hdr.cl_len        <= t_ccip_clLen'(txFifo_WrLen_qq);
                     af2cp_sTxPort.c1.valid             <= 1'b1;
-                    Num_Writes                         <= Num_Writes + 1'b1;
+                    Num_Writes                         <= (wrreq_type == eREQ_WRFENCE) ? Num_Writes : Num_Writes + 1'b1;
                 end
             end // re2xy_go
 
@@ -710,11 +710,11 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             ErrorVector[3]  <= ab2re_ErrorValid;
 
         /* synthesis translate_off */
-        // if(af2cp_sTxPort.c1.valid )
-        //     $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
+        if(af2cp_sTxPort.c1.valid )
+            $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
 
-        // if(af2cp_sTxPort.c0.valid)
-        //     $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
+        if(af2cp_sTxPort.c0.valid)
+            $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
 
         /* synthesis translate_on */
 
