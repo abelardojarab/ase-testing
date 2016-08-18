@@ -5,6 +5,9 @@ LOGNAME="$PWD/test_status.log"
 # Delete log if exists
 rm -rf $LOGNAME
 
+# Wait for simulator ready
+$ASEVAL_GIT/wait_till_ase_ready.sh
+
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
