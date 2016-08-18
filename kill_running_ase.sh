@@ -35,8 +35,7 @@ if [ $USER == "lab" ] ; then
     echo "####################################################"
     echo "# Proceeding with cleaning up simulation for space #"
     echo "####################################################"
-    cd $ASE_SRCDIR
-    make clean    
+    rm -rf $ASE_WORKDIR
 else
     echo "Looks like a manual run, will NOT clean up simulation workspace"
 fi
