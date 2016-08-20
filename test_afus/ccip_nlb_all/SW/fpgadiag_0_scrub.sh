@@ -40,16 +40,21 @@ for nlb_mode in $fpgadiag_mode ; do
 			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
-				eval $cmd | tee output.log
-				errcode=$?
-				simtime=`grep -i nsec output.log`
-				if [[ $errcode != 0 ]] 
+				random_out=`shuf -i 1-8 -n 1`
+				if [[ $random_out == 1 ]]
 				then
-				    echo -e " [** FAIL **]  $simtime  $cmd \n" >> $LOGNAME
-				    retcode=1
-				else
-				    echo -e " [PASS]        $simtime  $cmd \n" >> $LOGNAME
+				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
+				    echo $cmd
+				    eval $cmd | tee output.log
+				    errcode=$?
+				    simtime=`grep -i nsec output.log`
+				    if [[ $errcode != 0 ]]
+				    then
+					echo -e " [** FAIL **]  $simtime  $cmd \n" >> $LOGNAME
+					retcode=1
+				    else
+					echo -e " [PASS]        $simtime  $cmd \n" >> $LOGNAME
+				    fi
 				fi
 			    else
 			    	echo "** Simulator not running **"
