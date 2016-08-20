@@ -65,7 +65,7 @@ then
     			    then
     				cmd="/usr/bin/timeout $linux_timeout ./fpgadiag --target=ase $fpgadiag_cmd --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
     				echo "Run: " $cmd
-    				eval $cmd
+#    				eval $cmd
     				errcode=$?
     				if [[ $errcode != 0 ]] 
     				then
@@ -123,7 +123,7 @@ then
     				date
     				if ps -p $ase_pid > /dev/null
     				then
-    				    cmd="/usr/bin/timeout 600 ./fpgadiag --target=ase $fpgadiag_cmd --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
+    				    cmd="/usr/bin/timeout $linux_timeout ./fpgadiag --target=ase $fpgadiag_cmd --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
     				    echo "Run: " $cmd
     				    eval $cmd
     				    errcode=$?
