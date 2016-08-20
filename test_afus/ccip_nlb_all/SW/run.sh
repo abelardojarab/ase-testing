@@ -99,7 +99,7 @@ then
     fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1 --wvr"
     fpgadiag_mcl_arr="1 2 4"
     fpgadiag_rdtype_arr="--rds --rdi"
-    fpgadiag_wrtype_arr="--wt --wb"
+    fpgadiag_wrtype_arr="--wlm --wli --wpi"
     cd $MYINST_DIR/bin
     for mode_sel in $fpgadiag_mode_arr ; do
 	## Mode global
