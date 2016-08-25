@@ -63,16 +63,20 @@ then
     			    date
     			    if ps -p $ase_pid > /dev/null
     			    then
-    				cmd="/usr/bin/timeout $linux_timeout ./fpgadiag --target=ase $fpgadiag_cmd --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
-    				echo "Run: " $cmd
-#    				eval $cmd
-    				errcode=$?
-    				if [[ $errcode != 0 ]] 
-    				then
-    				    echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-    				    echo "Last command: " $cmd
-    				    exit 1
-    				fi
+				random_out=`shuf -i 1-20 -n 1`
+				if [[ $random_out == 4 ]]
+				then
+    				    cmd="/usr/bin/timeout $linux_timeout ./fpgadiag --target=ase $fpgadiag_cmd --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
+    				    echo "Run: " $cmd				
+    				    eval $cmd
+    				    errcode=$?
+    				    if [[ $errcode != 0 ]] 
+    				    then
+    					echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
+    					echo "Last command: " $cmd
+    					exit 1
+    				    fi
+				fi
     			    else
     				echo "** Simulator not running **"
     				exit 1
