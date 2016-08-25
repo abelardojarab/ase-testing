@@ -40,7 +40,7 @@ for nlb_mode in $fpgadiag_mode ; do
 			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				random_out=`shuf -i 1-8 -n 1`
+				random_out=`shuf -i 1-20 -n 1`
 				if [[ $random_out == 1 ]]
 				then
 				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
