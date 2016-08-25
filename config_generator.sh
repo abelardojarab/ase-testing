@@ -21,7 +21,7 @@ then
 fi
 
 
-if [ $seed==0 ]
+if [ $seed -eq 0 ]
 then
     echo -e -n "ENABLE_REUSE_SEED = 0\n"
     echo -e -n "ASE_SEED = 1234\n"

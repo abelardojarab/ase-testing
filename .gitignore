@@ -17,8 +17,11 @@ DVEfiles/
 ucli.key
 urgReport/
 *.obj
+*.txt
+*.info
 
 ## Binaries by name
 InitRelease
 mmio_stress
+seeded_random
 

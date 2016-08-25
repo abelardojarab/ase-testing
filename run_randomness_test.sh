@@ -2,8 +2,9 @@
 
 NUM_RUNS=2
 
-# ASE_CONFIG=$ASEVAL_GIT/ase_configs/ase_sw_simkill_cl_view_0.cfg
-ASE_CONFIG=$ASE_WORKDIR/ase.cfg
+ASE_CONFIG=$ASEVAL_GIT/test.cfg
+
+./config_generator.sh single 1234 silent 300.000 64 > $ASE_CONFIG
 
 ## Build simulator
 cd $ASE_SRCDIR
@@ -19,7 +20,7 @@ do
     $ASEVAL_GIT/wait_till_ase_ready.sh
     ## Run application
     cd $MYINST_DIR/bin/
-    ./fpgadiag --target=ase --mode=lpbk1 --begin=4096
+    ./fpgadiag --target=ase --mode=lpbk1 --begin=32768
     ## Wait until Simulator shuts down
     while [ -f $ASE_WORKDIR/.ase_ready.pid ]
     do
