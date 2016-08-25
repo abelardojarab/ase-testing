@@ -28,8 +28,6 @@ ase_svfifo:
       ../../aalsdk/aaluser/ase/hw/ase_svfifo.sv \
         tb_alt_fifo.sv \
 	   	-cm line+fsm+cond+tgl+branch \
-		
-	
 
 prng:
 	vcs -j 4 -full64 -nc \
@@ -42,14 +40,18 @@ prng:
 string:
 	vcs -full64 -nc -sverilog ../../hw/ase_pkg.sv ../../hw/ccip_logger.sv string_test.sv -debug_all +incdir+../../hw/
 
+random_test:
+	vcs -full64 -nc -sverilog random_test.sv  -debug_all 
+
 
 ################################################
-all: channel
+all: random_test
 
 sim:
-	./simv -l run.log -ucli -do run.tcl -cm line+fsm+cond+tgl+branch
-	urg -dir work/coverage.vdb -format both
-	dve -vpd inter.vpd -session session.tcl
+	./simv -l run.log -ucli -do run.tcl
+	# ./simv -l run.log -ucli -do run.tcl -cm line+fsm+cond+tgl+branch
+	# urg -dir work/coverage.vdb -format both
+	# dve -vpd inter.vpd -session session.tcl
 
 wave: 
 	dve -vpd inter.vpd -full64 &
