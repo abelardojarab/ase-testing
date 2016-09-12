@@ -1,5 +1,12 @@
 #!/bin/sh
 
+test_select=$1
+
+if [[ $test_select == "" ]]
+then
+    test_select="all"
+fi
+
 source $ASEVAL_GIT/test_afus/ccip_nlb_all/SW/fpgadiag_include.sh
 
 LOGNAME="$PWD/test_status.log"
@@ -18,11 +25,7 @@ retcode=0
 
 ## Listing options
 fpgadiag_mode="lpbk1"
-# fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1 --rvr"
-# fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1 --wvr"
-# fpgadiag_mcl_arr="1 2 4"
-# fpgadiag_rdtype_arr="--rds --rdi"
-# fpgadiag_wrtype_arr="--wt --wb"
+
 ## Run options
 cd $MYINST_DIR/bin
 for nlb_mode in $fpgadiag_mode ; do
@@ -37,10 +40,17 @@ for nlb_mode in $fpgadiag_mode ; do
 		for cnt_set in $fpgadiag_cnt_arr ; do
 		    for rd_set in $fpgadiag_rdtype_arr ; do
 			for wr_set in $fpgadiag_wrtype_arr ; do
-			    date
 			    if ps -p $ase_pid > /dev/null
 			    then
-				random_out=`shuf -i 1-20 -n 1`
+				## Test select
+				if [[ $test_select == "random" ]]
+				then
+				    random_out=`shuf -i 1-25 -n 1`
+				elif [[ $test_select == "all" ]]
+				then
+				    random_out=1
+				fi
+				## Run test
 				if [[ $random_out == 1 ]]
 				then
 				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
