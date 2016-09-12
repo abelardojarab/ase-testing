@@ -102,7 +102,7 @@ then
     fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1 --rvr"
     fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1 --wvr"
     fpgadiag_mcl_arr="1 2 4"
-    fpgadiag_rdtype_arr="--rds --rdi"
+    fpgadiag_rdtype_arr="--rdi"
     fpgadiag_wrtype_arr="--wlm --wli --wpi"
     cd $MYINST_DIR/bin
     for mode_sel in $fpgadiag_mode_arr ; do
@@ -128,15 +128,19 @@ then
     				if ps -p $ase_pid > /dev/null
     				then
     				    cmd="/usr/bin/timeout $linux_timeout ./fpgadiag --target=ase $fpgadiag_cmd --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
-    				    echo "Run: " $cmd
-    				    eval $cmd
-    				    errcode=$?
-    				    if [[ $errcode != 0 ]]
-    				    then
-    					echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
-    					echo "Last command: " $cmd
-    					exit 1
-    				    fi
+				    random_out=`shuf -i 1-20 -n 1`
+				    if [[ $random_out == 1 ]]
+				    then
+    					echo "Run: " $cmd
+    					eval $cmd
+    					errcode=$?
+    					if [[ $errcode != 0 ]]
+    					then
+    					    echo "fpgadiag timed out -- FAILURE EXIT, Error code $errcode !!"
+    					    echo "Last command: " $cmd
+    					    exit 1
+    					fi
+				    fi
     				else
     				    echo "** Simulator not running **"
     				    exit 1
