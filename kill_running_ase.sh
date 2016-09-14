@@ -28,6 +28,7 @@ if [ -e $ASE_WORKDIR/.ase_ready.pid ] ; then
     kill $pid
 else
     echo "** ERROR => Simulator process not found ! **"
+    exit 1
 fi
 
 # Disk cleanup
