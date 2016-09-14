@@ -138,7 +138,7 @@ SNPS_VLOGAN_OPT = -nc -V -full64 +v2k -sverilog +define+$(SIMULATOR)
 SNPS_VLOGAN_OPT+= +incdir+$(DUT_INCDIR) +incdir+$(ASE_INCDIR)
 SNPS_VLOGAN_OPT+= +librescan -work $(WORK) -override_timescale=$(TIMESCALE)
 # SNPS_VLOGAN_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
-SNPS_VLOGAN_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX  +define+CCI_SIMULATION=1 +define+SIM_MODE=1
+SNPS_VLOGAN_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX=1 +define+CCI_SIMULATION=1 +define+SIM_MODE=1
 SNPS_VLOGAN_OPT+= +lint=all,noVCDE,noNS,NCEID,CAWM,TFIPC,IPDP,PCWM
 ifeq ($(ASE_DISABLE_LOGGER), 1)
   SNPS_VLOGAN_OPT+= +define+ASE_DISABLE_LOGGER
@@ -200,7 +200,8 @@ MENT_VLOG_OPT+= -nologo +librescan -work $(WORK) +define+$(SIMULATOR) -novopt
 MENT_VLOG_OPT+= -dpiheader work/dpiheader.h
 MENT_VLOG_OPT+= +incdir+$(ASE_INCDIR)+$(DUT_INCDIR)+$(WORK)
 MENT_VLOG_OPT+= -sv  -timescale $(TIMESCALE) -l vlog.log
-MENT_VLOG_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
+# MENT_VLOG_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
+MENT_VLOG_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX  +define+CCI_SIMULATION=1 +define+SIM_MODE=1
 ifeq ($(ASE_DEBUG), 1)
   MENT_VLOG_OPT+= +define+ASE_DEBUG -hazards
 endif
