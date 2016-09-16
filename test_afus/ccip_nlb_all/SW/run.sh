@@ -63,7 +63,7 @@ then
     			    date
     			    if ps -p $ase_pid > /dev/null
     			    then
-				random_out=`shuf -i 1-20 -n 1`
+				random_out=`shuf -i 1-40 -n 1`
 				if [[ $random_out == 4 ]]
 				then
     				    cmd="/usr/bin/timeout $linux_timeout ./fpgadiag --target=ase $fpgadiag_cmd --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $vc_set"
