@@ -160,12 +160,9 @@ localparam      FEATURE_0_BEG  = 18'h0000;
 // At compile time, user can decide which test mode is synthesized.
 `ifndef SIM_MODE // PAR_MODE
     `ifdef NLB400_MODE_0
-            `ifdef  OLD_AFU_ID
-                    localparam       NLB_AFU_ID_H    = 64'hC000_C966_0D82_4272;
-                    localparam       NLB_AFU_ID_L    = 64'h9AEF_FE5F_8457_0612; 
-            `else   localparam       NLB_AFU_ID_H    = 64'hD842_4DC4_A4A3_C413;
-                    localparam       NLB_AFU_ID_L    = 64'hF89E_4336_83F9_040B;
-            `endif
+    localparam       NLB_AFU_ID_H    = 64'hD842_4DC4_A4A3_C413;
+    localparam       NLB_AFU_ID_L    = 64'hF89E_4336_83F9_040B;
+            
     `elsif NLB400_MODE_3
     localparam       NLB_AFU_ID_H    = 64'hF7DF_405C_BD7A_CF72;
     localparam       NLB_AFU_ID_L    = 64'h22F1_44B0_B93A_CD18;

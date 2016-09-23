@@ -139,12 +139,12 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 
     
    reg      [19:0]            Num_RdReqs;
-   reg      [9:0]             Num_RdPend;
+   reg      [10:0]            Num_RdPend;
    reg      [1:0]             RdFSM;
    reg      [MDATA-2:0]       Rdmdata;
 
    reg      [19:0]            Num_WrReqs;
-   reg      [9:0]             Num_WrPend;
+   reg      [10:0]            Num_WrPend;
    reg      [1:0]             WrFSM;
    reg      [MDATA-2:0]       Wrmdata;
    

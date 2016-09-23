@@ -1,9 +1,6 @@
-// ===========================================
-// Module to Register SR <--> PR signals in SR
-// TODO_START
-// Include HSSI ethernet IF
-// TODO_END -- Narayanan
-// ===========================================
+// ======================================
+// Module to Register IF signals 
+// ======================================
 
 import ccip_if_pkg::*;
 module ccip_interface_reg(

@@ -319,8 +319,8 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     
     (* noprune *) logic [2:0]   num_rd_sent;
     (* maxfan=1 *) logic [2:0]  num_wr_recvd;
-    (* noprune *) logic [8:0]   Num_WrPend;
-    (* noprune *) logic [8:0]   Num_RdPend;
+    (* noprune *) logic [11:0]  Num_WrPend;
+    (* noprune *) logic [11:0]  Num_RdPend;
         
     // NLB supports 64MB data transfers   
     // RdAddr computation takes one cycle :- Delay Rd valid generation from req to upstream by 1 clk
@@ -414,8 +414,14 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     begin    
         re2cr_num_Rdpend       <= 0;
         re2cr_num_Wrpend       <= 0;
-        re2cr_num_Rdpend[8:0]  <= Num_RdPend;
-        re2cr_num_Wrpend[8:0]  <= Num_WrPend;
+
+        // So, Max pending write transactions that requestor needs to track = 256
+        // So, there could be maximum of 256 * 4 = 1024 reqs that are tracked as Num_Wr/Rd_pend
+        // Num_Wr/Rd_Pend[11] indicates an underflow -- recorded as unexpected WrRsp Err
+        // Num_Wr/Rd_Pend[10:9] == 2'b11 indicates Test has to be stalled to prevent an overflow 
+        
+        re2cr_num_Rdpend[11:0] <= Num_RdPend[11:0];   
+        re2cr_num_Wrpend[11:0] <= Num_WrPend[11:0];
         re2cr_num_reads        <= Num_Reads;
         re2cr_num_writes       <= Num_Writes;
         re2cr_error      <= ErrorVector;
@@ -682,7 +688,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             $finish();
         // synthesis translate_on
 
-        if(Num_RdPend<0)
+        if(Num_RdPend[11]==1'b1)
         begin
             ErrorVector[0]  <= 1;
             /*synthesis translate_off */
@@ -690,7 +696,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             /*synthesis translate_on */
         end
         
-        if(Num_WrPend<0)
+        if(Num_WrPend[11]==1'b1)
         begin
             ErrorVector[0]  <= 1;
             /*synthesis translate_off */
@@ -710,11 +716,11 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             ErrorVector[3]  <= ab2re_ErrorValid;
 
         /* synthesis translate_off */
-        // if(af2cp_sTxPort.c1.valid )
-        //     $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
+        if(af2cp_sTxPort.c1.valid )
+            $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
 
-        // if(af2cp_sTxPort.c0.valid)
-        //     $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
+        if(af2cp_sTxPort.c0.valid)
+            $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
 
         /* synthesis translate_on */
 
@@ -804,17 +810,21 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         end
     end
 
+    
+    logic rd_pend_thresh;
+    logic wr_pend_thresh;
     always @(*)
     begin
+        
         RdHdr_valid = re2xy_go
         && !status_write
         && rnd_delay
         && !cp2af_sRxPort.c0TxAlmFull    
         && ab2re_RdEn;
 
-        re2ab_RdSent= RdHdr_valid;
+        re2ab_RdSent= RdHdr_valid & !rd_pend_thresh; 
 
-        txFifo_RdAck = re2xy_go && rnd_delay  && !cp2af_sRxPort.c1TxAlmFull && txFifo_Dout_v;
+        txFifo_RdAck = re2xy_go && rnd_delay  && !cp2af_sRxPort.c1TxAlmFull && txFifo_Dout_v && !wr_pend_thresh;
         wrreq_type   = txFifo_WrFence_qq ? eREQ_WRFENCE
                       :cr_wrlineI_en     ? eREQ_WRLINE_I 
                       : cr_wrpushI_en    ? eREQ_WRPUSH_I
@@ -823,6 +833,8 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
     end
     always @(posedge Clk_400)
     begin
+        rd_pend_thresh <= Num_RdPend[10] && Num_RdPend[9];
+        wr_pend_thresh <= Num_WrPend[10] && Num_WrPend[9];
         WrHdr_valid_T1 <= txFifo_RdAck;
         WrHdr_valid_T2 <= WrHdr_valid_T1 & re2xy_go;
         WrHdr_valid_T3 <= WrHdr_valid_T2;
