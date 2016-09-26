@@ -50,12 +50,18 @@ for nlb_mode in $fpgadiag_mode ; do
 				then
 				    random_out=1
 				fi
+				## WrFence setting
+				wrfvc_set=$wrvc_set
+				if [[ $wrfvc_set == "random" ]]
+				then
+				    wrfvc_set="auto"
+				fi
 				## Run test
 				if [[ $random_out == 1 ]]
 				then
 				    ## Run test
 				    stride=`shuf -i 1-25 -n 1`
-				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set --sa=$stride"
+				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set --cache-hint=$rd_set --cache-policy=$wr_set --multi-cl=$mcl_set --read-vc=$rdvc_set --write-vc=$wrvc_set --strided-access=$stride --wrfence-vc=$wrfvc_set"
 				    echo $cmd
 				    eval $cmd | tee output.log
 				    errcode=$?

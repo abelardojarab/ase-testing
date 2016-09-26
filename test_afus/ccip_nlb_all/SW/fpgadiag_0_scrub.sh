@@ -32,7 +32,8 @@ for nlb_mode in $fpgadiag_mode ; do
     ## ----------------------------------------------- ##
     mode_str="--mode=lpbk1"
     timeout_val=600
-    fpgadiag_cnt_arr="32768"
+    # fpgadiag_cnt_arr="32768"
+    fpgadiag_cnt_arr="16"
     ## ----------------------------------------------- ##
     for rdvc_set in $fpgadiag_rdvc_arr ; do
 	for wrvc_set in $fpgadiag_wrvc_arr ; do
@@ -50,10 +51,16 @@ for nlb_mode in $fpgadiag_mode ; do
 				then
 				    random_out=1
 				fi
+				## WrFence setting
+				wrfvc_set=$wrvc_set
+				if [[ $wrfvc_set == "random" ]]
+				then
+				    wrfvc_set="auto"
+				fi
 				## Run test
 				if [[ $random_out == 1 ]]
 				then
-				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set $rd_set $wr_set --mcl=$mcl_set $rdvc_set $wrvc_set"
+				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set --cache-hint=$rd_set --cache-policy=$wr_set --multi-cl=$mcl_set --read-vc=$rdvc_set --write-vc=$wrvc_set --wrfence-vc=$wrfvc_set"
 				    echo $cmd
 				    eval $cmd | tee output.log
 				    errcode=$?
@@ -61,6 +68,7 @@ for nlb_mode in $fpgadiag_mode ; do
 				    if [[ $errcode != 0 ]]
 				    then
 					echo -e " [** FAIL **]  $simtime  $cmd \n" >> $LOGNAME
+					exit 1
 					retcode=1
 				    else
 					echo -e " [PASS]        $simtime  $cmd \n" >> $LOGNAME

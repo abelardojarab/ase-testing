@@ -1,9 +1,11 @@
 #!/bin/sh
 
 # fpgadiag_mode="trput"
-fpgadiag_rdvc_arr="--rva --rvl0 --rvh0 --rvh1 --rvr"
-fpgadiag_wrvc_arr="--wva --wvl0 --wvh0 --wvh1 --wvr"
+fpgadiag_rdvc_arr="auto vl0 vh0 vh1 random"
+fpgadiag_wrvc_arr="auto vl0 vh0 vh1 random"
+fpgadiag_wrfvc_arr="auto vl0 vh0 vh1 random"
 fpgadiag_mcl_arr="1 2 4"
-fpgadiag_rdtype_arr="--rdi"
-fpgadiag_wrtype_arr="--wlm --wli --wpi"
+# fpgadiag_rdtype_arr="rdline-I rdline-M"
+fpgadiag_rdtype_arr="rdline-I"
+fpgadiag_wrtype_arr="wrline-I wrline-M wrpush-I"
 
