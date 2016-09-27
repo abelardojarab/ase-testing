@@ -10,6 +10,7 @@ source /opt/quartus_16.sh
 
 TEST_OPTION=$1
 
+rm -rf $ASEVAL_GIT/kw_run.* $ASEVAL_GIT/kw_ase.*
 
 if [[ $TEST_OPTION == "aal" ]]
 then
