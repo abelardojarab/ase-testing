@@ -2,8 +2,6 @@
 
 # Usage ./config_generator.sh <single|multi> <seed!=0> <silent|noisy> <usrclk> <mem>
 
-echo $0 $1 $2 $3 $4 $5
-
 type=$1
 seed=$2
 verbose=$3
