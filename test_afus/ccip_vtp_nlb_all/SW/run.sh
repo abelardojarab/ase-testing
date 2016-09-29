@@ -12,10 +12,20 @@ done
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
+## Copy BDX/SKX version
+cp $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/SW/HelloALIVTPNLB.cpp.$RELCODE $BBB_GIT/BBB_cci_mpf/sample/Hello_ALI_VTP_NLB/SW/HelloALIVTPNLB.cpp
+
+echo "######################################"
+echo "#     Compiling Hello_ALI_VTP_NLB    #"
+echo "######################################"
+cd $BBB_GIT/BBB_cci_mpf/sample/Hello_ALI_VTP_NLB/SW/
+make clean
+make prefix=$MYINST_DIR CFLAGS="-I $BBB_GIT/BBB_cci_mpf/sw/include/"
+
 echo "######################################"
 echo "#     Testing Hello_ALI_VTP_NLB      #"
 echo "######################################"
-cd $BBB_GIT/BBB_cci_mpf/sample/Hello_ALI_VTP_NLB/SW
+cd $BBB_GIT/BBB_cci_mpf/sample/Hello_ALI_VTP_NLB/SW/
 timeout 3600 ./helloALIVTPnlb
 if [[ $? != 0 ]]; 
 then
