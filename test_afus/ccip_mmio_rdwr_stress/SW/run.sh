@@ -14,7 +14,7 @@ done
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
 
-/usr/bin/timeout 300 ./mmio_stress
+/usr/bin/timeout 1800 ./mmio_stress
 errcode=$?
 if [[ $errcode != 0 ]]
 then
