@@ -280,9 +280,9 @@ btInt HelloALINLBApp::run()
 #elif defined ( ASEAFU )         /* Use ASE based RTL simulation */
   Manifest.Add(keyRegHandle, 20);
    
-  //   Manifest.Add(ALIAFU_NVS_KEY_TARGET, ali_afu_ase);
+  Manifest.Add(ALIAFU_NVS_KEY_TARGET, ali_afu_ase);
    
-  ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_SERVICE_NAME, "libASEALIAFU");
+  ConfigRecord.Add(AAL_FACTORY_CREATE_CONFIGRECORD_FULL_SERVICE_NAME, "libALI");
   ConfigRecord.Add(AAL_FACTORY_CREATE_SOFTWARE_SERVICE,true);
    
 #else                            /* default is Software Simulator */
