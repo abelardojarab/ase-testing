@@ -124,7 +124,7 @@ then
 				    then
 					wrfvc_set="auto"
 				    fi
-				    cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set --cache-hint=$rd_set --cache-policy=$wr_set --multi-cl=$mcl_set --read-vc=$rdvc_set --write-vc=$wrvc_set --wrfence-vc=$wrfvc_set"
+				    cmd="/usr/bin/timeout $linux_timeout ./fpgadiag --target=ase $mode_str --begin=$cnt_set --cache-hint=$rd_set --cache-policy=$wr_set --multi-cl=$mcl_set --read-vc=$rdvc_set --write-vc=$wrvc_set --wrfence-vc=$wrfvc_set"
 				    random_out=`shuf -i 1-20 -n 1`
 				    if [[ $random_out == 1 ]]
 				    then
