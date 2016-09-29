@@ -28,18 +28,25 @@ echo $SELECTED_CLASS
 
 ## Check if Release Code is supplied
 ALTERA_VER=15.1.2
-if [[ "$2" == "" ]];
+if [[ "$2" == "SKX1" ]];
 then
-    ALTERA_VER="16.0"
+    ALTERA_VER="16.0.0.211-Pro"
+    RELCODE="BDX2"
+elif [[ "$2" == "BDX2" ]];
+then
+    ALTERA_VER="16.0.0.211-Pro"
     RELCODE="BDX2"
 elif [[ "$2" == "BDX1" ]];
 then
     ALTERA_VER="15.1.2"
     RELCODE="BDX1"
 else
-    ALTERA_VER="16.0"
+    ALTERA_VER="16.0.0.211-Pro"
     RELCODE="$2"
 fi
+
+## Set LM_PROJECT
+export LM_PROJECT="ATP-PLAT-DEV"
 
 ## Set paths
 if [[ "$SELECTED_CLASS" == "VCS" ]] ;
@@ -52,7 +59,6 @@ elif [[ "$SELECTED_CLASS" == "QUESTA" ]] ;
 then
     ## Mentor License
     export MGLS_LICENSE_FILE="1717@mentor04p.elic.intel.com"
-    export LM_PROJECT="ATP-PLAT-DEV"
     export MTI_HOME=$SELECTED_PATH
     export PATH=${MTI_HOME}/bin/:${PATH}
 else
@@ -83,3 +89,4 @@ echo "MGLS_LICENSE_FILE    : " $MGLS_LICENSE_FILE
 echo "PATH                 : " $PATH
 echo "LD_LIBRARY_PATH      : " $LD_LIBRARY_PATH
 echo "LM_LICENSE_FILE      : " $LM_LICENSE_FILE
+
