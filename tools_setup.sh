@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## Check if TOOLKEY is supplied
-if [[ "$1" == "" ]];
+if [ "$1" = "" ];
 then
     echo "** ERROR : Incorrect usage ! **"
     echo "Usage: source tools_setup.sh <TOOLKEY> <RELCODE>"
@@ -27,35 +27,32 @@ echo $SELECTED_PATH
 echo $SELECTED_CLASS
 
 ## Check if Release Code is supplied
-ALTERA_VER=15.1.2
-if [[ "$2" == "SKX1" ]];
+export ALTERA_VER=16.0.0.211-Pro
+if [ "$RELCODE" = "SKX1" ];
 then
-    ALTERA_VER="16.0.0.211-Pro"
-    RELCODE="BDX2"
-elif [[ "$2" == "BDX2" ]];
+    export ALTERA_VER="16.0.0.211-Pro"
+    export RELCODE="BDX2"
+elif [ "$RELCODE" = "BDX2" ];
 then
-    ALTERA_VER="16.0.0.211-Pro"
-    RELCODE="BDX2"
-elif [[ "$2" == "BDX1" ]];
+    export ALTERA_VER="16.0.0.211-Pro"
+    export RELCODE="BDX2"
+elif [ "$RELCODE" = "BDX1" ];
 then
-    ALTERA_VER="15.1.2"
-    RELCODE="BDX1"
-else
-    ALTERA_VER="16.0.0.211-Pro"
-    RELCODE="$2"
+    export ALTERA_VER="15.1.2"
+    export RELCODE="BDX1"
 fi
 
 ## Set LM_PROJECT
 export LM_PROJECT="ATP-PLAT-DEV"
 
 ## Set paths
-if [[ "$SELECTED_CLASS" == "VCS" ]] ;
+if [ "$SELECTED_CLASS" = "VCS" ];
 then
     ## Synopsys license
     export SNPSLMD_LICENSE_FILE="26586@plxs0402.pdx.intel.com:26586@plxs0405.pdx.intel.com:26586@plxs0406.pdx.intel.com:26586@plxs0408.pdx.intel.com:26586@plxs0414.pdx.intel.com:26586@plxs0415.pdx.intel.com:26586@plxs0416.pdx.intel.com:26586@plxs0418.pdx.intel.com:26586@synopsys69p.elic.intel.com:26586@synopsys68p.elic.intel.com:26586@fmylic43.fm.intel.com:26586@irslic006.ir.intel.com"
     export VCS_HOME=$SELECTED_PATH
     export PATH=${VCS_HOME}/bin/:${PATH}
-elif [[ "$SELECTED_CLASS" == "QUESTA" ]] ;
+elif [ "$SELECTED_CLASS" = "QUESTA" ];
 then
     ## Mentor License
     export MGLS_LICENSE_FILE="1717@mentor04p.elic.intel.com"
