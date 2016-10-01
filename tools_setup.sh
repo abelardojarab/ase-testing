@@ -51,22 +51,24 @@ then
     ## Synopsys license
     export SNPSLMD_LICENSE_FILE="26586@plxs0402.pdx.intel.com:26586@plxs0405.pdx.intel.com:26586@plxs0406.pdx.intel.com:26586@plxs0408.pdx.intel.com:26586@plxs0414.pdx.intel.com:26586@plxs0415.pdx.intel.com:26586@plxs0416.pdx.intel.com:26586@plxs0418.pdx.intel.com:26586@synopsys69p.elic.intel.com:26586@synopsys68p.elic.intel.com:26586@fmylic43.fm.intel.com:26586@irslic006.ir.intel.com"
     export VCS_HOME=$SELECTED_PATH
-    export PATH=${VCS_HOME}/bin/:${PATH}
+#     export PATH=${SELECTED_PATH}/bin/:${PATH}
 elif [ "$SELECTED_CLASS" = "QUESTA" ];
 then
     ## Mentor License
     export MGLS_LICENSE_FILE="1717@mentor04p.elic.intel.com"
     export MTI_HOME=$SELECTED_PATH
-    export PATH=${MTI_HOME}/bin/:${PATH}
 else
     echo "** ERROR: TOOLKEY=$TOOLKEY is unidentified ! EXIT here ! **"
     exit 1
 fi
+
+export PATH=${SELECTED_PATH}/bin/:${PATH}
+
 export SIMULATOR=$SELECTED_CLASS
 
 ## Setup Altera settings
-export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@fmylic36b.fm.intel.com:1800@fmylic7001.fm.intel.com:1800@fmylic7008.fm.intel.com"
-export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@altera02p.elic.intel.com:1800@dan-host-1.sc.intel.com:1800@plxs0402.pdx.intel.com"
+# export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@fmylic36b.fm.intel.com:1800@fmylic7001.fm.intel.com:1800@fmylic7008.fm.intel.com"
+# export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@altera02p.elic.intel.com:1800@dan-host-1.sc.intel.com:1800@plxs0402.pdx.intel.com"
 export QUARTUS_HOME=/opt/altera/$ALTERA_VER/quartus/
 export QUARTUS_ROOTDIR=$QUARTUS_HOME
 export QUARTUS_64BIT=1
@@ -85,5 +87,5 @@ echo "SNPSLMD_LICENSE_FILE : " $SNPSLMD_LICENSE_FILE
 echo "MGLS_LICENSE_FILE    : " $MGLS_LICENSE_FILE
 echo "PATH                 : " $PATH
 echo "LD_LIBRARY_PATH      : " $LD_LIBRARY_PATH
-echo "LM_LICENSE_FILE      : " $LM_LICENSE_FILE
+# echo "LM_LICENSE_FILE      : " $LM_LICENSE_FILE
 
