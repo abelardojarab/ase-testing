@@ -10,8 +10,6 @@ source /opt/quartus_16.sh
 
 TEST_OPTION=$1
 
-rm -rf $ASEVAL_GIT/kw_run.* $ASEVAL_GIT/kw_ase.*
-
 if [[ $TEST_OPTION == "aal" ]]
 then
     ############################################################################
@@ -22,6 +20,7 @@ then
     cd $KW_BUILD
     ../configure
     ## Klocwork
+    rm -rf $ASEVAL_GIT/kw_run.*
     kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/AALUSER
     kwshell --verbose make -j 8
     kwcheck run
@@ -32,6 +31,7 @@ elif [[ $TEST_OPTION == "ase" ]]
 then
     ############################################################################
     cd $ASE_SRCDIR
+    rm -rf $ASEVAL_GIT/kw_ase.*
     kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/AALUSER
     kwshell --verbose make
     kwcheck run
