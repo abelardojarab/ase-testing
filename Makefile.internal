@@ -90,6 +90,7 @@ MENT_COMMAND = $(shell command -v vsim)
 
 ## C Compiler options
 CC_OPT = -g  -m64 -fPIC -D SIM_SIDE=1 -D SIMULATOR=$(SIMULATOR)
+CC_OPT+= -I $(ASE_SRCDIR)/sw/
 # CC_OPT+= -std=c11
 CC_OPT+= -Wall -fstack-protector-all
 ifeq ($(ASE_DEBUG), 1)
@@ -138,7 +139,7 @@ SNPS_VLOGAN_OPT = -nc -V -full64 +v2k -sverilog +define+$(SIMULATOR)
 SNPS_VLOGAN_OPT+= +incdir+$(DUT_INCDIR) +incdir+$(ASE_INCDIR)
 SNPS_VLOGAN_OPT+= +librescan -work $(WORK) -override_timescale=$(TIMESCALE)
 # SNPS_VLOGAN_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
-SNPS_VLOGAN_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX=1 +define+CCI_SIMULATION=1 +define+SIM_MODE=1
+SNPS_VLOGAN_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX  +define+CCI_SIMULATION=1 +define+SIM_MODE=1
 SNPS_VLOGAN_OPT+= +lint=all,noVCDE,noNS,NCEID,CAWM,TFIPC,IPDP,PCWM
 ifeq ($(ASE_DISABLE_LOGGER), 1)
   SNPS_VLOGAN_OPT+= +define+ASE_DISABLE_LOGGER
@@ -186,6 +187,7 @@ VCS_SIM_OPT+= -l run.log
 ifeq ($(ASE_PROFILE), 1)
   VCS_SIM_OPT+= -cm cond+fsm+branch
 endif
+VCS_SIM_OPT+= +ntb_random_seed=1234
 
 
 #########################################################################
@@ -199,7 +201,7 @@ MENT_VCOM_OPT = -nologo -work $(WORK)
 MENT_VLOG_OPT+= -nologo +librescan -work $(WORK) +define+$(SIMULATOR) -novopt
 MENT_VLOG_OPT+= -dpiheader work/dpiheader.h
 MENT_VLOG_OPT+= +incdir+$(ASE_INCDIR)+$(DUT_INCDIR)+$(WORK)
-MENT_VLOG_OPT+= -sv  -timescale $(TIMESCALE) -suppress 2388
+MENT_VLOG_OPT+= -sv  -timescale $(TIMESCALE) -l vlog.log
 # MENT_VLOG_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
 MENT_VLOG_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX  +define+CCI_SIMULATION=1 +define+SIM_MODE=1
 ifeq ($(ASE_DEBUG), 1)
@@ -221,6 +223,7 @@ endif
 # MENT_VSIM_OPT = -64
 MENT_VSIM_OPT+= -c -l run.log -dpioutoftheblue 1 -novopt
 MENT_VSIM_OPT+= -sv_lib $(ASE_SHOBJ_NAME) -do $(ASE_SRCDIR)/vsim_run.tcl
+MENT_VSIM_OPT+= -sv_seed 1234
 ifeq ($(ASE_DEBUG), 1)
   MENT_VLOG_OPT+= -hazards
 endif
@@ -245,7 +248,6 @@ CLANG_VERSION=3.8
 
 CLANG_OPT = -v -v -v -k -analyze-headers --use-cc=gcc -stats
 CLANG_OPT+= -maxloop 100
-CLANG_OPT+= -o $(PWD)/scanbuild/
 CLANG_OPT+= --use-analyzer=/usr/bin/clang-$(CLANG_VERSION)
 CLANG_OPT+= \
 	-enable-checker  alpha.core.BoolAssignment \
@@ -527,9 +529,9 @@ endif
 #########################################################################
 clean: header
 	rm -rf work/ *.log *.tsv AN.DB/ || echo "make: Didn't clean up work"
-	rm -rf csrc/ vc_hdrs.h .vlogansetup.* *.vpd
+	rm -rf csrc/ vc_hdrs.h .vlogansetup.* *.vpd app_build/
 	rm -rf transcript modelsim.ini vsim.wlf ucli.key vsim_stacktrace.vstf
-	rm -rf profile* simprofile* scanbuild/ DVEfiles/ csrc/
+	rm -rf profile* simprofile* scanbuild-app scanbuild-sim DVEfiles/ csrc/
 	rm -rf .ase_* *.o ase_seed.txt warnings.txt
 	rm -rf transcript *.log .ase_ipc_local ase_seed.txt
 	rm -rf vsim.wlf *_smq __hdl_xmr.tab
@@ -541,8 +543,7 @@ distclean: header clean
 #########################################################################
 #                            Internal only                              #
 #########################################################################
-NLB_CSRC = $(ASEVAL_GIT)/apps/nlb_lpbk1_test.c
-NLB_CSRC+= ${ASE_SRCDIR}/sw/tstamp_ops.c
+NLB_CSRC = ${ASE_SRCDIR}/sw/tstamp_ops.c
 NLB_CSRC+= ${ASE_SRCDIR}/sw/ase_ops.c 
 NLB_CSRC+= ${ASE_SRCDIR}/sw/app_backend.c 
 NLB_CSRC+= ${ASE_SRCDIR}/sw/mqueue_ops.c 
@@ -550,14 +551,22 @@ NLB_CSRC+= ${ASE_SRCDIR}/sw/error_report.c
 
 # NLB peek-poke build
 nlb-build:
-	gcc -g -o nlb_test.out $(NLB_CSRC) -lrt -lm -lpthread -I $(ASE_SRCDIR)/sw/
+	mkdir -p app_build
+	cd app_build ; gcc -g -m64 -fPIC -c $(NLB_CSRC) -I $(ASE_SRCDIR)/sw/ -Wall -fstack-protector-all || exit 1 ; cd -
+	cd app_build ; gcc -g -shared -o nlb_lib.so $(ASE_LD_SWITCHES) ; cd -
 
-# Source scan-build
-scan-build:
-	rm -rf scanbuild
-	mkdir -p scanbuild
-	scan-build-$(CLANG_VERSION) $(CLANG_OPT) make sw_build | tee scan-build-sim.log
-#	scan-build-$(CLANG_VERSION) $(CLANG_OPT) make nlb-build | tee scan-build-app.log
+## Scan-build options
+scan-build-sim:
+	rm -rf scanbuild-sim
+	mkdir -p scanbuild-sim
+	scan-build-$(CLANG_VERSION) $(CLANG_OPT) -o $(PWD)/scanbuild-sim/ make sw_build  | tee scan-build-sim.log
+
+scan-build-app:
+	rm -rf scan-build-app
+	mkdir -p scanbuild-app
+	scan-build-$(CLANG_VERSION) $(CLANG_OPT) -o $(PWD)/scanbuild-app/ make nlb-build | tee scan-build-app.log
+
+scan-build: scan-build-sim scan-build-app
 
 # GUI call for coverage
 cov_gui: coverage_gui
