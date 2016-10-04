@@ -5,11 +5,12 @@ afu=$1
 ## BBB VLOG and DIR
 mpf_v_list=$BBB_GIT/BBB_cci_mpf/hw/par/sim_file_list.txt
 async_v_list=$BBB_GIT/BBB_ccip_async/hw/sim/ccip_async_sim_addenda.txt
-# nlb_v_list=$ASEVAL_GIT/nlb_vlog_files.list
 
+## Base directory
 mpf_basedir=$BBB_GIT/BBB_cci_mpf/
 async_basedir=$BBB_GIT/BBB_ccip_async/
 nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/
+mmio_basedir=$ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/HW/
 
 ## AFU paths
 ccip_async_nlb100_all="$BBB_GIT/BBB_ccip_async/samples/async_nlb100.sv"
@@ -49,13 +50,23 @@ then
     dir_list=$dir_list" "$nlb_basedir
 fi
 
+if echo $afu | grep -q "ccip_mmio_rdwr_stress"
+then
+    echo "MMIO stress AFU found"
+    mmio_stress=1
+    dir_list=$dir_list" "$mmio_basedir
+fi
+
 echo $dir_list
 
 cd $ASE_SRCDIR
 ./scripts/generate_ase_environment.py $dir_list
 
 ## Redo vlog_files.list
-echo "" > $ASE_SRCDIR/vlog_files.list
+if [[ $afu -ne "ccip_mmio_rdwr_stress" ]]
+then
+    echo "" > $ASE_SRCDIR/vlog_files.list
+fi
 
 if [[ $async_found -eq 1 ]] 
 then
@@ -85,8 +96,18 @@ then
 elif [[ $afu == "ccip_async_mpf_nlb_all" ]]
 then
     echo -e "\n$ccip_async_mpf_nlb_all\n" >> $ASE_SRCDIR/vlog_files.list
+elif [[ $afu == "ccip_mmio_rdwr_stress" ]]
+then
+    echo "MMIO Stress AFU should be available"
 else
     echo "Requested AFU was not found, this may not work !"
     exit 1
 fi
+
+## Print out ase_sources.mk & vlog_files.list
+echo "-------------------------------------------------"
+cat $ASE_SRCDIR/vlog_files.list
+echo "-------------------------------------------------"
+cat $ASE_SRCDIR/ase_sources.mk
+echo "-------------------------------------------------"
 
