@@ -61,12 +61,13 @@ echo $dir_list
 
 cd $ASE_SRCDIR
 ./scripts/generate_ase_environment.py $dir_list
+cp vlog_files.list vlog_files.list.BAK
 
 ## Redo vlog_files.list
-if [[ $afu -ne "ccip_mmio_rdwr_stress" ]]
-then
-    echo "" > $ASE_SRCDIR/vlog_files.list
-fi
+# if [[ $afu -ne "ccip_mmio_rdwr_stress" ]]
+# then
+echo "" > $ASE_SRCDIR/vlog_files.list
+# fi
 
 if [[ $async_found -eq 1 ]] 
 then
@@ -99,6 +100,7 @@ then
 elif [[ $afu == "ccip_mmio_rdwr_stress" ]]
 then
     echo "MMIO Stress AFU should be available"
+    mv $ASE_SRCDIR/vlog_files.list.BAK $ASE_SRCDIR/vlog_files.list
 else
     echo "Requested AFU was not found, this may not work !"
     exit 1
