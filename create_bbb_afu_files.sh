@@ -5,11 +5,11 @@ afu=$1
 ## BBB VLOG and DIR
 mpf_v_list=$BBB_GIT/BBB_cci_mpf/hw/par/sim_file_list.txt
 async_v_list=$BBB_GIT/BBB_ccip_async/hw/sim/ccip_async_sim_addenda.txt
-nlb_v_list=$ASEVAL_GIT/nlb_vlog_files.list
+# nlb_v_list=$ASEVAL_GIT/nlb_vlog_files.list
 
 mpf_basedir=$BBB_GIT/BBB_cci_mpf/
 async_basedir=$BBB_GIT/BBB_ccip_async/
-nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/
+nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/
 
 ## AFU paths
 ccip_async_nlb100_all="$BBB_GIT/BBB_ccip_async/samples/async_nlb100.sv"
@@ -69,7 +69,7 @@ fi
 
 if [[ $nlb_found -eq 1 ]] 
 then
-    cat $ASEVAL_GIT/nlb_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
+    cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/$RELCODE/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
 fi
 
 ## Wrapper AFU
