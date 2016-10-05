@@ -56,7 +56,8 @@ ASE_PROFILE ?= 0
 
 # Coverage settings (lcov in SW and VCS-CM in HW)
 ASE_COVERAGE ?= 0
-COV_DIR=$(ASE_BASEDIR)/coverage/
+COV_DIR = $(ASE_BASEDIR)/coverage/
+COV_TYPES = line+cond+branch+fsm
 
 # Enable Altera gates library
 GLS_SIM = 1
@@ -170,8 +171,8 @@ ifeq ($(ASE_DEBUG), 1)
 endif
 ## Coverage switches
 ifeq ($(ASE_COVERAGE), 1)
-  SNPS_VCS_OPT+= -cm_dir $(COV_DIR)/vcs_coverage -cm_name ase_cov
-  SNPS_VCS_OPT+= -cm cond+fsm+branch -cm_tgl mda
+  SNPS_VCS_OPT+= -cm_dir $(COV_DIR)/ase_simv -cm_name ase_cov
+  SNPS_VCS_OPT+= -cm $(COV_TYPES) -cm_tgl mda
   SNPS_VCS_OPT+= -cm_hier $(ASEVAL_GIT)/ase_coverage.cfg
 endif
 ## Profile switches
@@ -185,7 +186,7 @@ endif
 VCS_SIM_OPT = -ucli -do $(ASE_SRCDIR)/vcs_run.tcl
 VCS_SIM_OPT+= -l run.log
 ifeq ($(ASE_PROFILE), 1)
-  VCS_SIM_OPT+= -cm cond+fsm+branch
+  VCS_SIM_OPT+= -cm $(COV_TYPES)
 endif
 VCS_SIM_OPT+= +ntb_random_seed=1234
 
@@ -501,7 +502,7 @@ ifeq ($(SIMULATOR), VCS)
 	cd $(ASE_WORKDIR) ; ./ase_simv $(VCS_SIM_OPT) +CONFIG=$(ASE_CONFIG) +SCRIPT=$(ASE_SCRIPT) ; cd -
   ifeq ($(ASE_COVERAGE), 1)
 	cd $(COV_DIR) ; lcov --base-directory $(COV_DIR) --directory $(ASE_WORKDIR) --capture --output-file $(COV_DIR)/sim_coverage.info ; genhtml $(COV_DIR)/sim_coverage.info --output-directory $(COV_DIR)/sim_coverage ; cd -
-	cd $(COV_DIR) ; urg -full64 -dir $(COV_DIR)/vcs_coverage.vdb ; cd -
+	cd $(COV_DIR) ; urg -full64 -dir $(COV_DIR)/ase_simv.vdb ; cd -
   endif
 else
   ifeq ($(SIMULATOR), QUESTA)
@@ -575,7 +576,7 @@ coverage_gui:
 	chromium-browser  $(COV_DIR)/urgReport/dashboard.html &
 	chromium-browser  $(COV_DIR)/lcov_coverage/index.html &
 	chromium-browser  $(COV_DIR)/profileReport.html &
-	dve -dir $(COV_DIR)/vcs_coverage.vdb/ -full64 &
+	dve -dir $(COV_DIR)/ase_simv.vdb/ -full64 &
 
 # Valgrind run
 valgrind_run:
