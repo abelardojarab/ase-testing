@@ -1,30 +1,63 @@
 #!/bin/sh
 
+TOOLKEY=$1
+
+TOOLKEY_LIST="vcsmx_H_2013_06_SP1_15  vcsmx_J_2014_12_SP3_5  vcsmx_K_2015_09_SP1  vcsmx_L_2016_06  vsim_questasim_10_5b  vsim_modelsim_se_10_5a  vcs_I_2014_03  vsim_modelsim_se_10_3e  vsim_questasim_10_4d  vsim_modelsim_ae_16_0_0_211"
+
 ## Check if TOOLKEY is supplied
 if [ "$1" = "" ];
 then
     echo "** ERROR : Incorrect usage ! **"
-    echo "Usage: source tools_setup.sh <TOOLKEY> <RELCODE>"
+    echo "Usage: source tools_setup.sh <TOOLKEY>"
     echo "    TOOLKEY      = { vcsmx_H_2013_06_SP1_15  vcsmx_J_2014_12_SP3_5  vcsmx_K_2015_09_SP1  vcsmx_L_2016_06  vsim_questasim_10_5b  vsim_modelsim_se_10_5a  vcs_I_2014_03  vsim_modelsim_se_10_3e  vsim_questasim_10_4d  vsim_modelsim_ae_16_0_0_211 }"
-    echo "    RELCODE = { BDX1  BDX2  SKX1 }"
-    return
+    return 1
+elif [[ "$1" =~ $TOOLKEY_LIST ]];
+then
+    echo "Unknown toolkey $TOOLKEY"
+    echo "** ERROR : Incorrect usage ! **"
+    echo "Usage: source tools_setup.sh <TOOLKEY>"
+    echo "    TOOLKEY      = { vcsmx_H_2013_06_SP1_15  vcsmx_J_2014_12_SP3_5  vcsmx_K_2015_09_SP1  vcsmx_L_2016_06  vsim_questasim_10_5b  vsim_modelsim_se_10_5a  vcs_I_2014_03  vsim_modelsim_se_10_3e  vsim_questasim_10_4d  vsim_modelsim_ae_16_0_0_211 }"
+    return 1
+else
+    echo "Toolkey identified as $TOOLKEY"
 fi
 
-TOOLKEY=$1
 
 declare -A TOOL_PATH
 declare -A TOOL_CLASS
 
 ## Set up VCS/Modelsim based on TOOLKEY
-TOOL_PATH=( [vcsmx_H_2013_06_SP1_15]="/opt/synopsys/vcs-mx/H-2013.06-SP1-15/" [vcsmx_J_2014_12_SP3_5]="/opt/synopsys/vcs-mx/J-2014.12-SP3-5/" [vcsmx_K_2015_09_SP1]="/opt/synopsys/vcs-mx/K-2015.09-SP1/" [vcsmx_L_2016_06]="/opt/synopsys/vcs-mx/L-2016.06/" [vsim_questasim_10_5b]="/opt/mentor/questasim_10.5b/questasim/" [vsim_modelsim_se_10_5a]="/opt/mentor/modelsim_se_10.5a/modeltech" [vcs_I_2014_03]="/opt/synopsys/vcs/I-2014.03/" [vsim_modelsim_se_10_3e]="/opt/mentor/modelsim_se_10.3e/modeltech/" [vsim_questasim_10_4d]="/opt/mentor/questasim_10.4d/questasim/" [vsim_modelsim_ae_16_0_0_211]="/opt/mentor/modelsim_ae-16.0.0.211/modelsim_ae/" )
+TOOL_PATH["vcsmx_H_2013_06_SP1_15"]="/opt/synopsys/vcs-mx/H-2013.06-SP1-15/"
+TOOL_PATH["vcsmx_J_2014_12_SP3_5"]="/opt/synopsys/vcs-mx/J-2014.12-SP3-5/"
+TOOL_PATH["vcsmx_K_2015_09_SP1"]="/opt/synopsys/vcs-mx/K-2015.09-SP1/"
+TOOL_PATH["vcsmx_L_2016_06"]="/opt/synopsys/vcs-mx/L-2016.06/"
+TOOL_PATH["vsim_questasim_10_5b"]="/opt/mentor/questasim_10.5b/questasim/"
+TOOL_PATH["vsim_modelsim_se_10_5a"]="/opt/mentor/modelsim_se_10.5a/modeltech"
+TOOL_PATH["vcs_I_2014_03"]="/opt/synopsys/vcs/I-2014.03/"
+TOOL_PATH["vsim_modelsim_se_10_3e"]="/opt/mentor/modelsim_se_10.3e/modeltech/"
+TOOL_PATH["vsim_questasim_10_4d"]="/opt/mentor/questasim_10.4d/questasim/"
+TOOL_PATH["vsim_modelsim_ae_16_0_0_211"]="/opt/mentor/modelsim_ae-16.0.0.211/modelsim_ae/"
 
-TOOL_CLASS=( [vcsmx_H_2013_06_SP1_15]=VCS [vcsmx_J_2014_12_SP3_5]=VCS [vcsmx_K_2015_09_SP1]=VCS [vcsmx_L_2016_06]=VCS [vsim_questasim_10_5b]=QUESTA [vsim_modelsim_se_10_5a]=QUESTA [vcs_I_2014_03]=VCS [vsim_modelsim_se_10_3e]=QUESTA [vsim_questasim_10_4d]=QUESTA [vsim_modelsim_ae_16_0_0_211]=QUESTA )
+TOOL_CLASS["vcsmx_H_2013_06_SP1_15"]=VCS
+TOOL_CLASS["vcsmx_J_2014_12_SP3_5"]=VCS
+TOOL_CLASS["vcsmx_K_2015_09_SP1"]=VCS
+TOOL_CLASS["vcsmx_L_2016_06"]=VCS
+TOOL_CLASS["vsim_questasim_10_5b"]=QUESTA
+TOOL_CLASS["vsim_modelsim_se_10_5a"]=QUESTA
+TOOL_CLASS["vcs_I_2014_03"]=VCS
+TOOL_CLASS["vsim_modelsim_se_10_3e"]=QUESTA
+TOOL_CLASS["vsim_questasim_10_4d"]=QUESTA
+TOOL_CLASS["vsim_modelsim_ae_16_0_0_211"]=QUESTA
+
+# TOOL_PATH=( [vcsmx_H_2013_06_SP1_15]="/opt/synopsys/vcs-mx/H-2013.06-SP1-15/" [vcsmx_J_2014_12_SP3_5]="/opt/synopsys/vcs-mx/J-2014.12-SP3-5/" [vcsmx_K_2015_09_SP1]="/opt/synopsys/vcs-mx/K-2015.09-SP1/" [vcsmx_L_2016_06]="/opt/synopsys/vcs-mx/L-2016.06/" [vsim_questasim_10_5b]="/opt/mentor/questasim_10.5b/questasim/" [vsim_modelsim_se_10_5a]="/opt/mentor/modelsim_se_10.5a/modeltech" [vcs_I_2014_03]="/opt/synopsys/vcs/I-2014.03/" [vsim_modelsim_se_10_3e]="/opt/mentor/modelsim_se_10.3e/modeltech/" [vsim_questasim_10_4d]="/opt/mentor/questasim_10.4d/questasim/" [vsim_modelsim_ae_16_0_0_211]="/opt/mentor/modelsim_ae-16.0.0.211/modelsim_ae/" )
+
+# TOOL_CLASS=( [vcsmx_H_2013_06_SP1_15]=VCS [vcsmx_J_2014_12_SP3_5]=VCS [vcsmx_K_2015_09_SP1]=VCS [vcsmx_L_2016_06]=VCS [vsim_questasim_10_5b]=QUESTA [vsim_modelsim_se_10_5a]=QUESTA [vcs_I_2014_03]=VCS [vsim_modelsim_se_10_3e]=QUESTA [vsim_questasim_10_4d]=QUESTA [vsim_modelsim_ae_16_0_0_211]=QUESTA )
 
 ## Set path
-export SELECTED_PATH=${TOOL_PATH[$TOOLKEY]}
-export SELECTED_CLASS=${TOOL_CLASS[$TOOLKEY]}
-echo $SELECTED_PATH
-echo $SELECTED_CLASS
+export SELECTED_PATH=${TOOL_PATH["$TOOLKEY"]}
+export SELECTED_CLASS=${TOOL_CLASS["$TOOLKEY"]}
+echo "SELECTED_PATH  : " $SELECTED_PATH
+echo "SELECTED_CLASS : " $SELECTED_CLASS
 
 ## Check if Release Code is supplied
 export ALTERA_VER=16.0.0.211-Pro
@@ -51,18 +84,23 @@ then
     ## Synopsys license
     export SNPSLMD_LICENSE_FILE="26586@plxs0402.pdx.intel.com:26586@plxs0405.pdx.intel.com:26586@plxs0406.pdx.intel.com:26586@plxs0408.pdx.intel.com:26586@plxs0414.pdx.intel.com:26586@plxs0415.pdx.intel.com:26586@plxs0416.pdx.intel.com:26586@plxs0418.pdx.intel.com:26586@synopsys69p.elic.intel.com:26586@synopsys68p.elic.intel.com:26586@fmylic43.fm.intel.com:26586@irslic006.ir.intel.com"
     export VCS_HOME=$SELECTED_PATH
-#     export PATH=${SELECTED_PATH}/bin/:${PATH}
 elif [ "$SELECTED_CLASS" = "QUESTA" ];
 then
     ## Mentor License
     export MGLS_LICENSE_FILE="1717@mentor04p.elic.intel.com"
     export MTI_HOME=$SELECTED_PATH
 else
-    echo "** ERROR: TOOLKEY=$TOOLKEY is unidentified ! EXIT here ! **"
-    exit 1
+    echo "** ERROR: TOOL_CLASS=$SELECTED_CLASS is unidentified ! EXIT here ! **"
+    return 1
 fi
 
-export PATH=${SELECTED_PATH}/bin/:${PATH}
+if [ "$TOOLKEY" = "vsim_modelsim_ae_16_0_0_211" ];
+then
+    echo "Using 'linux' instead of 'bin'"
+    export PATH=${SELECTED_PATH}/linux/:${PATH}
+else
+    export PATH=${SELECTED_PATH}/bin/:${PATH}
+fi
 
 export SIMULATOR=$SELECTED_CLASS
 
@@ -88,4 +126,3 @@ echo "MGLS_LICENSE_FILE    : " $MGLS_LICENSE_FILE
 echo "PATH                 : " $PATH
 echo "LD_LIBRARY_PATH      : " $LD_LIBRARY_PATH
 # echo "LM_LICENSE_FILE      : " $LM_LICENSE_FILE
-
