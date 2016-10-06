@@ -33,7 +33,7 @@ for nlb_mode in $fpgadiag_mode ; do
     mode_str="--mode=lpbk1"
     timeout_val=600
     # fpgadiag_cnt_arr="32768"
-    fpgadiag_cnt_arr="16"
+    fpgadiag_cnt_arr="64"
     ## ----------------------------------------------- ##
     for rdvc_set in $fpgadiag_rdvc_arr ; do
 	for wrvc_set in $fpgadiag_wrvc_arr ; do
