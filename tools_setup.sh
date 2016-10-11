@@ -105,7 +105,7 @@ fi
 export SIMULATOR=$SELECTED_CLASS
 
 ## Setup Altera settings
-# export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@fmylic36b.fm.intel.com:1800@fmylic7001.fm.intel.com:1800@fmylic7008.fm.intel.com"
+export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@fmylic36b.fm.intel.com:1800@fmylic7001.fm.intel.com:1800@fmylic7008.fm.intel.com"
 # export LM_LICENSE_FILE=$LM_LICENSE_FILE:"1800@altera02p.elic.intel.com:1800@dan-host-1.sc.intel.com:1800@plxs0402.pdx.intel.com"
 export QUARTUS_HOME=/opt/altera/$ALTERA_VER/quartus/
 export QUARTUS_ROOTDIR=$QUARTUS_HOME
