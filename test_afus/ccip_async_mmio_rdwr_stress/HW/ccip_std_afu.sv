@@ -30,14 +30,36 @@ module ccip_std_afu(
 );
 
 
+   logic 	  reset_pass;   
+   logic 	  afu_clk;   
+
+   t_if_ccip_Tx afu_tx;
+   t_if_ccip_Rx afu_rx;
+   
+   assign afu_clk =  uClk_usr;
+
+   
+   // AFU fmax @ 350 Mhz, using Async shim instead
+   ccip_async_shim ccip_async_shim (
+				    .bb_softreset    (pck_cp2af_softReset),
+				    .bb_clk          (pClk),
+				    .bb_tx           (pck_af2cp_sTx),
+				    .bb_rx           (pck_cp2af_sRx),
+				    .afu_softreset   (reset_pass),
+				    .afu_clk         (afu_clk),
+				    .afu_tx          (afu_tx),
+				    .afu_rx          (afu_rx)
+				    );
+
+   
 //===============================================================================================
 // User AFU goes here
 //===============================================================================================
 mmio_stress_afu mmio_stress_afu (
-				 .pClk                 ( pClk ) ,
-				 .pck_cp2af_softReset  ( pck_cp2af_softReset ) ,
-				 .pck_cp2af_sRx       ( pck_cp2af_sRx ) ,
-				 .pck_af2cp_sTx       ( pck_af2cp_sTx )
+				 .pClk                 ( afu_clk ) ,
+				 .pck_cp2af_softReset  ( reset_pass ) ,
+				 .pck_cp2af_sRx       ( afu_rx ) ,
+				 .pck_af2cp_sTx       ( afu_tx )
 				 );
 
 endmodule
