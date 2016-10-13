@@ -1,0 +1,5 @@
+$ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/HW/mmio_stress_afu.sv
+$ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/HW/ccip_std_afu.sv
+
+
+
