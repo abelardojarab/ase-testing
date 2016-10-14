@@ -57,7 +57,7 @@ ASE_PROFILE ?= 0
 # Coverage settings (lcov in SW and VCS-CM in HW)
 ASE_COVERAGE ?= 0
 COV_DIR = $(ASE_BASEDIR)/coverage/
-COV_TYPES = line+cond+branch+fsm
+COV_TYPES = line+cond+branch+fsm+tgl
 
 # Enable Altera gates library
 GLS_SIM = 1
@@ -178,15 +178,18 @@ endif
 ## Profile switches
 ifeq ($(ASE_PROFILE), 1)
   SNPS_VCS_OPT+= +vcs+loopreport +vcs+loopdetect
-  SNPS_VCS_OPT+= -simprofile +prof
+  SNPS_VCS_OPT+= -simprofile
 endif
 # SNPS_VCS_OPT+= -LDFLAGS="-m64"             #  !!! DO NOT EDIT !!!
 
 ## Simulation options
 VCS_SIM_OPT = -ucli -do $(ASE_SRCDIR)/vcs_run.tcl
 VCS_SIM_OPT+= -l run.log
-ifeq ($(ASE_PROFILE), 1)
+ifeq ($(ASE_COVERAGE), 1)
   VCS_SIM_OPT+= -cm $(COV_TYPES)
+endif
+ifeq ($(ASE_PROFILE), 1) 
+  VCS_SIM_OPT+= -simprofile time
 endif
 VCS_SIM_OPT+= +ntb_random_seed=1234
 
@@ -512,6 +515,10 @@ else
 	@echo "#         SIMULATOR=$(SIMULATOR) not supported             #"
 	@echo "############################################################"
   endif
+endif
+## Gnuplot post latency distribution
+ifeq ($(ASE_DEBUG), 1)
+	cd $(ASE_WORKDIR) ; gnuplot $(ASEVAL_GIT)/gp_hist_ch0.cfg ; gnuplot $(ASEVAL_GIT)/gp_hist_ch1.cfg ; cd -
 endif
 
 # Open Wave file
