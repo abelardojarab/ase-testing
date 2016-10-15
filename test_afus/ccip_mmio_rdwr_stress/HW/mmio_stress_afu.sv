@@ -60,17 +60,6 @@ module mmio_stress_afu
    t_ccip_c0_ReqMmioHdr CfgHdr;
    assign CfgHdr = t_ccip_c0_ReqMmioHdr'(pck_cp2af_sRx.c0.hdr);
 
-   // logic [8:0] 	     mmio_rtid;
-   
-   
-   // logic [63:0]      mmio_rdata_0;
-   // logic [8:0] 	     mmio_rtid_0;
-   // logic 	     mmio_rvalid_0;
-
-   // logic [63:0]      mmio_rdata_1;
-   // logic [8:0] 	     mmio_rtid_1;
-   // logic 	     mmio_rvalid_1;
-
 
    /*
     * Soft reset, starts off a 4-cycle long internal reset
@@ -79,7 +68,7 @@ module mmio_stress_afu
    logic 	     softreset_q;
    logic 	     softreset;
    logic 	     internal_rst;
-   logic 	     rst_trigger;
+   // logic 	     rst_trigger;
    int 		     rst_counter;
 
    typedef enum {
@@ -97,14 +86,14 @@ module mmio_stress_afu
       softreset_q <= softreset;
    end
 
-   always @(posedge clk) begin
-      if (softreset & ~softreset_q) begin
-	 rst_trigger <= 1;
-      end
-      else begin
-	 rst_trigger <= 0;
-      end
-   end
+   // always @(posedge clk) begin
+   //    if (softreset & ~softreset_q) begin
+   // 	 rst_trigger <= 1;
+   //    end
+   //    else begin
+   // 	 rst_trigger <= 0;
+   //    end
+   // end
 
    /*
     * Main process =>
@@ -120,7 +109,7 @@ module mmio_stress_afu
    	   ResetIdle:
    	     begin
    		ram_write_en <= 0;
-   		if (rst_trigger) begin
+   		if (softreset) begin
    		   internal_rst <= 1;
    		   rst_state <= ResetLine1;
    		end

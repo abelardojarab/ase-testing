@@ -36,8 +36,8 @@ module ccip_std_afu(
 mmio_stress_afu mmio_stress_afu (
 				 .pClk                ( pClk ) ,
 				 .pck_cp2af_softReset (pck_cp2af_softReset),
-				 .pck_cp2af_sRx       (pck_af2cp_sTx),
-				 .pck_af2cp_sTx       (pck_cp2af_sRx)
+				 .pck_cp2af_sRx       (pck_cp2af_sRx),
+				 .pck_af2cp_sTx       (pck_af2cp_sTx)
 				 );
 
 endmodule
