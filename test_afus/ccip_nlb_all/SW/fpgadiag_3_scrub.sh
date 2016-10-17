@@ -9,7 +9,7 @@ fi
 
 source $ASEVAL_GIT/test_afus/ccip_nlb_all/SW/fpgadiag_include.sh
 
-LOGNAME="$PWD/test_status.log"
+LOGNAME="$PWD/results_fpgadiag_3.log"
 
 # Delete log if exists
 rm -rf $LOGNAME

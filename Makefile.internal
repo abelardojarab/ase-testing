@@ -184,7 +184,7 @@ endif
 
 ## Simulation options
 VCS_SIM_OPT = -ucli -do $(ASE_SRCDIR)/vcs_run.tcl
-VCS_SIM_OPT+= -l run.log
+# VCS_SIM_OPT+= -l run.log
 ifeq ($(ASE_COVERAGE), 1)
   VCS_SIM_OPT+= -cm $(COV_TYPES)
 endif

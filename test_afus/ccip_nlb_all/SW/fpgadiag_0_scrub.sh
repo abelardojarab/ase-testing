@@ -9,7 +9,7 @@ fi
 
 source $ASEVAL_GIT/test_afus/ccip_nlb_all/SW/fpgadiag_include.sh
 
-LOGNAME="$PWD/test_status.log"
+LOGNAME="$PWD/results_fpgadiag_0.log"
 
 # Delete log if exists
 rm -rf $LOGNAME
@@ -68,7 +68,6 @@ for nlb_mode in $fpgadiag_mode ; do
 				    if [[ $errcode != 0 ]]
 				    then
 					echo -e " [** FAIL **]  $simtime  $cmd \n" >> $LOGNAME
-					exit 1
 					retcode=1
 				    else
 					echo -e " [PASS]        $simtime  $cmd \n" >> $LOGNAME
