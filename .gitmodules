@@ -1,0 +1,3 @@
+[submodule "fpga-regress"]
+	path = fpga-regress
+	url = git://atp-jenkins.jf.intel.com/aal
