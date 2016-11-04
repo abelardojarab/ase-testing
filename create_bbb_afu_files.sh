@@ -3,8 +3,10 @@
 afu=$1
 
 ## BBB VLOG and DIR
-mpf_v_list=$BBB_GIT/BBB_cci_mpf/hw/par/sim_file_list.txt
+mpf_v_list=$BBB_GIT/BBB_cci_mpf/hw/sim/cci_mpf_sim_addenda.txt
 async_v_list=$BBB_GIT/BBB_ccip_async/hw/sim/ccip_async_sim_addenda.txt
+mpf_rtldir=$(dirname $mpf_v_list)"/"
+async_rtldir=$(dirname $async_v_list)"/"
 
 ## Base directory
 mpf_basedir=$BBB_GIT/BBB_cci_mpf/
@@ -24,8 +26,8 @@ mpf_found=0
 nlb_found=0
 
 ## Generate Temp file sets
-awk '{print "$BBB_GIT/BBB_ccip_async/" $0}' $async_v_list > $ASEVAL_GIT/async_vlog_files.list
-awk '{print "$BBB_GIT/BBB_cci_mpf/" $0}' $mpf_v_list | grep -v ccip_if_pkg > $ASEVAL_GIT/mpf_vlog_files.list
+awk -v basedir=${async_rtldir} '/^[^#]/ {print basedir $0}' $async_v_list > $ASEVAL_GIT/async_vlog_files.list
+awk -v basedir=${mpf_rtldir}   '/^[^#]/ {print basedir $0}' $mpf_v_list | grep -v "+" |grep -v ccip_if_pkg > $ASEVAL_GIT/mpf_vlog_files.list
 
 ## Generate DIR list
 
