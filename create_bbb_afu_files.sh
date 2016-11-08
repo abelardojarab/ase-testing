@@ -13,17 +13,23 @@ mpf_basedir=$BBB_GIT/BBB_cci_mpf/
 async_basedir=$BBB_GIT/BBB_ccip_async/
 nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/
 mmio_basedir=$ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/HW/
+testrandom_basedir="$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/ $BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/"
 
 ## AFU paths
 ccip_async_nlb100_all="$BBB_GIT/BBB_ccip_async/samples/async_nlb100.sv"
 ccip_async_nlb300_all="$BBB_GIT/BBB_ccip_async/samples/async_nlb300.sv"
 ccip_mpf_nlb_all="$BBB_GIT/BBB_cci_mpf/sample/afu/ccip_mpf_nlb.sv"
 ccip_async_mpf_nlb_all="$BBB_GIT/BBB_cci_mpf/sample/afu/ccip_slow_mpf_nlb.sv"
+ccip_mpf_test_random="$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/hw/rtl/cci_test_afu.sv\n$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/hw/rtl/cci_test_csrs.sv\n$BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/hw/rtl/test_random.sv"
 
+## Directory listing
 dir_list=""
+
 async_found=0
 mpf_found=0
 nlb_found=0
+mmio_stress=0
+8test_random=0
 
 ## Generate Temp file sets
 awk -v basedir=${async_rtldir} '/^[^#]/ {print basedir $0}' $async_v_list > $ASEVAL_GIT/async_vlog_files.list
@@ -57,6 +63,13 @@ then
     echo "MMIO stress AFU found"
     mmio_stress=1
     dir_list=$dir_list" "$mmio_basedir
+fi
+
+if echo $afu | grep -q "ccip_mpf_test_random"
+then
+    echo "MPF Test Random AFU found"
+    test_random=1
+    dir_list=$dir_list" "$testrandom_basedir
 fi
 
 echo $dir_list
@@ -99,6 +112,10 @@ then
 elif [[ $afu == "ccip_async_mpf_nlb_all" ]]
 then
     echo -e "\n$ccip_async_mpf_nlb_all\n" >> $ASE_SRCDIR/vlog_files.list
+elif [[ $afu == "ccip_mpf_test_random" ]]
+then
+    echo "Creating MPF test_random AFU"
+    echo -e "\n$ccip_mpf_test_random\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_mmio_rdwr_stress" ]]
 then
     echo "MMIO Stress AFU should be available"
