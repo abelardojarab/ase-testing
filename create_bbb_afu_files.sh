@@ -5,8 +5,11 @@ afu=$1
 ## BBB VLOG and DIR
 mpf_v_list=$BBB_GIT/BBB_cci_mpf/hw/sim/cci_mpf_sim_addenda.txt
 async_v_list=$BBB_GIT/BBB_ccip_async/hw/sim/ccip_async_sim_addenda.txt
+mux_v_list=$BBB_GIT/BBB_ccip_mux/hw/sim/mux_simfiles.list
+
 mpf_rtldir=$(dirname $mpf_v_list)"/"
 async_rtldir=$(dirname $async_v_list)"/"
+mux_rtldir=$(dirname $mux_v_list)"/"
 
 ## Base directory
 mpf_basedir=$BBB_GIT/BBB_cci_mpf/
@@ -14,6 +17,7 @@ async_basedir=$BBB_GIT/BBB_ccip_async/
 nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/
 mmio_basedir=$ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/HW/
 testrandom_basedir="$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/ $BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/"
+mux_basedir="${mux_rtldir} $BBB_GIT/BBB_ccip_mux/sample/hw/"
 
 ## AFU paths
 ccip_async_nlb100_all="$BBB_GIT/BBB_ccip_async/samples/async_nlb100.sv"
@@ -21,6 +25,7 @@ ccip_async_nlb300_all="$BBB_GIT/BBB_ccip_async/samples/async_nlb300.sv"
 ccip_mpf_nlb_all="$BBB_GIT/BBB_cci_mpf/sample/afu/ccip_mpf_nlb.sv"
 ccip_async_mpf_nlb_all="$BBB_GIT/BBB_cci_mpf/sample/afu/ccip_slow_mpf_nlb.sv"
 ccip_mpf_test_random="$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/hw/rtl/cci_test_afu.sv\n$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/hw/rtl/cci_test_csrs.sv\n$BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/hw/rtl/test_random.sv"
+ccip_async_mux_muxsample=`find $BBB_GIT/BBB_ccip_mux/sample/hw/ -name \*.sv -or -name \*.v`
 
 ## Directory listing
 dir_list=""
@@ -29,14 +34,15 @@ async_found=0
 mpf_found=0
 nlb_found=0
 mmio_stress=0
-8test_random=0
+test_random=0
+mux_found=0
 
 ## Generate Temp file sets
 awk -v basedir=${async_rtldir} '/^[^#]/ {print basedir $0}' $async_v_list > $ASEVAL_GIT/async_vlog_files.list
 awk -v basedir=${mpf_rtldir}   '/^[^#]/ {print basedir $0}' $mpf_v_list | grep -v "+" |grep -v ccip_if_pkg > $ASEVAL_GIT/mpf_vlog_files.list
+awk -v basedir=${mux_rtldir}   '/^[^#]/ {print basedir $0}' $mux_v_list | grep -v "+" |grep -v ccip_if_pkg > $ASEVAL_GIT/mux_vlog_files.list
 
 ## Generate DIR list
-
 if echo $afu | grep -q "async"
 then
     dir_list=$dir_list" "$async_basedir
@@ -49,6 +55,13 @@ then
     echo "MPF found"
     mpf_found=1
     dir_list=$dir_list" "$mpf_basedir
+fi
+
+if echo $afu | grep -q "mux"
+then
+    echo "MUX found"
+    mux_found=1
+    dir_list=$dir_list" "$mux_basedir
 fi
 
 if echo $afu | grep -q "nlb"
@@ -79,10 +92,7 @@ cd $ASE_SRCDIR
 cp vlog_files.list vlog_files.list.BAK
 
 ## Redo vlog_files.list
-# if [[ $afu -ne "ccip_mmio_rdwr_stress" ]]
-# then
 echo "" > $ASE_SRCDIR/vlog_files.list
-# fi
 
 if [[ $async_found -eq 1 ]] 
 then
@@ -92,6 +102,11 @@ fi
 if [[ $mpf_found -eq 1 ]] 
 then
     cat $ASEVAL_GIT/mpf_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
+fi
+
+if [[ $mux_found -eq 1 ]]
+then
+    cat $ASEVAL_GIT/mux_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
 fi
 
 if [[ $nlb_found -eq 1 ]] 
@@ -116,6 +131,10 @@ elif [[ $afu == "ccip_mpf_test_random" ]]
 then
     echo "Creating MPF test_random AFU"
     echo -e "\n$ccip_mpf_test_random\n" >> $ASE_SRCDIR/vlog_files.list
+elif [[ $afu == "ccip_async_mux_muxsample" ]]
+then
+    echo "Create MUX test configuration"
+    echo -e "\n$ccip_async_mux_muxsample\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_mmio_rdwr_stress" ]]
 then
     echo "MMIO Stress AFU should be available"
