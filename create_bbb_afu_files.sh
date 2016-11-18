@@ -131,10 +131,7 @@ fi
 if [[ $mpf_found -eq 1 ]] 
 then
     cat $ASEVAL_GIT/mpf_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
-    if [[ $RELCODE == "SKX1" ]]
-    then
-	cp $ASEVAL_GIT/mpf.nlb_csr.sv $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_csr.sv
-    fi
+    cp $ASEVAL_GIT/test_afus/ccip_mpf_nlb_all/config/${RELCODE}/nlb_csr.sv $ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/nlb_csr.sv
 fi
 
 if [[ $mux_found -eq 1 ]]
@@ -144,7 +141,7 @@ fi
 
 if [[ $nlb_found -eq 1 ]] 
 then
-    cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/$RELCODE/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
+    cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/${RELCODE}/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
 fi
 
 if [[ $iom_found -eq 1 ]]
