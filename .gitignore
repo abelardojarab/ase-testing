@@ -25,3 +25,9 @@ InitRelease
 mmio_stress
 seeded_random
 
+async_vlog_files.list
+iombuf_samp_vlog_files.list
+iomfifo_samp_vlog_files.list
+iom_vlog_files.list
+mpf_vlog_files.list
+mux_vlog_files.list
