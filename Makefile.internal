@@ -85,6 +85,7 @@ ASE_SCRIPT ?= $(ASE_SRCDIR)/ase_regress.sh
 ASEHW_FILE_LIST = \
 	$(ASE_SRCDIR)/hw/ccip_if_pkg.sv \
 	$(ASE_SRCDIR)/hw/ase_pkg.sv \
+	$(ASE_SRCDIR)/hw/inorder_wrf_channel.sv \
 	$(ASE_SRCDIR)/hw/outoforder_wrf_channel.sv \
 	$(ASE_SRCDIR)/hw/latency_pipe.sv \
 	$(ASE_SRCDIR)/hw/ccip_emulator.sv \
