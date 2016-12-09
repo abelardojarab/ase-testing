@@ -18,7 +18,7 @@ for nlb_mode in $fpgadiag_mode ; do
     ## ----------------------------------------------- ##
     mode_str="--mode=trput --timeout-sec=3 --cont"
     timeout_val=10
-    fpgadiag_cnt_arr="1024 4096"
+    fpgadiag_cnt_arr="64 1024"
     ## ----------------------------------------------- ##
     for rdvc_set in $fpgadiag_rdvc_arr ; do
 	for wrvc_set in $fpgadiag_wrvc_arr ; do
