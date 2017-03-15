@@ -36,7 +36,7 @@ kwcheck list -F detailed --local --system --severity 5 > $ASEVAL_GIT/kw_run.5.lo
 cd $ASE_SRCDIR
 rm -rf $ASEVAL_GIT/kw_ase.*
 kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/AALUSER
-kwshell --verbose make
+kwshell --verbose make sw_build
 kwcheck run
 kwcheck list -F detailed --local --system --severity 1 > $ASEVAL_GIT/kw_ase.1.log
 kwcheck list -F detailed --local --system --severity 2 > $ASEVAL_GIT/kw_ase.2.log
@@ -47,4 +47,7 @@ kwcheck list -F detailed --local --system --severity 5 > $ASEVAL_GIT/kw_ase.5.lo
 # else
 #     echo "Set an option -- 'aal' or 'ase'"
 # fi
+
+cd $ASEVAL_GIT/
+ls -lt kw_*.log
 

@@ -17,7 +17,7 @@ export FPGASW_GIT=$BASEDIR/fpga-sw/
 export ASE_SRCDIR=$FPGASW_GIT/ase
 export ASE_WORKDIR=$FPGASW_GIT/ase/work
 # export AALKERN_DIR=$AALSDK_GIT/aalkernel
-# export MYINST_DIR=$BASEDIR/myinst
+export MYINST_DIR=$BASEDIR/myinst
 # export AALSAMP_DIR=$AALSDK_GIT/aalsamples
 
 export RELCODE="SKX1"
