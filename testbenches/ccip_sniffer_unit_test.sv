@@ -1364,8 +1364,48 @@ module ccip_checker_unit_test;
 			clk_cb.ccip_tx.c1.hdr.address		    <= 7;
 			##3;
 			`FAIL_UNLESS_EQUAL(clk_cb.error_code[22],0); 
-		`SVTEST_END			  
-	  
+			clk_cb.ccip_tx.c1.valid   				<= 0;
+		`SVTEST_END		
+
+		`SVTEST(MMIO_RDRSP_UNSOLICITED)
+			reset();
+			clk_cb.SoftReset <=1;
+			##3;
+			`FAIL_UNLESS_EQUAL(clk_cb.error_code[2],0);
+			clk_cb.SoftReset <=0;
+			##1;
+			clk_cb.ccip_tx.c2.mmioRdValid <= 1;
+			clk_cb.ccip_tx.c2.hdr.tid     <= 2; 
+			clk_cb.ccip_tx.c2.data		  <= 3;
+			
+			##3;
+			`FAIL_UNLESS_EQUAL(clk_cb.error_code[2],1);	
+			clk_cb.ccip_tx.c2.mmioRdValid <= 0;
+			
+		`SVTEST_END	
+		
+		
+		`SVTEST(MMIO_RDRSP_TIMEOUT)
+			reset();
+			clk_cb.ase_reset <=1;
+			##3;
+			`FAIL_UNLESS_EQUAL(clk_cb.error_code[1],0);
+			clk_cb.ase_reset <=0;
+			
+			##1;
+			for( int i=0;i<512;i++)
+			begin
+			reset();
+			clk_cb.ccip_rx.c0.mmioRdValid <= 1;
+			clk_cb.ccip_rx.c0.hdr    <= i;
+			##512;
+			##4;
+			`FAIL_UNLESS_EQUAL(clk_cb.error_code[1],1);
+			end
+			
+			
+		`SVTEST_END	
+		
 	  `SVUNIT_TESTS_END
 
 endmodule
