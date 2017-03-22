@@ -30,7 +30,7 @@ make
 make install
 
 ## Copy include directory to $MYINST_DIR
-cp -r $FPGASW_GIT/ase/api/include/ $MYINST_DIR/include/
+cp -r $FPGASW_GIT/fpga-api/include/ $MYINST_DIR/include/
 
 ## Build and install MPF
 cd $BBB_GIT/BBB_cci_mpf/sw/
