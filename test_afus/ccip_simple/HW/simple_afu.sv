@@ -33,7 +33,7 @@ assign mmioHdr = t_ccip_c0_ReqMmioHdr'(cp2af_sRxPort.c0.hdr);
 //    CNT (0x04)  Counter register (RW). Actual counter value.
 always @(posedge clk)
 begin
-   if (rst) begin 
+   if (rst) begin
       rStatus          <= '0;
       rCounter         <= '0;
       af2cp_sTxPort.c2 <= '0;
@@ -51,17 +51,36 @@ begin
       // on MMIO Write Request, set registers
       if (cp2af_sRxPort.c0.mmioWrValid == 1) begin               // MMIO Write
          case (mmioHdr.address)
-            16'h0000 : rStatus  <= cp2af_sRxPort.c0.data[1:0];
-            16'h0001 : rCounter <= cp2af_sRxPort.c0.data[31:0];
+            16'h0040 : rStatus  <= cp2af_sRxPort.c0.data[1:0];
+            16'h0041 : rCounter <= cp2af_sRxPort.c0.data[31:0];
          endcase
       end
 
-      // on MMIO Read Request, return current counter
+      // serve MMIO Read Requests (including AFU DFH)
       if (cp2af_sRxPort.c0.mmioRdValid == 1) begin               // MMIO Read
          af2cp_sTxPort.c2.hdr.tid      <= mmioHdr.tid;           // copy TID
          case (mmioHdr.address)
-            16'h0000 : af2cp_sTxPort.c2.data <= { 62'b0, rStatus[1:0] };    // return status -OR-
-            16'h0001 : af2cp_sTxPort.c2.data <= { 32'b0, rCounter[31:0] };  // return counter
+            // AFU header
+            16'h0000 : af2cp_sTxPort.c2.data <= {                // DFH
+               4'b0001,  // Feature Type        = AFU
+               8'b0,     // Reserved
+               4'b0,     // AFU Minor Revision  = 0
+               7'b0,     // Reserved
+               1'b1,     // End of DFH list     = 1
+               24'b0,    // Next DFH offset     = 0
+               4'b0,     // AFU Major version   = 0
+               12'b0     // Feature ID          = 0
+            };
+            16'h0002 : af2cp_sTxPort.c2.data <= 64'ha455_783a_3e90_43b9;    // AFU_ID_H
+            16'h0004 : af2cp_sTxPort.c2.data <= 64'ha12e_bb32_8f7d_d35c;    // AFU_ID_L
+            16'h0006 : af2cp_sTxPort.c2.data <= 64'h0;                      // Next AFU
+            16'h0008 : af2cp_sTxPort.c2.data <= 64'h0;                      // Reserved
+
+            // Our CSRs
+            16'h0040 : af2cp_sTxPort.c2.data <= { 62'b0, rStatus[1:0] };    // return status -OR-
+            16'h0041 : af2cp_sTxPort.c2.data <= { 32'b0, rCounter[31:0] };  // return counter
+
+            default  : af2cp_sTxPort.c2.data <= 64'h0;                      // default
          endcase
          af2cp_sTxPort.c2.mmioRdValid  <= 1;                     // post response
       end
@@ -74,5 +93,4 @@ assign af2cp_sTxPort.c0 = '0;
 assign af2cp_sTxPort.c1 = '0;
 
 endmodule
-
 

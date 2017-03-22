@@ -3,16 +3,26 @@
 #include <unistd.h>
 #include <fpga/enum.h>
 #include <fpga/access.h>
+#include <uuid/uuid.h>
+
+#define SIMPLE_AFU_GUID "A12EBB32-8F7D-D35C-A455-783A3E9043B9"
 
 int main(int argc, char *argv[]) {
 
 	fpga_properties   *filterp = NULL;
 	fpga_token         afc_token;
 	fpga_handle        afc_handle;
-	fpga_guid          guid = { 0xA1, 0x2E, 0xBB, 0x32, 0x8F, 0x7D, 0xD3,
-		0x5C, 0xA4, 0x55, 0x78, 0x3A, 0x3E, 0x90, 0x43, 0xB9 };
+	fpga_guid          guid;
+	  // = { 0xA1, 0x2E, 0xBB, 0x32, 0x8F, 0x7D, 0xD3,
+	  // 0x5C, 0xA4, 0x55, 0x78, 0x3A, 0x3E, 0x90, 0x43, 0xB9 };
 	uint32_t           num_matches = 1;
 	uint32_t	   x;
+
+	if (uuid_parse(SIMPLE_AFU_GUID, guid)) 
+	  {
+	    fprintf(stderr, "Error parsing guid '%s'\n", SIMPLE_AFU_GUID);
+	    return -1;
+	  }
 
 	/* Look for AFC with MY_AFC_ID */
 	printf("Looking for AFC\n");
@@ -21,7 +31,7 @@ int main(int argc, char *argv[]) {
 	fpgaPropertiesSetGuid(filterp, guid);
 	/* TODO: Add selection via BDF / device ID */
 
-	// fpgaEnumerate(filterp, 1, &afc_token, &num_matches);
+	fpgaEnumerate(filterp, 1, &afc_token, &num_matches);
 
 	fpgaDestroyProperties(&filterp); /* not needed anymore */
 
