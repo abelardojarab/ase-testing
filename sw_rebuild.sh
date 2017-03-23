@@ -22,10 +22,10 @@ rm -rf $MYINST_DIR
 
 ## Build and install fpga-sw
 cd $FPGASW_GIT/ase/api/
-rm -rf mybuild
-mkdir mybuild
+# rm -rf mybuild
+# mkdir mybuild
 cd mybuild
-cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR ../
+# cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR ../
 make
 make install
 
@@ -34,10 +34,10 @@ cp -r $FPGASW_GIT/common/include/ $MYINST_DIR/include/
 
 ## Build and install MPF
 cd $BBB_GIT/BBB_cci_mpf/sw/
-rm -rf mybuild
-mkdir mybuild
+# rm -rf mybuild
+# mkdir mybuild
 cd mybuild
-cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR/ -DCMAKE_C_FLAGS=-isystem\ $MYINST_DIR/include ../
+# cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR/ -DCMAKE_C_FLAGS=-isystem\ $MYINST_DIR/include ../
 make 
 make install
 
