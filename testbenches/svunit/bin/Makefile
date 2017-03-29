@@ -20,3 +20,5 @@ sim_debug:
 clean:
 	rm -rf $(OUT_DIR)
 
+wave:
+	dve -dir $(OUT_DIR)/simv.vdb/ -full64
