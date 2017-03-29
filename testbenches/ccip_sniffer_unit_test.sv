@@ -260,18 +260,7 @@ module ccip_checker_unit_test;
 			clk_cb.ccip_tx.c0.valid <= 0;
 	 `SVTEST_END 
       
-	/*  `SVTEST(C0TX_RESET_IGNORED)
-	        ##1;
-		    clk_cb.ccip_tx.c0.valid <= 1;
-			clk_cb.SoftReset <=1;
-			##3;			
-		//	`FAIL_UNLESS_EQUAL(clk_cb.error_code[9],1);
-			`FAIL_UNLESS_EQUAL(clk_cb.error_code[13],0);
-			`FAIL_UNLESS_EQUAL(clk_cb.error_code[7],0);	
-			##1;
-			clk_cb.ccip_tx.c0.valid <= 0;
-			clk_cb.SoftReset <=0;
-	  `SVTEST_END*/
+	
 	  
 	`SVTEST(C0TX_ADDR_ZERO_WARN )
 			reset();
@@ -1401,10 +1390,22 @@ module ccip_checker_unit_test;
 			##512;
 			##4;
 			`FAIL_UNLESS_EQUAL(clk_cb.error_code[1],1);
-			end
-			
-			
+			end			
 		`SVTEST_END	
+		
+		`SVTEST(C0TX_RESET_IGNORED)
+			reset();
+	        ##1;			
+		    clk_cb.ccip_tx.c2.mmioRdValid <= 1;
+			clk_cb.SoftReset <=1;
+			##3;			
+		//	`FAIL_UNLESS_EQUAL(clk_cb.error_code[9],1);
+			`FAIL_UNLESS_EQUAL(clk_cb.error_code[13],0);
+			`FAIL_UNLESS_EQUAL(clk_cb.error_code[7],0);	
+			##1;
+			clk_cb.ccip_tx.c0.valid <= 0;
+			clk_cb.SoftReset <=0;
+	  `SVTEST_END
 		
 	  `SVUNIT_TESTS_END
 
