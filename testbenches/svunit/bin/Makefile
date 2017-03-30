@@ -1,6 +1,6 @@
 SIMULATOR           = vcs
 OUT_DIR             = ccip_sniffer_output
-COMMON_COMPILE_ARGS = -timescale=1ns/1ps -lca -cm line+fsm+cond+branch
+COMMON_COMPILE_ARGS = -timescale=1ns/1ps -lca -cm line+fsm+cond+branch -full64
 ASE_DIR		    = ${PWD}
 
 # To run all the TEST_CASES, leave the TEST_CASES variable blank (as shown below).
