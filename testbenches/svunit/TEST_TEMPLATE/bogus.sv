@@ -1,0 +1,3 @@
+class bogus;
+endclass
+
