@@ -1,0 +1,13 @@
+########################################################################
+###########         HOW TO USE SV UNIT 		########################
+########################################################################
+
+Step 1: Source VCS script . SV unit uses the VCS simulator
+
+Step 2: Source the Setup.csh file in the svunit folder.Make sure the SV unit path is set appropriately.
+
+Step 3: set the ASE_WORKDIR path -> point it to the ase directory.
+ 
+Step 4: make sim ----- Runs the VCS simulator and checks the SV unit test cases against the Design
+
+Step 5: For Coverage , use make wave .
