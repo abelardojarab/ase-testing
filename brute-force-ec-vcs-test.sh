@@ -5,7 +5,7 @@
 # Do not list any with "Beta" in the name
 # Do not list all the "-x" version, just list the largest one
 
-source ~/bashrc_aliases/quartus_16.csh
+source ~/bashrc_aliases/quartus_16_621.csh
 
 SCRUB_LOG=vcs-scrub.txt
 
@@ -75,7 +75,7 @@ for i in $TOOL_VERSION; do
     if [ -f $ASE_WORKDIR/ase_simv ]; then
     	echo -n -e "\t[BUILD PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
 	echo "Running tests"
-	xterm -iconic -e "cd $ASE_SRCDIR ; make sim " &
+	/usr/bin/timeout 300 xterm -iconic -e "cd $ASE_SRCDIR ; make sim " &
 	while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
 	do
 	    sleep 1
@@ -100,10 +100,3 @@ for i in $TOOL_VERSION; do
     echo -e "" >> $ASEVAL_GIT/$SCRUB_LOG
 done
 
-
-# for i in $TOOL_VERSION; do
-#     echo "--------------------------------------------------------------------------"
-#     echo "  Currently testing VCS version: $i $logname  " 
-#     echo "--------------------------------------------------------------------------"    
-#     ls $i
-# done

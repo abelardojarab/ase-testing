@@ -82,7 +82,7 @@ for i in $TOOL_VERSION; do
     	echo -e -n "\t[BUILD PASS]" >> $ASEVAL_GIT/$SCRUB_LOG
     	echo "Running tests"
 #    	xterm -iconic -e "cd $ASE_SRCDIR ; make sim SIMULATOR=QUESTA " &
-    	xterm -e "cd $ASE_SRCDIR ; make sim SIMULATOR=QUESTA " &
+    	/usr/bin/timeout 300 xterm -e "cd $ASE_SRCDIR ; make sim SIMULATOR=QUESTA " &
     	while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
     	do
     	    sleep 1
