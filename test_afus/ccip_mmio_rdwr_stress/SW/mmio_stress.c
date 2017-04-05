@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <uuid/uuid.h>
 #include <fpga/enum.h>
 #include <fpga/access.h>
-
+#include <fpga/common.h>
 
 int usleep(unsigned);
 
@@ -37,15 +38,35 @@ typedef struct {
   uint32_t uint[16];
 } cache_line;
 
+/* SKX-P NLB0 AFU_ID */      
+   #define SKX_P_NLB0_AFUID "10C1BFF1-88D1-4DFB-96BF-6F5FC4038FAC"
+
+  /*
+ * macro to check return codes, print error message, and goto cleanup label
+ * NOTE: this changes the program flow (uses goto)!
+ */
+#define ON_ERR_GOTO(res, label, desc)                    \
+	do {                                       \
+		if ((res) != FPGA_OK) {            \
+			print_err((desc), (res));  \
+			goto label;                \
+		}                                  \
+	} while (0)
+
+void print_err(const char *s, fpga_result res)
+{
+	fprintf(stderr, "Error %s: %s\n", s, fpgaErrStr(res));
+}
+
+
 int main(int argc, char *argv[]) {
 
   uint32_t data32;
   uint64_t data64;
-  fpga_properties   *filterp = NULL;
+  fpga_properties   filter = NULL;
   fpga_token         afc_token;
   fpga_handle        afc_handle;
-  fpga_guid          guid = { 0xac, 0x8f, 0x03, 0xc4, 0x5f, 0x6f, 0xbf, 0x96,
-			      0xfb, 0x4d, 0xd1, 0x88, 0xf1, 0xbf, 0xc1, 0x10};
+  fpga_guid          guid;
   uint32_t           num_matches = 1;
 
   volatile uint64_t *mmio_ptr   = NULL;
@@ -53,35 +74,51 @@ int main(int argc, char *argv[]) {
   volatile uint64_t *status_ptr = NULL;
   volatile uint64_t *input_ptr  = NULL;
   volatile uint64_t *output_ptr = NULL;
-    
+  fpga_result     res;  
   int				ii;
   uint64_t        dsm_wsid;
   uint64_t        input_wsid;
   uint64_t        output_wsid;
+if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
+		fprintf(stderr, "Error parsing guid '%s'\n", SKX_P_NLB0_AFUID);
+		goto out_exit;
+	}
+
 
   /* Look for AFC with MY_AFC_ID */
-  fpgaCreateProperties(&filterp);
-  fpgaPropertiesSetObjectType(filterp, FPGA_AFC);
-  fpgaPropertiesSetGuid(filterp, guid);
-  /* TODO: Add selection via BDF / device ID */
+	res = fpgaCreateProperties(&filter);
+	ON_ERR_GOTO(res, out_exit, "creating properties object");
 
-  fpgaEnumerate(filterp, 1, &afc_token, &num_matches);
+	res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
+	ON_ERR_GOTO(res, out_exit, "setting object type");
 
-  fpgaDestroyProperties(&filterp); /* not needed anymore */
+	res = fpgaPropertiesSetGuid(filter, guid);
+	ON_ERR_GOTO(res, out_exit, "setting GUID");
 
-  if (num_matches < 1) {
-    fprintf(stderr, "AFC not found.\n");
-    return 1;
-  }
+	/* TODO: Add selection via BDF / device ID */
 
-  /* Open AFC and map MMIO */
-  fpgaOpen(afc_token, &afc_handle, 0);
-  fpgaMapMMIO(afc_handle, 0, (uint64_t **)&mmio_ptr);
+	res = fpgaEnumerate(&filter, 1, &afc_token, &num_matches);
+	ON_ERR_GOTO(res, out_exit, "enumerating AFCs");
+
+  res = fpgaDestroyProperties(&filter); /* not needed anymore */
+	ON_ERR_GOTO(res, out_exit, "destroying properties object");
+
+	if (num_matches < 1) {
+		fprintf(stderr, "AFC not found.\n");
+		return 1;
+	}
+
+	/* Open AFC and map MMIO */
+	res = fpgaOpen(afc_token, &afc_handle, 0);
+	ON_ERR_GOTO(res, out_exit, "opening AFC");
+  res = fpgaMapMMIO(afc_handle, 0, (uint64_t **)&mmio_ptr);
+	//ON_ERR_GOTO(res, out_close, "mapping MMIO space");
 
   printf("Running Test\n");
 
-  /* Reset AFC */
-  fpgaReset(afc_handle);
+  res = fpgaReset(afc_handle);
+	//ON_ERR_GOTO(res, out_free_output, "resetting AFC");
+
 	
   /*
    * Step 1: MMIOWrite32 through range
@@ -89,7 +126,9 @@ int main(int argc, char *argv[]) {
   printf(" Step 1: MMIOWrite32 through range");
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4) 
     {
-      fpgaWriteMMIO32(afc_handle, 0, ii, ii);
+      res = fpgaWriteMMIO32(afc_handle, 0,ii, ii);
+	//ON_ERR_GOTO(res, out_free_output, "MMIO writes 32 bit");
+    
     }
   printf(" DONE !\n");
 	 
@@ -100,7 +139,8 @@ int main(int argc, char *argv[]) {
   printf(" Step 2: MMIORead32 through range");
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4) 
     {
-      fpgaReadMMIO32(afc_handle, 0, ii, &data32);
+      res = fpgaReadMMIO32(afc_handle, 0, ii, &data32);
+      // ON_ERR_GOTO(res, out_free_output, "MMIO writes 32 bit");
       if (data32 != (uint64_t)ii)
 	{
 	  printf("Error => Found unexpected MMIO readback ");
@@ -115,7 +155,9 @@ int main(int argc, char *argv[]) {
   printf(" Step 3: MMIOWrite64 through range");
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8) 
     {
-      fpgaWriteMMIO64(afc_handle, 0, ii, (uint64_t)ii);
+      res = fpgaWriteMMIO64(afc_handle, 0, ii, (uint64_t)ii);
+	//ON_ERR_GOTO(res, out_free_output, "writing 64 bit MMIO");
+   
     }
   printf(" DONE !\n");
 
@@ -126,7 +168,8 @@ int main(int argc, char *argv[]) {
   printf(" Step 4: MMIORead64 through range");
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8) 
     {
-      fpgaReadMMIO64(afc_handle, 0, ii, &data64);
+       res = fpgaReadMMIO64(afc_handle, 0, ii, &data64);
+    //   ON_ERR_GOTO(res, out_free_output, "reading 64 bit MMIO");
       if (data64 != ii)
 	{
 	  printf("Error => Found unexpected MMIO readback ");
@@ -137,9 +180,11 @@ int main(int argc, char *argv[]) {
 	
   printf("Done Running Test\n");
   /* Release accelerator */
-  fpgaClose(afc_handle);
 
-  return 0;
+	res = fpgaClose(afc_handle);
+	//ON_ERR_GOTO(res, out_exit, "closing AFC");
+ out_exit:
+	return res;
 }
 
 
