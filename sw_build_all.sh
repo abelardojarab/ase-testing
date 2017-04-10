@@ -21,16 +21,16 @@ cd $BASEDIR
 rm -rf $MYINST_DIR
 
 ## Build and install fpga-sw
-cd $FPGASW_GIT/ase/api/
+cd $FPGASW_GIT/
 rm -rf mybuild
 mkdir mybuild
 cd mybuild
-cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR ../
+cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=YES ../
 make
 make install
 
 ## Copy include directory to $MYINST_DIR
-cp -r $FPGASW_GIT/common/include/ $MYINST_DIR/include/
+# cp -r $FPGASW_GIT/common/include/ $MYINST_DIR/include/
 
 ## Build and install MPF
 cd $BBB_GIT/BBB_cci_mpf/sw/
@@ -49,9 +49,9 @@ export LD_LIBRARY_PATH=$MYINST_DIR/lib/
 make test_random_ase prefix=$MYINST_DIR/
 
 ## Build NLB hello_fpga
-mkdir -p $MYINST_DIR/bin/
-cd  $MYINST_DIR/bin/
-gcc -g -o hello_fpga $FPGASW_GIT/fpga-api/samples/hello_fpga.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -std=c99 -luuid
+# mkdir -p $MYINST_DIR/bin/
+# cd  $MYINST_DIR/bin/
+# gcc -g -o hello_fpga $FPGASW_GIT/fpga-api/samples/hello_fpga.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -std=c99 -luuid
 
 ## Build MMIO stress test
 # cd $MYINST_DIR/bin/
