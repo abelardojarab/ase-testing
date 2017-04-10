@@ -15,7 +15,7 @@ echo '******************** Setting up the ASE Environment **********************
 echo '********************************************************************************'
 
 cd $ASE_SRCDIR
-python scripts/generate_ase_environment.py $1
+python scripts/generate_ase_environment.py $1/HW
 
 make -j8
 make sim &
