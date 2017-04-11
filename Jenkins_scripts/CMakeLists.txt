@@ -35,6 +35,12 @@ set(API_DIR ${PROJECT_SOURCE_DIR})
      set(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
  endif(CMAKE_BUILD_TYPE STREQUAL "Coverage")
 
+
+include_directories(
+  ${API_DIR}/../../common/include/
+  ${API_DIR}/../sw/
+  )
+
 set(ASEAPI_SRC
   ${API_DIR}/../sw/tstamp_ops.c
   ${API_DIR}/../sw/ase_ops.c
