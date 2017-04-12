@@ -12,7 +12,8 @@ mkdir -p $KW_BUILD
 cd $KW_BUILD
 
 rm -rf $ASEVAL_GIT/kw_run.*
-kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/AALUSER
+# kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/FPGA_API_ASE
+kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/BBB
 kwinject $ASEVAL_GIT/sw_build_all.sh
 kwcheck run --build-spec kwinject.out --local
 kwcheck list -F detailed --local --system --severity 1 > $ASEVAL_GIT/kw_run.1.log
