@@ -15,7 +15,7 @@ echo '******************** Setting up the ASE Environment **********************
 echo '********************************************************************************'
 
 cd $ASE_SRCDIR
-if [ $TEST_AFU_DIR == 'ccip_nlb_all_SKX1' || $TEST_AFU_DIR == 'ccip_mmio_rdwr_stress' ]
+if [ "$TEST_AFU_DIR" = "ccip_nlb_all_SKX1" || "$TEST_AFU_DIR" = "ccip_mmio_rdwr_stress" ]
 then
 python scripts/generate_ase_environment.py $1/HW
 else
