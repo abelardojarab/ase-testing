@@ -15,8 +15,7 @@ echo '******************** Setting up the ASE Environment **********************
 echo '********************************************************************************'
 
 cd $ASE_SRCDIR
-if [ "$TEST_AFU_DIR" = "ccip_async_mux_4nlb" ]
-then
+if [ "$TEST_AFU_DIR" = 'ccip_async_mux_4nlb' ]; then
 cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./
 cp $BBB_GIT/BBB_ccip_mux/sample/sw/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 sed -i 's/define+NLB400_MODE_0/define+NLB400_MODE_0 +define+NUM_AFUS_4/g' Makefile
