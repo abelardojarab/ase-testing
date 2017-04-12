@@ -15,13 +15,15 @@ echo '******************** Setting up the ASE Environment **********************
 echo '********************************************************************************'
 
 cd $ASE_SRCDIR
-if [ "$TEST_AFU_DIR" = "ccip_nlb_all_SKX1" || "$TEST_AFU_DIR" = "ccip_mmio_rdwr_stress" ]
+if [ "$TEST_AFU_DIR" = "ccip_async_mux_4nlb" ]
 then
-python scripts/generate_ase_environment.py $1/HW
-else
 cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./
 cp $BBB_GIT/BBB_ccip_mux/sample/sw/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
+else
+python scripts/generate_ase_environment.py $1/HW
 fi
+
+
 make -j8
 make sim &
 
