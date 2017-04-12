@@ -14,7 +14,7 @@ $BBB_GIT/BBB_ccip_mux/hw/rtl/ccip_mux.sv
 $BBB_GIT/BBB_ccip_mux/hw/rtl/fair_arbiter.sv
 $BBB_GIT/BBB_ccip_mux/hw/rtl/ccip_front_end.sv
 $BBB_GIT/BBB_ccip_mux/hw/rtl/ccip_intf_regs.sv
-
+$BBB_GIT/BBB_ccip_mux/sample/hw/nlb_csr.sv
 $ASEVAL_GIT/test_afus/ccip_async_mux_4nlb/HW/ccip_std_afu.sv
 $BBB_GIT/BBB_ccip_async/hw/rtl/ccip_async_shim.sv
 $BBB_GIT/BBB_ccip_async/hw/rtl/ccip_afifo_channel.sv
@@ -25,7 +25,6 @@ $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160/synth/req_C1TxRAM2PORT_ram_2port_160_nfprwsy.v
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_gram_sdp.v
-$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_csr.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/ccip_interface_reg.sv
 
 

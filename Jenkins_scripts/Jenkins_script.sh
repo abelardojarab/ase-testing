@@ -15,11 +15,27 @@ echo '******************** Setting up the ASE Environment **********************
 echo '********************************************************************************'
 
 cd $ASE_SRCDIR
+if [ "$TEST_AFU_DIR" = 'ccip_async_mux_4nlb' ]; then
+cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./
+cp $BBB_GIT/BBB_ccip_mux/sample/
+cp $BBB_GIT/BBB_ccip_mux/sample/sw/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
+sed -i 's/define+NLB400_MODE_0/define+NLB400_MODE_0 +define+NUM_AFUS_4/g' Makefile
+else
 python scripts/generate_ase_environment.py $1/HW
+fi
 
+rm -rf $ASE_WORKDIR/.ase_ready.pid
 make -j8
 make sim &
 
+# Wait for readiness
+echo "##################################"
+echo "#     Waiting for .ase_ready     #"
+echo "##################################"
+while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
+do
+    sleep 1
+done
 ###############################################################################
 ##################            APPLICATION  SIDE            ####################
 ###############################################################################
