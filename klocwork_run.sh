@@ -12,7 +12,8 @@ mkdir -p $KW_BUILD
 cd $KW_BUILD
 
 rm -rf $ASEVAL_GIT/kw_run.*
-kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/AALUSER
+# kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/FPGA_API_ASE
+kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/BBB
 kwinject $ASEVAL_GIT/sw_build_all.sh
 kwcheck run --build-spec kwinject.out --local
 kwcheck list -F detailed --local --system --severity 1 > $ASEVAL_GIT/kw_run.1.log
@@ -20,34 +21,3 @@ kwcheck list -F detailed --local --system --severity 2 > $ASEVAL_GIT/kw_run.2.lo
 kwcheck list -F detailed --local --system --severity 3 > $ASEVAL_GIT/kw_run.3.log
 kwcheck list -F detailed --local --system --severity 4 > $ASEVAL_GIT/kw_run.4.log
 kwcheck list -F detailed --local --system --severity 5 > $ASEVAL_GIT/kw_run.5.log
-
-# ## configure
-# cd $KW_BUILD
-# cmake $ASE_SRCDIR/api/
-
-# ## Klocwork
-# rm -rf $ASEVAL_GIT/kw_run.*
-# kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/AALUSER
-# kwshell --verbose make -j 8
-# kwcheck run
-# kwcheck list -F detailed --local --system --severity 1 > $ASEVAL_GIT/kw_run.1.log
-# kwcheck list -F detailed --local --system --severity 2 > $ASEVAL_GIT/kw_run.2.log
-# kwcheck list -F detailed --local --system --severity 3 > $ASEVAL_GIT/kw_run.3.log
-# kwcheck list -F detailed --local --system --severity 4 > $ASEVAL_GIT/kw_run.4.log
-# kwcheck list -F detailed --local --system --severity 5 > $ASEVAL_GIT/kw_run.5.log
-
-# ############################################################################
-# cd $ASE_SRCDIR
-# rm -rf $ASEVAL_GIT/kw_ase.*
-# kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/AALUSER
-# kwshell --verbose make sw_build
-# kwcheck run
-# kwcheck list -F detailed --local --system --severity 1 > $ASEVAL_GIT/kw_ase.1.log
-# kwcheck list -F detailed --local --system --severity 2 > $ASEVAL_GIT/kw_ase.2.log
-# kwcheck list -F detailed --local --system --severity 3 > $ASEVAL_GIT/kw_ase.3.log
-# kwcheck list -F detailed --local --system --severity 4 > $ASEVAL_GIT/kw_ase.4.log
-# kwcheck list -F detailed --local --system --severity 5 > $ASEVAL_GIT/kw_ase.5.log
-
-
-# cd $ASEVAL_GIT/
-# ls -lt kw_*.log
