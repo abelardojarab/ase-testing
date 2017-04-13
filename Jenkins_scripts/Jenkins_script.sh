@@ -22,9 +22,9 @@ cp $BBB_GIT/BBB_ccip_mux/sample/sw/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 sed -i 's/define+NLB400_MODE_0/define+NLB400_MODE_0 +define+NUM_AFUS_4/g' Makefile
 elif [ "$TEST_AFU_DIR" = 'ccip_async_nlb300_all' ] || [ "$TEST_AFU_DIR" = 'ccip_async_nlb100_all' ]; then
 cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./ 
-cp $FPGASW_GIT/libfpga/samples/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
+cp $FPGASW_GIT/libfpga/samples/hello_fpga.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 else
-cp $FPGASW_GIT/libfpga/samples/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
+cp $FPGASW_GIT/libfpga/samples/hello_fpga.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 python scripts/generate_ase_environment.py $1/HW
 fi
 
