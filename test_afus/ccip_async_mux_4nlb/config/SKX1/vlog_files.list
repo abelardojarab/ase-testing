@@ -25,7 +25,7 @@ $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth/req_C1TxRAM2PORT.v
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160/synth/req_C1TxRAM2PORT_ram_2port_160_nfprwsy.v
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_gram_sdp.v
-$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/nlb_csr.sv
+$BBB_GIT/BBB_ccip_mux/sample/hw/nlb_csr.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/ccip_interface_reg.sv
 
 
