@@ -54,7 +54,6 @@ export LD_LIBRARY_PATH=$ASE_API_DIR/mybuild/lib
 echo "############################### #################################################"
 echo "#############################   	 Building samples   # #########################"
 echo "#################################################################################"
-LIBNAME=libfpga-ASE.so
 
 gcc -g -o $TEST_AFU_DIR $1/SW/*.c $ASE_API_DIR/mybuild/lib -I$AALSDK_GIT/common/include/ -std=c99 -luuid -lgcov
 export ASE_WORKDIR=$ASE_WORKDIR
