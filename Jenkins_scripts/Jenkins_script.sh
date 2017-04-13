@@ -20,7 +20,11 @@ if [ "$TEST_AFU_DIR" = 'ccip_async_mux_4nlb' ]; then
 cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./ 
 cp $BBB_GIT/BBB_ccip_mux/sample/sw/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 sed -i 's/define+NLB400_MODE_0/define+NLB400_MODE_0 +define+NUM_AFUS_4/g' Makefile
+elif [ "$TEST_AFU_DIR" = 'ccip_async_nlb300_all' ] || [ "$TEST_AFU_DIR" = 'ccip_async_nlb100_all' ]; then
+cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./ 
+cp $FPGASW_GIT/libfpga/samples/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 else
+cp $FPGASW_GIT/libfpga/samples/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 python scripts/generate_ase_environment.py $1/HW
 fi
 
@@ -41,11 +45,11 @@ cd $ASE_API_DIR
 mkdir  mybuild
 cd mybuild
 
-cmake ../ -DCMAKE_BUILD_TYPE=Coverage 
+cmake ../../.. -DBUILD_ASE=ON -DCMAKE_BUILD_TYPE=Coverage
 
 make VERBOSE=1
 
-export LD_LIBRARY_PATH=$PWD
+export LD_LIBRARY_PATH=$PWD/lib
 
 echo "############################### #################################################"
 echo "#############################   	 Building samples   # #########################"
@@ -64,7 +68,7 @@ lcov --capture --initial --directory . --output-file coverage_new
 
 ./$TEST_AFU_DIR
 
-lcov --no-checksum --directory .  --capture --output-file coverage_new.info
-genhtml coverage_new.info --output-directory coverage_out
+lcov -capture --directory ./ase/api/CMakeFiles/fpga-ASE.dir/src/ -o coverage.info
+genhtml coverage.info --output-directory coverage_out
 
 fi
