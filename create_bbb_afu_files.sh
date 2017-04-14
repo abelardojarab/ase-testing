@@ -137,6 +137,7 @@ fi
 if [[ $mux_found -eq 1 ]]
 then
     cat $ASEVAL_GIT/mux_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
+	cp  $mux_basedir/sample/hw/nlb_csr.sv $ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/nlb_csr.sv
 fi
 
 if [[ $nlb_found -eq 1 ]] 
