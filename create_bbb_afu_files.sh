@@ -167,10 +167,10 @@ elif [[ $afu == "ccip_mpf_test_random" ]]
 then
     echo "Creating MPF test_random AFU"
     echo -e "\n$ccip_mpf_test_random\n" >> $ASE_SRCDIR/vlog_files.list
-elif [[ $afu == "ccip_async_mux_muxsample" ]]
+elif [[ $afu == "ccip_async_mux_4nlb" ]]
 then
     echo "Create MUX test configuration"
-    echo -e "\n$ccip_async_mux_muxsample\n" >> $ASE_SRCDIR/vlog_files.list
+    echo -e "\n$ccip_async_mux_4nlb\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_mmio_rdwr_stress" ]]
 then
     echo "MMIO Stress AFU should be available"
