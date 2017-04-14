@@ -144,7 +144,7 @@ fi
 if [[ $nlb_found -eq 1 ]] 
 then
     cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/${RELCODE}/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
-	sed -i 's/BDX2/SKX1/g' $ASE_SRCDIR/vlog_files.list
+	#sed -i 's/BDX2/SKX1/g' $ASE_SRCDIR/vlog_files.list
 fi
 
 if [[ $iom_found -eq 1 ]]
