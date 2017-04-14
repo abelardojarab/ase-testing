@@ -18,7 +18,7 @@ iom_rtldir=$BBB_GIT/BBB_iom/
 ## Base directory
 mpf_basedir=$BBB_GIT/BBB_cci_mpf/
 async_basedir=$BBB_GIT/BBB_ccip_async/
-nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/
+nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/
 mmio_basedir=$ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/HW/
 testrandom_basedir="$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/ $BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/"
 mux_basedir="${mux_rtldir} $BBB_GIT/BBB_ccip_mux/sample/hw/"
