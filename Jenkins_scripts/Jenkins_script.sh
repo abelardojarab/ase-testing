@@ -17,16 +17,21 @@ if [ "$TEST_AFU_DIR" = 'ccip_async_mux_4nlb' ]; then
 cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./ 
 cp $BBB_GIT/BBB_ccip_mux/sample/sw/*.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 sed -i 's/define+NLB400_MODE_0/define+NLB400_MODE_0 +define+NUM_AFUS_4/g' Makefile
+echo "DIPTI 4"
 elif [ "$TEST_AFU_DIR" = 'ccip_async_nlb300_all' ] || [ "$TEST_AFU_DIR" = 'ccip_async_nlb100_all' ]; then
 cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./ 
 cp $AALSDK_GIT/libfpga/samples/hello_fpga.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
+echo "DIPTI 3"
 else
 cp $AALSDK_GIT/libfpga/samples/hello_fpga.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 python scripts/generate_ase_environment.py $1/HW
 fi
 
+echo "DIPTI 5"
 rm -rf $ASE_WORKDIR/.ase_ready.pid
+echo "DIPTI 6"
 make -j8
+echo "DIPTI 7"
 make sim &
 
 
