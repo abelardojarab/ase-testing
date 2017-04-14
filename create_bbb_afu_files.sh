@@ -18,7 +18,7 @@ iom_rtldir=$BBB_GIT/BBB_iom/
 ## Base directory
 mpf_basedir=$BBB_GIT/BBB_cci_mpf/
 async_basedir=$BBB_GIT/BBB_ccip_async/
-nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/
+nlb_basedir=$ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/
 mmio_basedir=$ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/HW/
 testrandom_basedir="$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/ $BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/"
 mux_basedir="${mux_rtldir} $BBB_GIT/BBB_ccip_mux/sample/hw/"
@@ -144,6 +144,7 @@ fi
 if [[ $nlb_found -eq 1 ]] 
 then
     cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/${RELCODE}/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
+	sed -i 's/BDX2/SKX1/g' $ASE_SRCDIR/vlog_files.list
 fi
 
 if [[ $iom_found -eq 1 ]]
