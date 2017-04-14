@@ -1,9 +1,6 @@
 #!/bin/sh
 set -e
-
 cd $ASE_SRCDIR
-make clean
-
 rm -rf $ASE_API_DIR/mybuild
 
 echo '************************************'
@@ -55,7 +52,7 @@ echo "############################### ##########################################
 echo "#############################   	 Building samples   # #########################"
 echo "#################################################################################"
 
-gcc -g -o $TEST_AFU_DIR $1/SW/*.c $ASE_API_DIR/mybuild/lib -I$AALSDK_GIT/common/include/ -std=c99 -luuid -lgcov
+gcc -g -o $TEST_AFU_DIR $1/SW/*.c $ASE_API_DIR/mybuild/lib/libfpga-ASE.so -I$FPGASW_GIT/common/include/ -std=c99 -luuid -lgcov
 export ASE_WORKDIR=$ASE_WORKDIR
 if [ -z "$ASE_WORKDIR" ]
 then
