@@ -1,4 +1,4 @@
-# #############################################################################
+############################################################################
 # Copyright(c) 2011-2016, Intel Corporation
 #
 # Redistribution and use in source and binary forms, with or without
@@ -83,19 +83,19 @@ ASE_SCRIPT ?= $(ASE_SRCDIR)/ase_regress.sh
 #########################################################################
 ## ASE HW file setup
 ASEHW_FILE_LIST = \
-	$(ASE_SRCDIR)/hw/ccip_if_pkg.sv \
-	$(ASE_SRCDIR)/hw/ase_pkg.sv \
-	$(ASE_SRCDIR)/hw/inorder_wrf_channel.sv \
-	$(ASE_SRCDIR)/hw/outoforder_wrf_channel.sv \
-	$(ASE_SRCDIR)/hw/latency_pipe.sv \
-	$(ASE_SRCDIR)/hw/ccip_emulator.sv \
-	$(ASE_SRCDIR)/hw/ase_svfifo.sv \
-	$(ASE_SRCDIR)/hw/ccip_logger.sv \
-	$(ASE_SRCDIR)/hw/ccip_checker.sv \
-	$(ASE_SRCDIR)/hw/ase_top.sv \
+	$(ASE_SRCDIR)/rtl/ccip_if_pkg.sv \
+	$(ASE_SRCDIR)/rtl/ase_pkg.sv \
+	$(ASE_SRCDIR)/rtl/inorder_wrf_channel.sv \
+	$(ASE_SRCDIR)/rtl/outoforder_wrf_channel.sv \
+	$(ASE_SRCDIR)/rtl/latency_pipe.sv \
+	$(ASE_SRCDIR)/rtl/ccip_emulator.sv \
+	$(ASE_SRCDIR)/rtl/ase_svfifo.sv \
+	$(ASE_SRCDIR)/rtl/ccip_logger.sv \
+	$(ASE_SRCDIR)/rtl/ccip_checker.sv \
+	$(ASE_SRCDIR)/rtl/ase_top.sv \
 
 ## ASE HW include directory setup
-ASE_INCDIR = $(ASE_SRCDIR)/hw/+
+ASE_INCDIR = $(ASE_SRCDIR)/rtl/+
 
 ## ASE SW file setup
 ASESW_FILE_LIST = \
