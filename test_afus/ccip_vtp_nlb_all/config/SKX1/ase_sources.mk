@@ -17,7 +17,7 @@ ASEHW_FILE_LIST = \
 	$(ASE_SRCDIR)/rtl/ccip_emulator.sv \
 	$(ASE_SRCDIR)/rtl/ase_svfifo.sv \
 	$(ASE_SRCDIR)/rtl/ccip_logger.sv \
-	$(ASE_SRCDIR)/rtl/ccip_sniffer.sv \
+	$(ASE_SRCDIR)/rtl/ccip_checker.sv \
 	$(ASE_SRCDIR)/rtl/ase_top.sv \
 
 
