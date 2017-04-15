@@ -7,21 +7,21 @@
 
 DUT_VLOG_SRC_LIST = $(ASE_SRCDIR)/vlog_files.list 
 
-DUT_INCDIR = $(BBB_GIT)/BBB_cci_mpf/hw/+$(BBB_GIT)/BBB_cci_mpf/hw/rtl+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pwrite+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-if+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-if+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-prims+$(BBB_GIT)/BBB_cci_mpf/hw/par+$(BBB_GIT)/BBB_cci_mpf/sample/afu/+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/include_files+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/include_files/common+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/synth+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_160+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_160/synth+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160/synth+$(BBB_GIT)/BBB_ccip_async/hw/rtl/+
+DUT_INCDIR = $(BBB_GIT)/BBB_cci_mpf/rtl/+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-mpf-shims+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-mpf-shims/cci_mpf_shim_vtp+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-mpf-shims/cci_mpf_shim_edge+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-mpf-shims/cci_mpf_shim_wro+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-mpf-shims/cci_mpf_shim_pwrite+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-if+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-mpf-if+$(BBB_GIT)/BBB_cci_mpf/rtl/rtl/cci-mpf-prims+$(BBB_GIT)/BBB_cci_mpf/rtl/par+$(BBB_GIT)/BBB_cci_mpf/sample/afu/+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/include_files+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/include_files/common+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/synth+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_160+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT/ram_2port_160/synth+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/synth+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160+$(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/HW/QSYS_IPs/RAM/req_C1TxRAM2PORT/ram_2port_160/synth+$(BBB_GIT)/BBB_ccip_async/rtl/rtl/+
 
 ASEHW_FILE_LIST = \
-	$(ASE_SRCDIR)/hw/ccip_if_pkg.sv \
-	$(ASE_SRCDIR)/hw/ase_pkg.sv \
-	$(ASE_SRCDIR)/hw/outoforder_wrf_channel.sv \
-	$(ASE_SRCDIR)/hw/latency_pipe.sv \
-	$(ASE_SRCDIR)/hw/ccip_emulator.sv \
-	$(ASE_SRCDIR)/hw/ase_svfifo.sv \
-	$(ASE_SRCDIR)/hw/ccip_logger.sv \
-	$(ASE_SRCDIR)/hw/ccip_sniffer.sv \
-	$(ASE_SRCDIR)/hw/ase_top.sv \
+	$(ASE_SRCDIR)/rtl/ccip_if_pkg.sv \
+	$(ASE_SRCDIR)/rtl/ase_pkg.sv \
+	$(ASE_SRCDIR)/rtl/outoforder_wrf_channel.sv \
+	$(ASE_SRCDIR)/rtl/latency_pipe.sv \
+	$(ASE_SRCDIR)/rtl/ccip_emulator.sv \
+	$(ASE_SRCDIR)/rtl/ase_svfifo.sv \
+	$(ASE_SRCDIR)/rtl/ccip_logger.sv \
+	$(ASE_SRCDIR)/rtl/ccip_sniffer.sv \
+	$(ASE_SRCDIR)/rtl/ase_top.sv \
 
 
-ASE_INCDIR = $(ASE_SRCDIR)/hw/+
+ASE_INCDIR = $(ASE_SRCDIR)/rtl/+
 
 ASESW_FILE_LIST = \
 	$(ASE_SRCDIR)/sw/ase_ops.c \
