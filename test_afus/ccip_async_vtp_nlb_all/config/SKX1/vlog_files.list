@@ -6,7 +6,6 @@ $ASEVAL_GIT/test_afus/ccip_vtp_nlb_all/HW/include_files/common/sys_cfg_pkg.svh
 
 
 
-$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_buffer_afu.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-if/ccis_if_pkg.sv
 $BBB_GIT/BBB_cci_mpf/hw/rtl/cci-if/ccis_if_funcs_pkg.sv
 #$BBB_GIT/BBB_cci_mpf/hw/rtl/cci-if/ccip_if_pkg.sv
