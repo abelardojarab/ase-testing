@@ -29,9 +29,8 @@ $BBB_GIT/BBB_ccip_mux/sample/hw/nlb_csr.sv
 $ASEVAL_GIT/test_afus/ccip_nlb_all_SKX1/HW/ccip_interface_reg.sv
 
 
-$BBB_GIT/BBB_ccip_mux/hw/rtl/gram_sdp_2clks.v
 $BBB_GIT/BBB_ccip_mux/hw/rtl/sync_C1Tx_fifo.v
 $BBB_GIT/BBB_ccip_mux/hw/rtl/gram_sdp.v
 $BBB_GIT/BBB_ccip_mux/hw/rtl/a10_ram_sdp_wysiwyg.v
-$BBB_GIT/BBB_ccip_mux/hw/rtl/sync_C0Tx_fifo.v
+
 
