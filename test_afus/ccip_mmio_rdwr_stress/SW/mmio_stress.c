@@ -90,27 +90,25 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 	ON_ERR_GOTO(res, out_exit, "creating properties object");
 
 	res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
-	ON_ERR_GOTO(res, out_exit, "setting object type");
+	ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
 
 	res = fpgaPropertiesSetGuid(filter, guid);
-	ON_ERR_GOTO(res, out_exit, "setting GUID");
+	ON_ERR_GOTO(res, out_destroy_prop, "setting GUID");
 
 	/* TODO: Add selection via BDF / device ID */
 
-	res = fpgaEnumerate(&filter, 1, &afc_token, &num_matches);
-	ON_ERR_GOTO(res, out_exit, "enumerating AFCs");
-
-  res = fpgaDestroyProperties(&filter); /* not needed anymore */
-	ON_ERR_GOTO(res, out_exit, "destroying properties object");
+	res = fpgaEnumerate(&filter, 1, &afc_token, 1, &num_matches);
+	ON_ERR_GOTO(res, out_destroy_prop, "enumerating AFCs");
 
 	if (num_matches < 1) {
 		fprintf(stderr, "AFC not found.\n");
-		return 1;
+		res = fpgaDestroyProperties(&filter);
+		return FPGA_INVALID_PARAM;
 	}
 
 	/* Open AFC and map MMIO */
 	res = fpgaOpen(afc_token, &afc_handle, 0);
-	ON_ERR_GOTO(res, out_exit, "opening AFC");
+	ON_ERR_GOTO(res, out_destroy_tok, "opening AFC");
   res = fpgaMapMMIO(afc_handle, 0, (uint64_t **)&mmio_ptr);
 	//ON_ERR_GOTO(res, out_close, "mapping MMIO space");
 
