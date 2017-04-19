@@ -22,7 +22,7 @@ elif [ "$TEST_AFU_DIR" = 'ccip_mmio_rdwr_stress' ]; then
 #cp $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/config/SKX1/* ./ 
 echo " DO NOTHING"
 else
-cp $AALSDK_GIT/libfpga/samples/hello_fpga.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
+cp $FPGASW_GIT/libfpga/samples/hello_fpga.c $ASEVAL_GIT/test_afus/$TEST_AFU_DIR/SW
 #echo "DO NOTHING"
 fi
 
@@ -38,6 +38,9 @@ fi
 echo "############################### #################################################"
 echo "######################   	 Build libfpga-ASE library    #########################"
 echo "#################################################################################"
+if [ "$TEST_AFU_DIR" = 'test_random_ase' ]; then
+./test_mpf $BBB_GIT/..
+else
 rm -rf $ASE_API_DIR/mybuild
 cd $ASE_API_DIR
 mkdir  mybuild
@@ -53,19 +56,23 @@ echo "############################### ##########################################
 echo "#############################   	 Building samples   # #########################"
 echo "#################################################################################"
 
-gcc -g -o $TEST_AFU_DIR $1/SW/*.c $ASE_API_DIR/mybuild/lib/libfpga-ASE.so -I$AALSDK_GIT/common/include/ -std=c99 -luuid -lgcov
+gcc -g -o $TEST_AFU_DIR $1/SW/*.c $ASE_API_DIR/mybuild/lib/libfpga-ASE.so -I$FPGASW_GIT/common/include/ -std=c99 -luuid -lgcov
+fi
+
 export ASE_WORKDIR=$ASE_WORKDIR
 if [ -z "$ASE_WORKDIR" ]
 then
 echo '??????????????????????????????? ASE_WORKDIR is not set ??????????????????????????'
 else
 echo "#############################   ASE_WORKDIR is set   ############################"
+if [ "$TEST_AFU_DIR" = 'test_random_ase' ];then
+./test_mpf_cov $TEST_AFU_DIR
+else
 lcov --zerocounters --directory .
 lcov --capture --initial --directory . --output-file coverage_new
-
 ./$TEST_AFU_DIR
 
 lcov -capture --directory ./ase/api/CMakeFiles/fpga-ASE.dir/src/ -o coverage.info
 genhtml coverage.info --output-directory coverage_out
-
+fi
 fi
