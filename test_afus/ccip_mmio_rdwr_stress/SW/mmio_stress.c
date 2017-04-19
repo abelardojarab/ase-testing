@@ -90,15 +90,15 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 	ON_ERR_GOTO(res, out_exit, "creating properties object");
 
 	res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
-	ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
+	ON_ERR_GOTO(res, out_exit, "setting object type");
 
 	res = fpgaPropertiesSetGuid(filter, guid);
-	ON_ERR_GOTO(res, out_destroy_prop, "setting GUID");
+	ON_ERR_GOTO(res, out_exit, "setting GUID");
 
 	/* TODO: Add selection via BDF / device ID */
 
 	res = fpgaEnumerate(&filter, 1, &afc_token, 1, &num_matches);
-	ON_ERR_GOTO(res, out_destroy_prop, "enumerating AFCs");
+	ON_ERR_GOTO(res, out_exit, "enumerating AFCs");
 
 	if (num_matches < 1) {
 		fprintf(stderr, "AFC not found.\n");
@@ -108,14 +108,14 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 
 	/* Open AFC and map MMIO */
 	res = fpgaOpen(afc_token, &afc_handle, 0);
-	ON_ERR_GOTO(res, out_destroy_tok, "opening AFC");
+	ON_ERR_GOTO(res, out_exit, "opening AFC");
   res = fpgaMapMMIO(afc_handle, 0, (uint64_t **)&mmio_ptr);
-	//ON_ERR_GOTO(res, out_close, "mapping MMIO space");
+	//ON_ERR_GOTO(res, out_exit, "mapping MMIO space");
 
   printf("Running Test\n");
 
   res = fpgaReset(afc_handle);
-	//ON_ERR_GOTO(res, out_free_output, "resetting AFC");
+	//ON_ERR_GOTO(res, out_exit, "resetting AFC");
 
 	
   /*
@@ -125,7 +125,7 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4) 
     {
       res = fpgaWriteMMIO32(afc_handle, 0,ii, ii);
-	//ON_ERR_GOTO(res, out_free_output, "MMIO writes 32 bit");
+	//ON_ERR_GOTO(res, out_exit, "MMIO writes 32 bit");
     
     }
   printf(" DONE !\n");
@@ -138,7 +138,7 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4) 
     {
       res = fpgaReadMMIO32(afc_handle, 0, ii, &data32);
-      // ON_ERR_GOTO(res, out_free_output, "MMIO writes 32 bit");
+      // ON_ERR_GOTO(res, out_exit, "MMIO writes 32 bit");
       if (data32 != (uint64_t)ii)
 	{
 	  printf("Error => Found unexpected MMIO readback ");
@@ -154,7 +154,7 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8) 
     {
       res = fpgaWriteMMIO64(afc_handle, 0, ii, (uint64_t)ii);
-	//ON_ERR_GOTO(res, out_free_output, "writing 64 bit MMIO");
+	//ON_ERR_GOTO(res, out_exit, "writing 64 bit MMIO");
    
     }
   printf(" DONE !\n");
@@ -167,7 +167,7 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
   for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8) 
     {
        res = fpgaReadMMIO64(afc_handle, 0, ii, &data64);
-    //   ON_ERR_GOTO(res, out_free_output, "reading 64 bit MMIO");
+    //   ON_ERR_GOTO(res, out_exit, "reading 64 bit MMIO");
       if (data64 != ii)
 	{
 	  printf("Error => Found unexpected MMIO readback ");
