@@ -5,9 +5,9 @@
 #                                                                  #
 ####################################################################
 
-DUT_VLOG_SRC_LIST = /home/diptishe/JENKINS_test/cpt_sys_sw-fpga-sw/ase/vlog_files.list 
+DUT_VLOG_SRC_LIST = $(ASE_SRCDIR)/vlog_files.list 
 
-DUT_INCDIR = /home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/test/test-mpf/test_random/hw/rtl/+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-if+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-mpf-shims+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pwrite+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-mpf-if+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/hw/rtl/cci-mpf-prims+/home/diptishe/JENKINS_test/atd_fpga_app-qa_bblocks/BBB_cci_mpf/test/test-mpf/base/hw/rtl/+
+DUT_INCDIR = $(BBB_GIT)/BBB_cci_mpf/test/test-mpf/test_random/hw/rtl/+$(BBB_cci_mpf)/BBB_cci_mpf/hw/rtl/+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-if+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_wro+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_pwrite+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_edge+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-shims/cci_mpf_shim_vtp+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-if+$(BBB_GIT)/BBB_cci_mpf/hw/rtl/cci-mpf-prims+$(BBB_GIT)/BBB_cci_mpf/test/test-mpf/base/hw/rtl/+
 
 ASE_TOP = ase_top
 
