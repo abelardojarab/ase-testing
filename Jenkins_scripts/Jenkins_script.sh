@@ -39,7 +39,7 @@ echo "############################### ##########################################
 echo "######################   	 Build libfpga-ASE library    #########################"
 echo "#################################################################################"
 if [ "$TEST_AFU_DIR" = 'test_random_ase' ]; then
-./test_mpf $BBB_GIT/..
+./test_mpf.sh $BBB_GIT/..
 else
 rm -rf $ASE_API_DIR/mybuild
 cd $ASE_API_DIR
@@ -66,7 +66,7 @@ echo '??????????????????????????????? ASE_WORKDIR is not set ???????????????????
 else
 echo "#############################   ASE_WORKDIR is set   ############################"
 if [ "$TEST_AFU_DIR" = 'test_random_ase' ];then
-./test_mpf_cov $TEST_AFU_DIR
+./test_mpf_cov.sh $TEST_AFU_DIR
 else
 lcov --zerocounters --directory .
 lcov --capture --initial --directory . --output-file coverage_new
