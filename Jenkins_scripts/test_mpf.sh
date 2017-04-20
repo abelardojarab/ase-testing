@@ -5,7 +5,7 @@ cd $FPGASW_GIT/ase/api
 rm -rf mybuild
 mkdir mybuild
 cd mybuild
-cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON ../../.. 
+cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DCMAKE_BUILD_TYPE=Coverage ../../.. 
 make
 make install
 
