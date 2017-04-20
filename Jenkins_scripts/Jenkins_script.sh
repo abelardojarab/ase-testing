@@ -75,7 +75,7 @@ lcov --capture --initial --directory . --output-file coverage_new
 
 ./$TEST_AFU_DIR
 
-lcov -capture --directory ./ase/api/CMakeFiles/fpga-ASE.dir/src/ ./ase/api/CMakeFiles/fpga-ASE.dir/__/sw/ -o coverage.info
+lcov -capture --directory ./ase/api/CMakeFiles/fpga-ASE.dir/ -o coverage.info
 genhtml coverage.info --output-directory coverage_out
 fi
 fi
