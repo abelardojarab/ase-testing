@@ -84,21 +84,20 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 		goto out_exit;
 	}
 
-
-  /* Look for AFC with MY_AFC_ID */
-	res = fpgaCreateProperties(&filter);
+	/* Look for AFC with MY_AFC_ID */
+	res = fpgaGetProperties(NULL, &filter);
 	ON_ERR_GOTO(res, out_exit, "creating properties object");
 
 	res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
-	ON_ERR_GOTO(res, out_exit, "setting object type");
+	ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
 
 	res = fpgaPropertiesSetGuid(filter, guid);
-	ON_ERR_GOTO(res, out_exit, "setting GUID");
+	ON_ERR_GOTO(res, out_destroy_prop, "setting GUID");
 
 	/* TODO: Add selection via BDF / device ID */
 
 	res = fpgaEnumerate(&filter, 1, &afc_token, 1, &num_matches);
-	ON_ERR_GOTO(res, out_exit, "enumerating AFCs");
+	ON_ERR_GOTO(res, out_destroy_prop, "enumerating AFCs");
 
 	if (num_matches < 1) {
 		fprintf(stderr, "AFC not found.\n");
@@ -181,6 +180,10 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 
 	res = fpgaClose(afc_handle);
 	//ON_ERR_GOTO(res, out_exit, "closing AFC");
+
+out_destroy_prop:
+	res = fpgaDestroyProperties(&filter);
+	ON_ERR_GOTO(res, out_exit, "destroying properties object");
  out_exit:
 	return res;
 }
