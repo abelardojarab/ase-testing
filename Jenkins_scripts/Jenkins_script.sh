@@ -57,7 +57,7 @@ echo "############################### ##########################################
 echo "#############################   	 Building samples   # #########################"
 echo "#################################################################################"
 
-gcc -g -o $TEST_AFU_DIR $1/SW/*.c $ASE_API_DIR/mybuild/lib/libfpga-ASE.so -I$FPGASW_GIT/common/include/ -std=c99 -luuid -lgcov
+gcc -g -o cpt $1/SW/*.c $ASE_API_DIR/mybuild/lib/libfpga-ASE.so -I$FPGASW_GIT/common/include/ -std=c99 -luuid -lgcov
 fi
 
 export ASE_WORKDIR=$ASE_WORKDIR
@@ -73,7 +73,7 @@ else
 lcov --zerocounters --directory .
 lcov --capture --initial --directory . --output-file coverage_new
 
-./$TEST_AFU_DIR
+./cpt
 
 lcov -capture --directory ./ase/api/CMakeFiles/fpga-ASE.dir/ -o ${TEST_AFU_DIR}.info
 #genhtml ${TEST_AFU_DIR}.info --output-directory coverage 
