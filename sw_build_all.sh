@@ -1,5 +1,8 @@
 #!/bin/sh
 
+## Run instructions
+## $ ./sw_build_all.sh [lib_only]
+
 set -e
 
 if [ -z "$FPGASW_GIT" ]; then
@@ -29,8 +32,12 @@ cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=YES ../
 make
 make install
 
-## Copy include directory to $MYINST_DIR
-# cp -r $FPGASW_GIT/common/include/ $MYINST_DIR/include/
+## If only library is to be built, return right here
+if [ "$1" == "lib_only" ];
+then
+    echo "BBBs will not be built... returning here !"
+    exit 0
+fi
 
 ## Build and install MPF
 cd $BBB_GIT/BBB_cci_mpf/sw/
@@ -48,16 +55,17 @@ rm -rf test_random_ase
 export LD_LIBRARY_PATH=$MYINST_DIR/lib/
 make test_random_ase prefix=$MYINST_DIR/
 
-## Build NLB hello_fpga
-# mkdir -p $MYINST_DIR/bin/
-# cd  $MYINST_DIR/bin/
-# gcc -g -o hello_fpga $FPGASW_GIT/fpga-api/samples/hello_fpga.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -std=c99 -luuid
-
-## Build MMIO stress test
-# cd $MYINST_DIR/bin/
-# gcc -g -o $ASEVAL_GIT/test_afus/
-
 ## Build MUX sample
+echo "#################################"
+echo "#       CCI-P MUX Sample        #"
+echo "#################################"
 cd $BBB_GIT/BBB_ccip_mux/sample/sw/
 gcc -g -o hello_fpga_mux $BBB_GIT/BBB_ccip_mux/sample/sw/hello_fpga_mux.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -std=c99 -luuid
 
+
+# MMIO Stress
+echo "#################################"
+echo "#       CCI-P MMIO Sample       #"
+echo "#################################"
+cd $ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/SW/
+gcc -g -o mmio_stress mmio_stress.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -luuid -std=c99
