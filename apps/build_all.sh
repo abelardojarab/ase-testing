@@ -4,12 +4,12 @@ COV_FLAGS="-fprofile-arcs -ftest-coverage -lgcov"
 
 rm -rf *.out output.*.log
 
-if [[ $1 != "" ]]
-then
-    ASE_SRCDIR=$1
-else
-    ASE_SRCDIR=../../aalsdk/aaluser/ase/
-fi
+# if [[ $1 != "" ]]
+# then
+#     ASE_SRCDIR=$1
+# else
+#     ASE_SRCDIR=../../aalsdk/aaluser/ase/
+# fi
 
 set -e
 
