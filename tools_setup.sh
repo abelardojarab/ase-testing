@@ -64,7 +64,7 @@ export ALTERA_VER=16.0.0.211-Pro
 if [ "$RELCODE" = "SKX1" ];
 then
     export ALTERA_VER="16.0.0.211-Pro"
-    export RELCODE="BDX2"
+    export RELCODE="SKX1"
 elif [ "$RELCODE" = "BDX2" ];
 then
     export ALTERA_VER="16.0.0.211-Pro"

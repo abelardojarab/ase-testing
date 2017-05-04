@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## Run instructions
-## $ ./sw_build_all.sh [lib_only]
+## $ ./sw_build_all.sh [lib_only] [cov]
 
 set -e
 
@@ -20,6 +20,24 @@ if [ -z "$ASEVAL_GIT" ]; then
     exit 1
 fi
 
+arg_list="$*"
+
+lib_only=0
+cov=0
+
+if [[ $arg_list == *"lib_only"* ]];
+then
+    lib_only=1
+fi
+
+if [[ $arg_list == *"cov"* ]];
+then
+    cov=1
+fi
+
+echo "lib_only = $lib_only"
+echo "cov      = $cov"
+
 cd $BASEDIR
 rm -rf $MYINST_DIR
 
@@ -28,12 +46,17 @@ cd $FPGASW_GIT/
 rm -rf mybuild
 mkdir mybuild
 cd mybuild
-cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=YES ../
+if [ $cov -eq 1 ];
+then
+    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DCMAKE_BUILD_TYPE=Coverage ../
+else
+    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON ../
+fi
 make
 make install
 
 ## If only library is to be built, return right here
-if [ "$1" == "lib_only" ];
+if [ $lib_only -eq 1 ];
 then
     echo "BBBs will not be built... returning here !"
     exit 0

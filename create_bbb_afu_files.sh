@@ -2,6 +2,11 @@
 
 afu=$1
 
+if [ $afu == "ccip_umsg_trigger" ];
+then
+    afu="ccip_nlb_mode0"
+fi
+
 ## BBB VLOG and DIR
 mpf_v_list=$BBB_GIT/BBB_cci_mpf/hw/sim/cci_mpf_sim_addenda.txt
 async_v_list=$BBB_GIT/BBB_ccip_async/hw/sim/ccip_async_sim_addenda.txt
@@ -31,7 +36,6 @@ ccip_mpf_nlb_all="$BBB_GIT/BBB_cci_mpf/sample/afu/ccip_mpf_nlb.sv"
 ccip_async_mpf_nlb_all="$BBB_GIT/BBB_cci_mpf/sample/afu/ccip_slow_mpf_nlb.sv"
 ccip_mpf_test_random="$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/hw/rtl/cci_test_afu.sv\n$BBB_GIT/BBB_cci_mpf/test/test-mpf/base/hw/rtl/cci_test_csrs.sv\n$BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/hw/rtl/test_random.sv"
 ccip_async_mux_muxsample=`find $BBB_GIT/BBB_ccip_mux/sample/hw/ -name \*.sv -or -name \*.v`
-
 
 ## Directory listing
 dir_list=""
@@ -123,12 +127,12 @@ cp vlog_files.list vlog_files.list.BAK
 ## Redo vlog_files.list
 echo "" > $ASE_SRCDIR/vlog_files.list
 
-if [[ $async_found -eq 1 ]] 
+if [[ $async_found -eq 1 ]]
 then
     cat $ASEVAL_GIT/async_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
 fi
 
-if [[ $mpf_found -eq 1 ]] 
+if [[ $mpf_found -eq 1 ]]
 then
     cat $ASEVAL_GIT/mpf_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
     cp $ASEVAL_GIT/test_afus/ccip_mpf_nlb_all/config/${RELCODE}/nlb_csr.sv $ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/nlb_csr.sv
@@ -137,15 +141,15 @@ fi
 if [[ $mux_found -eq 1 ]]
 then
     cat $ASEVAL_GIT/mux_vlog_files.list >> $ASE_SRCDIR/vlog_files.list
-	cp  $BBB_GIT/BBB_ccip_mux/sample/hw/nlb_csr.sv $ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/nlb_csr.sv
-	sed -i '$ a '$BBB_GIT'/BBB_ccip_mux/sample/hw/ccip_std_afu.sv' $ASE_SRCDIR/vlog_files.list
+    cp  $BBB_GIT/BBB_ccip_mux/sample/hw/nlb_csr.sv $ASEVAL_GIT/test_afus/ccip_nlb_all_${RELCODE}/HW/nlb_csr.sv
+    sed -i '$ a '$BBB_GIT'/BBB_ccip_mux/sample/hw/ccip_std_afu.sv' $ASE_SRCDIR/vlog_files.list
 fi
 
-if [[ $nlb_found -eq 1 ]] 
-then
-    cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/${RELCODE}/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
-	#sed -i 's/BDX2/SKX1/g' $ASE_SRCDIR/vlog_files.list
-fi
+# if [[ $nlb_found -eq 1 ]]
+# then
+#     cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/${RELCODE}/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
+#     #sed -i 's/BDX2/SKX1/g' $ASE_SRCDIR/vlog_files.list
+# fi
 
 if [[ $iom_found -eq 1 ]]
 then
@@ -180,11 +184,15 @@ then
 elif [[ $afu == "ccip_async_mpf_iom_iombuf_samp" ]]
 then
     echo "IOM buffer example"
-    cat  $ASEVAL_GIT/iombuf_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list    
+    cat  $ASEVAL_GIT/iombuf_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_async_mpf_iom_iomfifo_samp" ]]
 then
     echo "IOM FIFO example"
     cat  $ASEVAL_GIT/iomfifo_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list
+elif [[ $afu == "ccip_nlb_mode0" ]]
+then
+    echo "NLB Mode0 AFU"
+    cp $ASEVAL_GIT/test_afus/ccip_nlb_mode0/config/$RELCODE/* $ASE_SRCDIR/
 else
     echo "Requested AFU was not found, this may not work !"
     exit 1
@@ -196,4 +204,3 @@ cat $ASE_SRCDIR/vlog_files.list
 echo "-------------------------------------------------"
 cat $ASE_SRCDIR/ase_sources.mk
 echo "-------------------------------------------------"
-
