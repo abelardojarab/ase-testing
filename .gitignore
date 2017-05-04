@@ -31,3 +31,5 @@ iomfifo_samp_vlog_files.list
 iom_vlog_files.list
 mpf_vlog_files.list
 mux_vlog_files.list
+
+kw_build
