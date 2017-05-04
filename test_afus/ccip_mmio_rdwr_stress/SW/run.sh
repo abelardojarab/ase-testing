@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# make prefix=$MYINST_DIR
+gcc -g -o mmio_stress mmio_stress.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -luuid -std=c99
 
 # Wait for readiness
 echo "##################################"
@@ -11,13 +11,8 @@ do
     sleep 1
 done
 
-# Simulator PID
-ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
+LD_LIBRARY_PATH=$MYINST_DIR/lib/
 
 /usr/bin/timeout 1800 ./mmio_stress
 errcode=$?
-if [[ $errcode != 0 ]]
-then
-    echo "** mmio_stress: FAILURE EXIT !! Error code $errcode **"
-    exit 1
-fi
+echo "Error code $errcode"
