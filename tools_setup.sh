@@ -60,10 +60,10 @@ echo "SELECTED_PATH  : " $SELECTED_PATH
 echo "SELECTED_CLASS : " $SELECTED_CLASS
 
 ## Check if Release Code is supplied
-export ALTERA_VER=16.0.0.211-Pro
+export ALTERA_VER=17.0.0.290
 if [ "$RELCODE" = "SKX1" ];
 then
-    export ALTERA_VER="16.0.0.211-Pro"
+    export ALTERA_VER="17.0.0.290"
     export RELCODE="SKX1"
 elif [ "$RELCODE" = "BDX2" ];
 then
