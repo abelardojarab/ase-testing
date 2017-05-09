@@ -16,6 +16,8 @@ cd $ASE_SRCDIR/coverage/
 lcov -a ccip_nlb_mode0.info \
     -a ccip_mmio_rdwr_stress.info \
     -a ccip_umsg_trigger.info \
-    -o combined.info
-genhtml combined.info -o html
+    -o raw.info
 
+lcov --remove raw.info 'common.c' 'event.c' 'manage.c' -o combined.info
+
+genhtml combined.info -o html
