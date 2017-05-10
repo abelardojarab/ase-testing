@@ -80,7 +80,7 @@ then
     dir_list=$dir_list" "$mux_basedir
 fi
 
-if echo $afu | grep -Eq 'nlb.*all'
+if echo $afu | grep -Eq 'nlb'
 then
     echo "NLB found"
     nlb_found=1
