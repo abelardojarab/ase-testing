@@ -21,7 +21,7 @@ mkdir -p $ASE_COV
 cd $ASE_SRCDIR/
 
 ## Config set up
-$ASEVAL_GIT/create_bbb_afu_files.sh $TESTNAME
+$ASEVAL_GIT/create_bbb_afu_files.sh $TESTNAME || echo "create_bbb_afu_files.sh: Squelch error return"
 if [ $TESTNAME == "ccip_nlb_mode0" ];
 then
     $ASEVAL_GIT/config_generator.sh single 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
