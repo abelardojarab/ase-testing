@@ -80,7 +80,7 @@ then
     dir_list=$dir_list" "$mux_basedir
 fi
 
-if echo $afu | grep -q "nlb"
+if echo $afu | grep -Eq 'nlb.*all'
 then
     echo "NLB found"
     nlb_found=1
@@ -145,11 +145,11 @@ then
     sed -i '$ a '$BBB_GIT'/BBB_ccip_mux/sample/hw/ccip_std_afu.sv' $ASE_SRCDIR/vlog_files.list
 fi
 
-# if [[ $nlb_found -eq 1 ]]
-# then
-#     cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/${RELCODE}/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
-#     #sed -i 's/BDX2/SKX1/g' $ASE_SRCDIR/vlog_files.list
-# fi
+if [[ $nlb_found -eq 1 ]]
+then
+    cat $ASEVAL_GIT/test_afus/ccip_nlb_all/config/${RELCODE}/vlog_files.list | grep -v "ccip_std_afu\.sv" >> $ASE_SRCDIR/vlog_files.list
+    sed -i 's/BDX2/SKX1/g' $ASE_SRCDIR/vlog_files.list
+fi
 
 if [[ $iom_found -eq 1 ]]
 then
