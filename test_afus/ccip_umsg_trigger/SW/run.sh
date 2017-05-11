@@ -21,7 +21,7 @@ errcode=$?
 echo "Error code $errcode"
 
 cd $CURRDIR
-gcc -g -o umsg_trigger_test umsg_trigger_test.c /home/rrsharma/xeon-fpga-src/myinst/lib/libfpga-ASE.so -I /home/rrsharma/xeon-fpga-src/myinst/include -std=c99 -luuid -lpthread
+gcc -g -o umsg_trigger_test umsg_trigger_test.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -std=c99 -luuid -lpthread
 ./umsg_trigger_test | echo "This should have failed"
 errcode=$?
 echo "Error code $errcode"
