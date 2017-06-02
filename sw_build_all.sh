@@ -24,6 +24,8 @@ arg_list="$*"
 
 lib_only=0
 cov=0
+gtest=0
+slim=0
 
 if [[ $arg_list == *"lib_only"* ]];
 then
@@ -35,8 +37,19 @@ then
     cov=1
 fi
 
+if [[ $arg_list == *"gtest"* ]];
+then
+    gtest=1
+fi
+
+if [[ $arg_list == *"slim"* ]];
+then
+    slim=1
+fi
+
 echo "lib_only = $lib_only"
 echo "cov      = $cov"
+echo "slim     = $slim"
 
 cd $BASEDIR
 rm -rf $MYINST_DIR
@@ -46,11 +59,18 @@ cd $FPGASW_GIT/
 rm -rf mybuild
 mkdir mybuild
 cd mybuild
+
+## **FIXME ** Add Gtest enable
 if [ $cov -eq 1 ];
 then
-    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DCMAKE_BUILD_TYPE=Coverage ../
+    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DBUILD_FPGAFX=ON -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Coverage ../
+elif [ $slim -eq 1 ];
+then
+    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_LIBFPGA=OFF -DBUILD_ASE=ON -DBUILD_FPGAFX=ON -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Coverage ../
+#    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_LIBFPGA=OFF -DBUILD_ASE=ON ../
 else
-    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON ../
+    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DBUILD_TESTS=OFF ../
+#    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DBUILD_FPGAFX=ON -DBUILD_TESTS=ON -DGTEST_ROOT=/home/rrsharma/other/googletest-release-1.7.0/ ../
 fi
 make
 make install

@@ -198,6 +198,9 @@ else
     exit 1
 fi
 
+## Set platform type
+# echo -e "\nASE_PLATFORM = ASE_PLATFORM_MCP_SKX\n" >> $ASE_SRCDIR/ase_sources.mk
+
 ## Print out ase_sources.mk & vlog_files.list
 echo "-------------------------------------------------"
 cat $ASE_SRCDIR/vlog_files.list

@@ -2,21 +2,21 @@
 
 TOOLKEY=$1
 
-TOOLKEY_LIST="vcsmx_H_2013_06_SP1_15  vcsmx_J_2014_12_SP3_5  vcsmx_K_2015_09_SP1  vcsmx_L_2016_06  vsim_questasim_10_5b  vsim_modelsim_se_10_5a  vcs_I_2014_03  vsim_modelsim_se_10_3e  vsim_questasim_10_4d  vsim_modelsim_ae_16_0_0_211"
+TOOLKEY_LIST="vcsmx_H_2013_06_SP1_15  vcsmx_J_2014_12_SP3_5  vcsmx_K_2015_09_SP1  vcsmx_L_2016_06  vsim_questasim_10_5b  vsim_modelsim_se_10_5a  vcs_I_2014_03  vsim_modelsim_se_10_3e  vsim_questasim_10_4d  vsim_modelsim_ae_16_0_0_211 vsim_modelsim_ase_17_0_0_290"
 
 ## Check if TOOLKEY is supplied
 if [ "$1" = "" ];
 then
     echo "** ERROR : Incorrect usage ! **"
     echo "Usage: source tools_setup.sh <TOOLKEY>"
-    echo "    TOOLKEY      = { vcsmx_H_2013_06_SP1_15  vcsmx_J_2014_12_SP3_5  vcsmx_K_2015_09_SP1  vcsmx_L_2016_06  vsim_questasim_10_5b  vsim_modelsim_se_10_5a  vcs_I_2014_03  vsim_modelsim_se_10_3e  vsim_questasim_10_4d  vsim_modelsim_ae_16_0_0_211 }"
+    echo "    TOOLKEY      = $TOOLKEY_LIST"
     return 1
 elif [[ "$1" =~ $TOOLKEY_LIST ]];
 then
     echo "Unknown toolkey $TOOLKEY"
     echo "** ERROR : Incorrect usage ! **"
     echo "Usage: source tools_setup.sh <TOOLKEY>"
-    echo "    TOOLKEY      = { vcsmx_H_2013_06_SP1_15  vcsmx_J_2014_12_SP3_5  vcsmx_K_2015_09_SP1  vcsmx_L_2016_06  vsim_questasim_10_5b  vsim_modelsim_se_10_5a  vcs_I_2014_03  vsim_modelsim_se_10_3e  vsim_questasim_10_4d  vsim_modelsim_ae_16_0_0_211 }"
+    echo "    TOOLKEY      = $TOOLKEY_LIST"
     return 1
 else
     echo "Toolkey identified as $TOOLKEY"
@@ -37,6 +37,7 @@ TOOL_PATH["vcs_I_2014_03"]="/opt/synopsys/vcs/I-2014.03/"
 TOOL_PATH["vsim_modelsim_se_10_3e"]="/opt/mentor/modelsim_se_10.3e/modeltech/"
 TOOL_PATH["vsim_questasim_10_4d"]="/opt/mentor/questasim_10.4d/questasim/"
 TOOL_PATH["vsim_modelsim_ae_16_0_0_211"]="/opt/mentor/modelsim_ae-16.0.0.211/modelsim_ae/"
+TOOL_PATH["vsim_modelsim_ase_17_0_0_290"]="/opt/altera/17.0.0.290/modelsim_ase/"
 
 TOOL_CLASS["vcsmx_H_2013_06_SP1_15"]=VCS
 TOOL_CLASS["vcsmx_J_2014_12_SP3_5"]=VCS
@@ -48,10 +49,7 @@ TOOL_CLASS["vcs_I_2014_03"]=VCS
 TOOL_CLASS["vsim_modelsim_se_10_3e"]=QUESTA
 TOOL_CLASS["vsim_questasim_10_4d"]=QUESTA
 TOOL_CLASS["vsim_modelsim_ae_16_0_0_211"]=QUESTA
-
-# TOOL_PATH=( [vcsmx_H_2013_06_SP1_15]="/opt/synopsys/vcs-mx/H-2013.06-SP1-15/" [vcsmx_J_2014_12_SP3_5]="/opt/synopsys/vcs-mx/J-2014.12-SP3-5/" [vcsmx_K_2015_09_SP1]="/opt/synopsys/vcs-mx/K-2015.09-SP1/" [vcsmx_L_2016_06]="/opt/synopsys/vcs-mx/L-2016.06/" [vsim_questasim_10_5b]="/opt/mentor/questasim_10.5b/questasim/" [vsim_modelsim_se_10_5a]="/opt/mentor/modelsim_se_10.5a/modeltech" [vcs_I_2014_03]="/opt/synopsys/vcs/I-2014.03/" [vsim_modelsim_se_10_3e]="/opt/mentor/modelsim_se_10.3e/modeltech/" [vsim_questasim_10_4d]="/opt/mentor/questasim_10.4d/questasim/" [vsim_modelsim_ae_16_0_0_211]="/opt/mentor/modelsim_ae-16.0.0.211/modelsim_ae/" )
-
-# TOOL_CLASS=( [vcsmx_H_2013_06_SP1_15]=VCS [vcsmx_J_2014_12_SP3_5]=VCS [vcsmx_K_2015_09_SP1]=VCS [vcsmx_L_2016_06]=VCS [vsim_questasim_10_5b]=QUESTA [vsim_modelsim_se_10_5a]=QUESTA [vcs_I_2014_03]=VCS [vsim_modelsim_se_10_3e]=QUESTA [vsim_questasim_10_4d]=QUESTA [vsim_modelsim_ae_16_0_0_211]=QUESTA )
+TOOL_CLASS["vsim_modelsim_ase_17_0_0_290"]=QUESTA
 
 ## Set path
 export SELECTED_PATH=${TOOL_PATH["$TOOLKEY"]}
@@ -94,7 +92,7 @@ else
     return 1
 fi
 
-if [ "$TOOLKEY" = "vsim_modelsim_ae_16_0_0_211" ];
+if [ "$TOOLKEY" = "vsim_modelsim_ae_16_0_0_211" ] || [ "$TOOLKEY" = "vsim_modelsim_ase_17_0_0_290" ] ;
 then
     echo "Using 'linux' instead of 'bin'"
     export PATH=${SELECTED_PATH}/linux/:${PATH}
