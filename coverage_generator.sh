@@ -48,19 +48,26 @@ echo "ChangeDir: $ASEVAL_GIT/test_afus/$TESTNAME/SW/"
 cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
+##if [[ $TESTNAME == "ccip_ase_fifo_nlb" ]] 
+##then
+##echo "DONE"
+##else
 ## Wait till simulation gone
 while [ -f $ASE_WORKDIR/.ase_ready.pid ]
 do
     sleep 1
 done
 sleep 3
-
+#fi
 #######################################
 ##                                   ##
 ##     Coverage report generation    ##
 ##                                   ##
 #######################################
 cd $ASE_COV
+## Convert cov_db to reports
+urg -full64 -dir ase_simv.vdb -show tests -format both
+
 # lcov --base-directory $ASE_COV --directory $ASE_WORKDIR --capture --output-file $TESTNAME.info
 lcov --capture \
     --test-name $TESTNAME \
@@ -72,5 +79,4 @@ lcov --capture \
 
 genhtml $TESTNAME.info --output-directory html_$TESTNAME
 
-## Convert cov_db to reports
-urg -full64 -dir ase_simv.vdb -show tests -format both
+

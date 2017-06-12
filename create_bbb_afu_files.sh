@@ -193,6 +193,14 @@ elif [[ $afu == "ccip_nlb_mode0" ]]
 then
     echo "NLB Mode0 AFU"
     cp $ASEVAL_GIT/test_afus/ccip_nlb_mode0/config/$RELCODE/* $ASE_SRCDIR/
+elif [[ $afu == "ccip_checker_nlb" ]]
+then
+    echo "NLB Mode0 AFU"
+    cp $ASEVAL_GIT/test_afus/ccip_checker_nlb/config/$RELCODE/* $ASE_SRCDIR/
+elif [[ $afu == "ccip_ase_fifo_nlb" ]]
+then
+    echo "NLB Mode0 AFU"
+    cp $ASEVAL_GIT/test_afus/ccip_ase_fifo_nlb/config/$RELCODE/* $ASE_SRCDIR/
 else
     echo "Requested AFU was not found, this may not work !"
     exit 1
