@@ -1,6 +1,8 @@
 #!/bin/sh
 
-gcc -g -o mmio_stress mmio_stress.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -luuid -std=c99
+set -e
+
+gcc -g -o mmio_stress mmio_stress.c -I $MYINST_DIR/include  -L $MYINST_DIR/lib -luuid -lopae-c -lpthread -std=c99 
 
 # Wait for readiness
 echo "##################################"
@@ -11,8 +13,7 @@ do
     sleep 1
 done
 
-LD_LIBRARY_PATH=$MYINST_DIR/lib/
+/usr/bin/timeout 1800  LD_PRELOAD=libopae-c-ase.so LD_LIBRARY_PATH=$MYINST_DIR/lib/  ./mmio_stress
 
-/usr/bin/timeout 1800 ./mmio_stress
 errcode=$?
 echo "Error code $errcode"

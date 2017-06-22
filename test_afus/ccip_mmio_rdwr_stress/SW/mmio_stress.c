@@ -2,9 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <uuid/uuid.h>
-#include <fpga/enum.h>
-#include <fpga/access.h>
-#include <fpga/common.h>
+#include <opae/fpga.h>
 
 int usleep(unsigned);
 
@@ -91,7 +89,7 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 	res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
 	ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
 
-	res = fpgaPropertiesSetGuid(filter, guid);
+	res = fpgaPropertiesSetGUID(filter, guid);
 	ON_ERR_GOTO(res, out_destroy_prop, "setting GUID");
 
 	/* TODO: Add selection via BDF / device ID */
