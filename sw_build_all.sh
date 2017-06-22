@@ -103,7 +103,7 @@ echo "#################################"
 echo "#       CCI-P MUX Sample        #"
 echo "#################################"
 cd $BBB_GIT/BBB_ccip_mux/sample/sw/
-gcc -g -o hello_fpga_mux $BBB_GIT/BBB_ccip_mux/sample/sw/hello_fpga_mux.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -std=c99 -luuid
+gcc -g -o hello_fpga_mux $BBB_GIT/BBB_ccip_mux/sample/sw/hello_fpga_mux.c $MYINST_DIR/lib/libopae-c-ase.so -I $MYINST_DIR/include -std=c99 -luuid
 
 
 # MMIO Stress
@@ -111,4 +111,4 @@ echo "#################################"
 echo "#       CCI-P MMIO Sample       #"
 echo "#################################"
 cd $ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/SW/
-gcc -g -o mmio_stress mmio_stress.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include -luuid -std=c99
+gcc -g -o mmio_stress mmio_stress.c $MYINST_DIR/lib/libopae-c-ase.so -I $MYINST_DIR/include -luuid -std=c99
