@@ -41,9 +41,9 @@ then
     debug=1
 fi
 
-echo "lib_only = $lib_only"
-echo "cov      = $cov"
-echo "debug    = $debug"
+echo "Build OPAE stack with ASE = $lib_only"
+echo "Build OPAE with coverage  = $cov"
+echo "Build OPAE with debug     = $debug"
 
 cd $BASEDIR
 rm -rf $MYINST_DIR
