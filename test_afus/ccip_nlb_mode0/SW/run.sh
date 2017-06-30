@@ -4,7 +4,7 @@ set -e
 
 LD_LIBRARY_PATH=$MYINST_DIR/lib/
 
-gcc -g -o hello_fpga_ase $FPGASW_GIT/libfpga/samples/hello_fpga.c $MYINST_DIR/lib/libfpga-ASE.so -I $MYINST_DIR/include/ -std=c99 -luuid
+gcc -g -o hello_fpga $FPGASW_GIT/samples/hello_fpga.c -L$MYINST_DIR/lib/ -I $MYINST_DIR/include/ -std=c99 -luuid -lopae-c -lpthread
 
 # Wait for readiness
 echo "##################################"
@@ -15,7 +15,7 @@ do
     sleep 1
 done
 
-/usr/bin/timeout 1800 ./hello_fpga_ase 
+LD_PRELOAD=libopae-c-ase.so ./hello_fpga
 errcode=$?
 echo "Error code $errcode"
-
+exit $errcode
