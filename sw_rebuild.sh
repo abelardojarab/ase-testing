@@ -20,29 +20,6 @@ fi
 cd $BASEDIR
 rm -rf $MYINST_DIR
 
-## Build and install fpga-sw
-cd $FPGASW_GIT/ase/api/
-# rm -rf mybuild
-# mkdir mybuild
-cd mybuild
-# cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR ../
+cd $FPGASW_GIT/mybuild
 make
 make install
-
-## Copy include directory to $MYINST_DIR
-cp -r $FPGASW_GIT/common/include/ $MYINST_DIR/include/
-
-## Build and install MPF
-cd $BBB_GIT/BBB_cci_mpf/sw/
-# rm -rf mybuild
-# mkdir mybuild
-cd mybuild
-make
-make install
-
-## Build MPF samples
-cd $BBB_GIT/BBB_cci_mpf/test/test-mpf/test_random/sw/
-make clean
-rm -rf test_random_ase
-export LD_LIBRARY_PATH=$MYINST_DIR/lib/
-make test_random_ase prefix=$MYINST_DIR/
