@@ -9,7 +9,9 @@ COV_DIR=${ASE_SRCDIR}/coverage/
 
 COV_TYPES="line+cond+branch+fsm+tgl"
 
-set -e
+VALGRIND_OPT="--tool=memcheck -v --log-file=valgrind.log --error-limit=no  --track-fds=yes --trace-children=yes  --leak-check=full --track-origins=yes  --show-reachable=yes  --show-leak-kinds=definite,possible --undef-value-errors=yes"
+
+set -ve
 
 if [ -z "$FPGASW_GIT" ]; then
     echo "env(FPGASW_GIT) has not been set !"
@@ -52,21 +54,26 @@ then
     if [ $prof -eq 1 ];
     then
 	echo "Adding Profiler options"
+	echo "## Adding Profiler options" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_VLOGAN_OPT+= +define+ASE_PROFILE=1" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_VCS_OPT+= +vcs+loopreport +vcs+loopdetect -simprofile" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_SIM_OPT+= -simprofile time" >> $ASE_SRCDIR/ase_sources.mk
+	## Add Valgrind options in Makefile	
+ 	echo "VALGRIND_OPT = ${VALGRIND_OPT}" >> $ASE_SRCDIR/ase_sources.mk
+	echo -e "\n" >> $ASE_SRCDIR/Makefile
+	cat $ASEVAL_GIT/snippets/valgrind_run.make >> $ASE_SRCDIR/Makefile
     fi
     ## Coverage options
     if [ $cov -eq 1 ];
     then
 	echo "Add Coverage options"
+	echo "## Add Coverage options" >> $ASE_SRCDIR/ase_sources.mk
 	echo "COV_DIR = ${COV_DIR}" >> $ASE_SRCDIR/ase_sources.mk
 	echo "CC_OPT+= -fprofile-arcs -ftest-coverage" >> $ASE_SRCDIR/ase_sources.mk
 	echo "ASE_LD_SWITCHES+= -lgcov" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_VCS_OPT+= -cm_dir ${COV_DIR}/ase_simv -cm_name ase_cov -cm ${COV_TYPES} -cm_tgl mda -cm_hier ${ASEVAL_GIT}/ase_coverage.cfg" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_SIM_OPT+= -cm ${COV_TYPES}" >> $ASE_SRCDIR/ase_sources.mk
-
-    fi       
+    fi
 else
     echo "ase_sources.mk doesnt exist in $ASE_SRCDIR"
     echo "Script will exit now "
