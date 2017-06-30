@@ -1,0 +1,12 @@
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/avalon_mm_pkg.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/avalon_utilities_pkg.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/verbosity_pkg.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/altera_avalon_dc_fifo.v
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/altera_avalon_mm_clock_crossing_bridge.v
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/altera_avalon_mm_slave_bfm.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/altera_dcfifo_synchronizer_bundle.v
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/interfaces/ccip_interface_reg.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/ccip_std_afu.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/hello_mem_afu.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/mem_csr.sv
+$ASEVAL_GIT/test_afus/ccip_dcp_hello_mem/HW/mem_fsm.sv
