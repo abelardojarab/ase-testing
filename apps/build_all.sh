@@ -15,22 +15,22 @@ set -e
 set -v
 
 gcc $COV_FLAGS -fPIC -g -o nlb_test.out \
-    nlb_lpbk1_test.c ${MYINST_DIR}/lib/libfpga-ASE.so \
+    nlb_lpbk1_test.c ${MYINST_DIR}/lib/libopae-c-ase.so \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 #    -D ASE_DEBUG
 
 gcc -g -o mmio_test.out \
-    mmio_test.c ${MYINST_DIR}/lib/libfpga-ASE.so \
+    mmio_test.c ${MYINST_DIR}/lib/libopae-c-ase.so \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 #    -D ASE_DEBUG
 
 gcc  -g -o alloc_dealloc.out \
-    alloc_dealloc.c ${MYINST_DIR}/lib/libfpga-ASE.so \
+    alloc_dealloc.c ${MYINST_DIR}/lib/libopae-c-ase.so \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 #    -D ASE_DEBUG
 
 gcc  -g -o alloc_stress_test.out \
-    alloc_stress_test.c ${MYINST_DIR}/lib/libfpga-ASE.so \
+    alloc_stress_test.c ${MYINST_DIR}/lib/libopae-c-ase.so \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
 # gcc -g -o mux_nlb_test.out \
@@ -44,11 +44,11 @@ gcc  -g -o alloc_stress_test.out \
 #     -D ASE_DEBUG
 
 gcc  -g -o session_stress.out \
-    session_stress.c ${MYINST_DIR}/lib/libfpga-ASE.so \
+    session_stress.c ${MYINST_DIR}/lib/libopae-c-ase.so \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
 gcc  -g -o umsg_test.out \
-    umsg_test.c ${MYINST_DIR}/lib/libfpga-ASE.so \
+    umsg_test.c ${MYINST_DIR}/lib/libopae-c-ase.so \
     -lrt -lm -lpthread -I ${ASE_SRCDIR}/sw/ \
 
 

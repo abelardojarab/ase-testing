@@ -16,7 +16,7 @@ fpgadiag_mode="lpbk1"
 cd $MYINST_DIR/bin
 for nlb_mode in $fpgadiag_mode ; do
     ## ----------------------------------------------- ##
-    mode_str="--mode=lpbk1"
+    mode_str="-m lpbk1"
     timeout_val=600
     # fpgadiag_cnt_arr="32768"
     fpgadiag_cnt_arr="4096 32768"
@@ -43,7 +43,7 @@ for nlb_mode in $fpgadiag_mode ; do
 			    ## Run test
 			    if [[ $random_out == 1 ]]
 			    then
-				cmd="/usr/bin/timeout $timeout_val ./fpgadiag --target=ase $mode_str --begin=$cnt_set --cache-hint=$rd_set --cache-policy=$wr_set --multi-cl=$mcl_set --read-vc=$rdvc_set --write-vc=$wrvc_set --wrfence-vc=$wrfvc_set"
+				cmd="/usr/bin/timeout $timeout_val ./fpgadiag -target ase $mode_str --begin=$cnt_set -m $mcl_set -r $rdvc_set -w $wrvc_set "
 				echo $cmd
 			    fi
 			done
