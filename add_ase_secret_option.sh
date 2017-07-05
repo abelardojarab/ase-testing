@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 ## Run instructions
 ## ./add_ase_secret_option.sh [cov] [prof]
 
@@ -11,7 +13,6 @@ COV_TYPES="line+cond+branch+fsm+tgl"
 
 VALGRIND_OPT="--tool=memcheck -v --log-file=valgrind.log --error-limit=no  --track-fds=yes --trace-children=yes  --leak-check=full --track-origins=yes  --show-reachable=yes  --show-leak-kinds=definite,possible --undef-value-errors=yes"
 
-set -ve
 
 if [ -z "$FPGASW_GIT" ]; then
     echo "env(FPGASW_GIT) has not been set !"
