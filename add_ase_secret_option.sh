@@ -70,7 +70,7 @@ then
 	echo "## Add Coverage options" >> $ASE_SRCDIR/ase_sources.mk
 	echo "COV_DIR = ${COV_DIR}" >> $ASE_SRCDIR/ase_sources.mk
 	echo "CC_OPT+= -fprofile-arcs -ftest-coverage" >> $ASE_SRCDIR/ase_sources.mk
-	echo "ASE_LD_SWITCHES+= -lgcov" >> $ASE_SRCDIR/ase_sources.mk
+	echo "ASE_LD_SWITCHES+= -lgcov --coverage" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_VCS_OPT+= -cm_dir ${COV_DIR}/ase_simv -cm_name ase_cov -cm ${COV_TYPES} -cm_tgl mda -cm_hier ${ASEVAL_GIT}/ase_coverage.cfg" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_SIM_OPT+= -cm ${COV_TYPES}" >> $ASE_SRCDIR/ase_sources.mk
     fi

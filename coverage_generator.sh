@@ -1,6 +1,5 @@
 #!/bin/sh
 
-set -v
 set -e
 
 ## Sanity check input
@@ -34,6 +33,7 @@ fi
 
 ## Build with coverage metrics
 cd $ASE_SRCDIR/
+$ASEVAL_GIT/add_ase_secret_option.sh cov
 make ASE_COVERAGE=1 ASE_DEBUG=0
 
 ## Run simulation
@@ -73,8 +73,8 @@ lcov --capture \
     --test-name $TESTNAME \
     --base-directory $PWD \
     --directory $ASE_WORKDIR \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/__/sw/ \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/src/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
     --output-file $TESTNAME.info
 
 genhtml $TESTNAME.info --output-directory html_$TESTNAME
