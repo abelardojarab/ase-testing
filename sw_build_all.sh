@@ -25,6 +25,7 @@ arg_list="$*"
 lib_only=0
 cov=0
 debug=0
+gtest=0
 
 if [[ $arg_list == *"lib_only"* ]];
 then
@@ -41,9 +42,15 @@ then
     debug=1
 fi
 
+if [[ $arg_list == *"gtest"* ]];
+then
+    gtest=1
+fi
+
 echo "Build OPAE stack with ASE = $lib_only"
 echo "Build OPAE with coverage  = $cov"
 echo "Build OPAE with debug     = $debug"
+echo "Build OPAE with GTest     = $gtest"
 
 cd $BASEDIR
 rm -rf $MYINST_DIR
@@ -54,19 +61,29 @@ rm -rf mybuild
 mkdir mybuild
 cd mybuild
 
-## **FIXME ** Add Gtest enable
+## CMake command
+cmake_cmd="cmake ../ -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON"
+
+## {lcov, debug, slim build options"
 if [ $cov -eq 1 ];
 then
-    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Coverage ../
+    cmake_cmd="$cmake_cmd -DCMAKE_BUILD_TYPE=Coverage"
 elif [ $debug -eq 1 ];
 then
-    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Debug ../
+    cmake_cmd="$cmake_cmd -DCMAKE_BUILD_TYPE=Debug"
 elif [ $lib_only -eq 1 ];
 then
-    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON ../
-else
-    cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON -DBUILD_TESTS=ON ../
+    cmake_cmd="$cmake_cmd "
 fi
+
+## Gtest support
+if [ $gtest -eq 1 ];
+then
+    cmake_cmd="$cmake_cmd -DBUILD_TESTS=ON"
+fi
+
+## CMake command
+eval $cmake_cmd
 
 ## Build and install
 make
