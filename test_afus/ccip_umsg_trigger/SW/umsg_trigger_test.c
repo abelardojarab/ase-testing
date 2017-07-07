@@ -2,9 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <uuid/uuid.h>
-#include <fpga/enum.h>
-#include <fpga/access.h>
-#include <fpga/common.h>
+#include <opae/fpga.h>
 #include <pthread.h>
 #include <stdlib.h>
 
