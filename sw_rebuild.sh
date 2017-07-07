@@ -21,5 +21,5 @@ cd $BASEDIR
 rm -rf $MYINST_DIR
 
 cd $FPGASW_GIT/mybuild
-make
+make -j 8
 make install
