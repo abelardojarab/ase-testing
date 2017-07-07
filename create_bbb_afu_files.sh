@@ -189,7 +189,7 @@ elif [[ $afu == "ccip_async_mpf_iom_iomfifo_samp" ]]
 then
     echo "IOM FIFO example"
     cat  $ASEVAL_GIT/iomfifo_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list
-elif [[ $afu == "ccip_nlb_mode0" ]]
+elif [[ $afu == "ccip_nlb_mode0" ]] || [[ $afu == "ccip_nlb_mode0_memcrash" ]]
 then
     echo "NLB Mode0 AFU"
     cp $ASEVAL_GIT/test_afus/ccip_nlb_mode0/config/$RELCODE/* $ASE_SRCDIR/
