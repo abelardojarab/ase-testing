@@ -19,13 +19,16 @@ export MYINST_DIR=$BASEDIR/myinst
 
 export RELCODE="SKX1"
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MYINST_DIR/lib/
+
 echo "Directory settings =>"
-echo "FPGASW_GIT  : " $FPGASW_GIT
-echo "FPGAINT_GIT : " $FPGAINT_GIT
-echo "FPGADOC_GIT : " $FPGADOC_GIT
-echo "ASEVAL_GIT  : " $ASEVAL_GIT
-echo "BBB_GIT     : " $BBB_GIT
-echo "ASE_SRCDIR  : " $ASE_SRCDIR
-echo "ASE_WORKDIR : " $ASE_WORKDIR
-echo "MYINST_DIR  : " $MYINST_DIR
-echo "RELCODE     : " $RELCODE
+echo "FPGASW_GIT      : " $FPGASW_GIT
+echo "FPGAINT_GIT     : " $FPGAINT_GIT
+echo "FPGADOC_GIT     : " $FPGADOC_GIT
+echo "ASEVAL_GIT      : " $ASEVAL_GIT
+echo "BBB_GIT         : " $BBB_GIT
+echo "ASE_SRCDIR      : " $ASE_SRCDIR
+echo "ASE_WORKDIR     : " $ASE_WORKDIR
+echo "MYINST_DIR      : " $MYINST_DIR
+echo "RELCODE         : " $RELCODE
+echo "LD_LIBRARY_PATH : " $LD_LIBRARY_PATH
