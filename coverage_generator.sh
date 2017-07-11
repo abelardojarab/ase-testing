@@ -23,8 +23,11 @@ cd $ASE_SRCDIR/
 $ASEVAL_GIT/create_bbb_afu_files.sh $TESTNAME
 if [ $TESTNAME == "ccip_nlb_mode0" ];
 then
-    $ASEVAL_GIT/config_generator.sh single 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
+    $ASEVAL_GIT/config_generator.sh single 1234 noisy 300.0 32 > $ASE_SRCDIR/ase.cfg
 elif [ $TESTNAME == "ccip_umsg_trigger" ];
+then
+    $ASEVAL_GIT/config_generator.sh multi 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
+elif [ $TESTNAME == "ccip_mmio_rdwr_stress" ];
 then
     $ASEVAL_GIT/config_generator.sh multi 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
 else
