@@ -1,8 +1,6 @@
 #!/bin/sh
 
-# export PATH=/home/rrsharma/kw10/bin:$PATH
 export PATH=/home/rrsharma/klocwork/bin:${PATH}
-# export KW_BUILD=$AALUSER_DIR/kw_build/
 export KW_BUILD=$ASEVAL_GIT/kw_build/
 
 ############################################################################
@@ -17,7 +15,7 @@ kwcheck create --url https://klocwork-jf3.devtools.intel.com:8085/FPGA_API_ASE
 kwinject $ASEVAL_GIT/sw_build_all.sh lib_only
 kwinject $ASEVAL_GIT/dummy_swbuild.sh
 
-kwcheck run --build-spec kwinject.out --local
+kwcheck run --build-spec kwinject.out --local --system
 kwcheck list -F detailed --local --system --severity 1 > $ASEVAL_GIT/kw_run.1.log
 kwcheck list -F detailed --local --system --severity 2 > $ASEVAL_GIT/kw_run.2.log
 kwcheck list -F detailed --local --system --severity 3 > $ASEVAL_GIT/kw_run.3.log
