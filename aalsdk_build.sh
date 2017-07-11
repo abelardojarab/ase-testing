@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "$AALSDK_GIT" ]; then
     echo "env(AALSDK_GIT) has not been set !"

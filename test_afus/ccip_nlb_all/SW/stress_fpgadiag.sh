@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Simulator PID
 ase_pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 NUM_RUNS=2
 ASE_CONFIG=$ASEVAL_GIT/test.cfg

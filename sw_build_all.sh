@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Run instructions
 ## $ ./sw_build_all.sh [lib_only] [cov]

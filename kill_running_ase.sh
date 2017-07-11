@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "ASE_WORKDIR =" $ASE_WORKDIR
 

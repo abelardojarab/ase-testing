@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Wait for Simulator to be running/ready
 echo "Waiting for simulator to be ready ... "

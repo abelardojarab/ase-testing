@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 COV_FLAGS="-fprofile-arcs -ftest-coverage -lgcov"
 

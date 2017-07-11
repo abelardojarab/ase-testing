@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Build SW libraries with coverage
 $ASEVAL_GIT/sw_build_all.sh cov

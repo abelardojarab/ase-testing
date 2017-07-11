@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SKXP_DIR="/nfs/pdx/disks/atp.06/user/rrsharma/xeon-fpga-src/skxp-a0/"
 RX_PERSONS="rahul.r.sharma@intel.com"

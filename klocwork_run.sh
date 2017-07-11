@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export PATH=/home/rrsharma/klocwork/bin:${PATH}
 export KW_BUILD=$ASEVAL_GIT/kw_build/

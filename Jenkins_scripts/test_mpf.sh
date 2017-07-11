@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 cd $1
 mkdir myinst
 cd $FPGASW_GIT/ase/api

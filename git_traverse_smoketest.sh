@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Go to ASE_SRCDIR directory
 cd $ASE_SRCDIR

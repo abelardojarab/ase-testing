@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 cd $ASE_SRCDIR/api/mybuild
 lcov --zerocounters --directory .
 lcov --capture --initial --directory . --output-file coverage_new

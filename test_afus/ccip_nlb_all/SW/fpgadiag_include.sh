@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # fpgadiag_mode="trput"
 fpgadiag_rdvc_arr="auto vl0 vh0 vh1 random"

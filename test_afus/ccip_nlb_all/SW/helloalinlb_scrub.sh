@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 LOGNAME="$PWD/test_status.log"
 

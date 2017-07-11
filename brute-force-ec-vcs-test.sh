@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## NOTES:
 # Do not list any older than 2011

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Wait for simulator ready
 $ASEVAL_GIT/wait_till_ase_ready.sh

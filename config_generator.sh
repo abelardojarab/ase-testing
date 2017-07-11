@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Usage ./config_generator.sh <single|multi> <seed!=0> <silent|noisy> <usrclk> <mem>
 
