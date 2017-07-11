@@ -33,6 +33,7 @@ arg_list="$*"
 
 cov=0
 prof=0
+debug=0
 
 if [[ $arg_list == *"cov"* ]];
 then
@@ -44,8 +45,14 @@ then
     prof=1
 fi
 
+if [[ $arg_list == *"debug"* ]];
+then
+    debug=1
+fi
+
 echo "Profile option  = $prof"
 echo "Coverage option = $cov"
+echo "Debug option    = $debug"
 
 ## Open ASE workdir
 cd $ASE_SRCDIR
@@ -74,6 +81,14 @@ then
 	echo "ASE_LD_SWITCHES+= -lgcov --coverage" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_VCS_OPT+= -cm_dir ${COV_DIR}/ase_simv -cm_name ase_cov -cm ${COV_TYPES} -cm_tgl mda -cm_hier ${ASEVAL_GIT}/ase_coverage.cfg" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_SIM_OPT+= -cm ${COV_TYPES}" >> $ASE_SRCDIR/ase_sources.mk
+    fi
+    ## Debug options
+    if [ $debug -eq 1 ];
+    then
+	echo "Adding Debug options"
+	echo "## Add Debug Options" >> $ASE_SRCDIR/ase_sources.mk
+	echo "CC_OPT+= -D ASE_DEBUG=1" >> $ASE_SRCDIR/ase_sources.mk
+	echo "SNPS_VLOGAN_OPT+= +define+ASE_DEBUG=1" >> $ASE_SRCDIR/ase_sources.mk
     fi
 else
     echo "ase_sources.mk doesnt exist in $ASE_SRCDIR"
