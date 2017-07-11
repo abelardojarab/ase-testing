@@ -13,7 +13,7 @@ do
     sleep 1
 done
 
-LD_PRELOAD=libopae-c-ase.so LD_LIBRARY_PATH=$MYINST_DIR/lib/  ./mmio_stress
+ASE_LOG=0 LD_PRELOAD=libopae-c-ase.so LD_LIBRARY_PATH=$MYINST_DIR/lib/  ./mmio_stress
 
 errcode=$?
 echo "Error code $errcode"
