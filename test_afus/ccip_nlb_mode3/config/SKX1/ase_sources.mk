@@ -12,3 +12,7 @@ DUT_INCDIR = $(ASEVAL_GIT)/test_afus/ccip_nlb_all_SKX1/+$(ASEVAL_GIT)/test_afus/
 ASE_TOP = ase_top
 
 SIMULATOR ?= VCS
+
+SNPS_VLOGAN_OPT = +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_3
+
+MENT_VLOG_OPT = +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_3
