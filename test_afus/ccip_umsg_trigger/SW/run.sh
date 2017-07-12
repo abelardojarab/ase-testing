@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -e
+set -e
 CURRDIR=$PWD
 
 LD_LIBRARY_PATH=$MYINST_DIR/lib/
@@ -20,11 +20,11 @@ cd $ASEVAL_GIT/apps/
 errcode=$?
 echo "Error code $errcode"
 
-cd $CURRDIR
-gcc -g -o umsg_trigger_test umsg_trigger_test.c $MYINST_DIR/lib/libopae-c-ase.so -I $MYINST_DIR/include -std=c99 -luuid -lpthread
-./umsg_trigger_test | echo "This should have failed"
-errcode=$?
-echo "Error code $errcode"
+# cd $CURRDIR
+# gcc -g -o umsg_trigger_test umsg_trigger_test.c $MYINST_DIR/lib/libopae-c-ase.so -I $MYINST_DIR/include -std=c99 -luuid -lpthread
+# ./umsg_trigger_test
+# errcode=$?
+# echo "Error code $errcode"
 
 ## Kill the Simualtor
 $ASEVAL_GIT/kill_running_ase.sh

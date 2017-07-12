@@ -25,9 +25,9 @@ int usleep(unsigned);
 
 
 // Umsg sender thread
-void *umsg_thrasher(void *addr)
+int *umsg_thrasher(void *addr)
 {
-  uint64_t data64, i;
+  uint64_t i;
   uint64_t *umsg_addr;
   
   pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
@@ -38,6 +38,8 @@ void *umsg_thrasher(void *addr)
     {
       *umsg_addr = ((uint64_t)umsg_addr & 0xFFFFFFFF00000000) + i;
     }
+
+  return 0;
 }
 
 /* SKX-P NLB0 AFU_ID */
@@ -73,14 +75,6 @@ int main(int argc, char *argv[])
   fpga_guid          guid;
   uint32_t           num_matches;
 
-  volatile uint64_t *dsm_ptr    = NULL;
-  volatile uint64_t *status_ptr = NULL;
-  volatile uint64_t *input_ptr  = NULL;
-  volatile uint64_t *output_ptr = NULL;
-
-  uint64_t        dsm_wsid;
-  uint64_t        input_wsid;
-  uint64_t        output_wsid;
   fpga_result     res = FPGA_OK;
 
   if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
@@ -95,7 +89,7 @@ int main(int argc, char *argv[])
   res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
   ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
 
-  res = fpgaPropertiesSetGuid(filter, guid);
+  res = fpgaPropertiesSetGUID(filter, guid);
   ON_ERR_GOTO(res, out_destroy_prop, "setting GUID");
 
   /* TODO: Add selection via BDF / device ID */
@@ -130,17 +124,19 @@ int main(int argc, char *argv[])
   // Get UMsg address
   fpgaGetUmsgPtr(afc_handle, umsg_baseaddr);
 
-  // Set attribute
-  fpgaSetUmsgAttributes(afc_handle, 0xF0F0F0F0);
-   
   // Find addresses
   for(ii = 0; ii < NUM_UMSG ; ii++)
     {
       // umsg_claddr[ii] = umsg_get_address(ii);
       umsg_claddr[ii] = (uint64_t*)((uint64_t)umsg_baseaddr + (uint64_t)(ii*0x1040));
     }
+
+  //////////// No hint test ///////////////////////  
+  // Set attribute
+  fpgaSetUmsgAttributes(afc_handle, 0x00000000);  
   
   // Multi-threaded umsg send
+  printf("Running test with hint disabled\n");
   for(ii = 0; ii < NUM_UMSG ; ii++)
     {
       err[ii] = pthread_create(&tid[ii], NULL, &umsg_thrasher, umsg_claddr[ii]);
@@ -159,79 +155,35 @@ int main(int argc, char *argv[])
       pthread_join(tid[ii], NULL);
     }
 
-  /* Program DMA addresses */
-  /* uint64_t iova; */
-  /* res = fpgaGetIOVA(afc_handle, dsm_wsid, &iova); */
-  /* ON_ERR_GOTO(res, out_free_output, "getting DSM IOVA"); */
+  ///////////// Run with hint test /////////////////
+  
+  // Set attribute
+  fpgaSetUmsgAttributes(afc_handle, 0xFFFFFFFF);
 
-  /* res = fpgaWriteMMIO64(afc_handle, 0, CSR_AFU_DSM_BASEL, iova); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_AFU_DSM_BASEL"); */
+  printf("Running test with hint enabled\n");
 
-  /* res = fpgaWriteMMIO32(afc_handle, 0, CSR_CTL, 0); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_CFG"); */
-  /* res = fpgaWriteMMIO32(afc_handle, 0, CSR_CTL, 1); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_CFG"); */
+    for(ii = 0; ii < NUM_UMSG ; ii++)
+    {
+      err[ii] = pthread_create(&tid[ii], NULL, &umsg_thrasher, umsg_claddr[ii]);
+      if (err[ii] != 0) 
+	{
+	  perror("pthread_create");
+	  exit(1);
+	}      
+    }
 
-  /* res = fpgaGetIOVA(afc_handle, input_wsid, &iova); */
-  /* ON_ERR_GOTO(res, out_free_output, "getting input IOVA"); */
-  /* res = fpgaWriteMMIO64(afc_handle, 0, CSR_SRC_ADDR, CACHELINE_ALIGNED_ADDR(iova)); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_SRC_ADDR"); */
+  sleep(60);
+  
+  // Join outstanding threads
+  for(ii = 0; ii < NUM_UMSG ; ii++)
+    {
+      pthread_join(tid[ii], NULL);
+    }
 
-  /* res = fpgaGetIOVA(afc_handle, output_wsid, &iova); */
-  /* ON_ERR_GOTO(res, out_free_output, "getting output IOVA"); */
-  /* res = fpgaWriteMMIO64(afc_handle, 0, CSR_DST_ADDR, CACHELINE_ALIGNED_ADDR(iova)); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_DST_ADDR"); */
-  //fpgaProgramBufferAddressAndLength(afc_handle, dsm_wsid, 0, LPBK1_DSM_SIZE,
-  //				   CSR_AFU_DSM_BASEL);
-  //fpgaProgramBufferAddressAndLength(afc_handle, input_wsid, 0, LPBK1_BUFFER_SIZE,
-  //				   CSR_SRC_ADDR);
-  //fpgaProgramBufferAddressAndLength(afc_handle, output_wsid, 0, LPBK1_BUFFER_SIZE,
-  //				   CSR_DST_ADDR);
 
-  /* res = fpgaWriteMMIO32(afc_handle, 0, CSR_NUM_LINES, LPBK1_BUFFER_SIZE / CL(1)); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_NUM_LINES"); */
-  /* res = fpgaWriteMMIO32(afc_handle, 0, CSR_CFG, 0x42000); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_CFG"); */
-
-  /* status_ptr = dsm_ptr + DSM_STATUS_TEST_COMPLETE/8; */
-
-  /* /\* Start the test *\/ */
-  /* res = fpgaWriteMMIO32(afc_handle, 0, CSR_CTL, 3); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_CFG"); */
-
-  /* /\* Wait for test completion *\/ */
-  /* while (0 == ((*status_ptr) & 0x1)) { */
-  /* 	usleep(100); */
-  /* } */
-
-  /* /\* Stop the device *\/ */
-  /* res = fpgaWriteMMIO32(afc_handle, 0, CSR_CTL, 7); */
-  /* ON_ERR_GOTO(res, out_free_output, "writing CSR_CFG"); */
-
-  /* Check output buffer contents */
-  /* 	for (uint32_t i = 0; i < LPBK1_BUFFER_SIZE; i++) { */
-  /* 		if (((uint8_t*)output_ptr)[i] != ((uint8_t*)input_ptr)[i]) { */
-  /* 			fprintf(stderr, "Output does NOT match input " */
-  /* 				"at offset %i!\n", i); */
-  /* 			break; */
-  /* 		} */
-  /* 	} */
-
-  /* 	printf("Done Running Test\n"); */
-
-  /* 	/\* Release buffers *\/ */
-  /* out_free_output: */
-  /* 	res = fpgaReleaseBuffer(afc_handle, output_wsid); */
-  /* 	ON_ERR_GOTO(res, out_free_input, "releasing output buffer"); */
-  /* out_free_input: */
-  /* 	res = fpgaReleaseBuffer(afc_handle, input_wsid); */
-  /* 	ON_ERR_GOTO(res, out_free_dsm, "releasing input buffer"); */
-  /* out_free_dsm: */
-  /* 	res = fpgaReleaseBuffer(afc_handle, dsm_wsid); */
-  /* 	ON_ERR_GOTO(res, out_unmap, "releasing DSM buffer"); */
-
+  ///////////////////// Teardown /////////////////////
+  
   /* Unmap MMIO space */
- out_unmap:
   res = fpgaUnmapMMIO(afc_handle, 0);
   ON_ERR_GOTO(res, out_close, "unmapping MMIO space");
 
