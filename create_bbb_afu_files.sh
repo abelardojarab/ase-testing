@@ -163,52 +163,52 @@ fi
 ## Wrapper AFU
 if [[ $afu == "ccip_async_nlb100_all" ]]
 then
-echo -e "\n$ccip_async_nlb100_all\n" >> $ASE_SRCDIR/vlog_files.list
+    echo -e "\n$ccip_async_nlb100_all\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_async_nlb300_all" ]]
 then
-echo -e "\n$ccip_async_nlb300_all\n" >> $ASE_SRCDIR/vlog_files.list
+    echo -e "\n$ccip_async_nlb300_all\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_mpf_nlb_all" ]]
 then
-echo -e "\n$ccip_mpf_nlb_all\n" >> $ASE_SRCDIR/vlog_files.list
+    echo -e "\n$ccip_mpf_nlb_all\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_async_mpf_nlb_all" ]]
 then
-echo -e "\n$ccip_async_mpf_nlb_all\n" >> $ASE_SRCDIR/vlog_files.list
+    echo -e "\n$ccip_async_mpf_nlb_all\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_mpf_test_random" ]]
 then
-echo "Creating MPF test_random AFU"
-echo -e "\n$ccip_mpf_test_random\n" >> $ASE_SRCDIR/vlog_files.list
+    echo "Creating MPF test_random AFU"
+    echo -e "\n$ccip_mpf_test_random\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_async_mux_4nlb" ]]
 then
-echo "Create MUX test configuration"
-echo -e "\n$ccip_async_mux_4nlb\n" >> $ASE_SRCDIR/vlog_files.list
+    echo "Create MUX test configuration"
+    echo -e "\n$ccip_async_mux_4nlb\n" >> $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_mmio_rdwr_stress" ]]
 then
-echo "MMIO Stress AFU should be available"
-mv $ASE_SRCDIR/vlog_files.list.BAK $ASE_SRCDIR/vlog_files.list
+    echo "MMIO Stress AFU should be available"
+    mv $ASE_SRCDIR/vlog_files.list.BAK $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_async_mpf_iom_iombuf_samp" ]]
 then
-echo "IOM buffer example"
-cat  $ASEVAL_GIT/iombuf_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list
+    echo "IOM buffer example"
+    cat  $ASEVAL_GIT/iombuf_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_async_mpf_iom_iomfifo_samp" ]]
 then
-echo "IOM FIFO example"
-cat  $ASEVAL_GIT/iomfifo_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list
+    echo "IOM FIFO example"
+    cat  $ASEVAL_GIT/iomfifo_samp_vlog_files.list >>  $ASE_SRCDIR/vlog_files.list
 elif [[ $afu == "ccip_nlb_mode0" ]] || [[ $afu == "ccip_nlb_mode0_memcrash" ]]
 then
-echo "NLB Mode0 AFU"
-cp $ASEVAL_GIT/test_afus/ccip_nlb_mode0/config/$RELCODE/* $ASE_SRCDIR/
-							  elif [[ $afu == "ccip_checker_nlb" ]]
-							  then
-							  echo "NLB Mode0 AFU"
-							  cp $ASEVAL_GIT/test_afus/ccip_checker_nlb/config/$RELCODE/* $ASE_SRCDIR/
-							  elif [[ $afu == "ccip_ase_fifo_nlb" ]]
-							  then
-							  echo "NLB Mode0 AFU"
-							  cp $ASEVAL_GIT/test_afus/ccip_ase_fifo_nlb/config/$RELCODE/* $ASE_SRCDIR/
-							  else
-							  echo "Requested AFU was not found, this may not work !"
-							  exit 1
-							  fi
+    echo "NLB Mode0 AFU"
+    cp $ASEVAL_GIT/test_afus/ccip_nlb_mode0/config/$RELCODE/* $ASE_SRCDIR/
+elif [[ $afu == "ccip_checker_nlb" ]]
+then
+    echo "NLB Mode0 AFU"
+    cp $ASEVAL_GIT/test_afus/ccip_checker_nlb/config/$RELCODE/* $ASE_SRCDIR/
+elif [[ $afu == "ccip_ase_fifo_nlb" ]]
+then
+    echo "NLB Mode0 AFU"
+    cp $ASEVAL_GIT/test_afus/ccip_ase_fifo_nlb/config/$RELCODE/* $ASE_SRCDIR/
+else
+    echo "Requested AFU was not found, this may not work !"
+    exit 1
+fi
 
 ## Set platform type
 # echo -e "\nASE_PLATFORM = ASE_PLATFORM_MCP_SKX\n" >> $ASE_SRCDIR/ase_sources.mk
