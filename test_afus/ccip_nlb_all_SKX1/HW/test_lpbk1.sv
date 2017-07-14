@@ -151,7 +151,6 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
     logic                   rd_done;
     logic                   finite_test;
     logic   [4:0]           ram_max_index;
-    logic   [7:0]           Num_ram_reads;
     logic   [20:0]          Total_ram_reads;                      
     logic   [15:0]          ab2l1_WrRsp;
     logic   [1:0]           ab2l1_WrRspCLnum;
@@ -190,11 +189,18 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
     logic   [9:0]           Num_RdRsp_buff1;
     logic                   trigger_rds_done;
     logic                   Wr_cmplt;
-    logic                   Wr_cmplt_q;
     logic                   rd_cmplt;
     logic                   Read_Buffer_ID;
     logic                   buff0_serviced;
     logic                   buff1_serviced;
+    
+    logic                   not_mcl_req;
+    logic                   almfull_low;
+    logic                   latch_RAM_rd_cmp;
+    logic                   detect_RAM_rd_cmp;
+    logic                   detect_cur_rd_cmp;
+    logic  [1:0]            detect_cur_rd_cmp_reg;
+    logic  [1:0]            ram_thresh_encoding;
     
     (* maxfan=32 *) logic   ram1_sel_T4;
     (* maxfan=1  *) logic   [1:0] CL_ID;
@@ -229,22 +235,30 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
     // ----------------------------------------------------------------------------
     always@(posedge Clk_400)
     begin
-      finite_test                    <= re2xy_go && !re2xy_Cont;
-      if (!test_Resetb)
-      begin
-        ram_max_index                <= mCL1_depth_base2;
-        finite_test                  <= 0;
+      finite_test                          <= re2xy_go && !re2xy_Cont;
+      if (!test_Resetb)                    
+      begin                                
+        ram_thresh_encoding                <= 2;
+        ram_max_index                      <= mCL1_depth_base2;
+        finite_test                        <= 0;
       end
       
       else
       begin
         case (re2xy_multiCL_len)
-          2'b00  :  ram_max_index    <= mCL1_depth_base2;
-          2'b01  :  ram_max_index    <= mCL2_depth_base2;
-          2'b11  :  ram_max_index    <= mCL4_depth_base2;
-          default:  ram_max_index    <= mCL1_depth_base2;
-        endcase     
-      end   
+          2'b00  :  ram_max_index          <= mCL1_depth_base2;
+          2'b01  :  ram_max_index          <= mCL2_depth_base2;
+          2'b11  :  ram_max_index          <= mCL4_depth_base2;
+          default:  ram_max_index          <= mCL1_depth_base2;
+        endcase  
+        
+        case (re2xy_multiCL_len)
+           2'b00  : ram_thresh_encoding    <= 2;
+           2'b01  : ram_thresh_encoding    <= 1;
+           2'b11  : ram_thresh_encoding    <= 0;
+           default: ram_thresh_encoding    <= 2;
+        endcase          
+      end         
     end
 
     // ------------------------------------------------------
@@ -344,7 +358,31 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
       .clock     (Clk_400),         //           .clock
       .q         (wrreq_mem1_out)   // ram_output.dataout
     );
-
+    
+    always@ (*)
+    begin
+      detect_RAM_rd_cmp     = 0;
+      detect_cur_rd_cmp     = 0;
+      if (write_fsm || (!write_fsm && not_mcl_req && Wr_go && almfull_low) ) // These conditions ensure next clock will pop an entry from RAM0/1
+      begin        
+        if (Total_ram_reads[19:0] == re2xy_NumLines[19:0] && finite_test)    // Detect final test complete
+        begin
+          detect_RAM_rd_cmp = 1;
+        end       
+        
+        if ((Total_ram_reads[8:0] << ram_thresh_encoding) == 9'h0)           // Detect current block complete   
+        begin
+          detect_cur_rd_cmp = 1;
+        end
+      end
+    end
+    
+    always @(posedge Clk_400)
+    begin
+      detect_cur_rd_cmp_reg[0] <= detect_cur_rd_cmp;
+      detect_cur_rd_cmp_reg[1] <= detect_cur_rd_cmp_reg[0];
+    end    
+    
     // ----------------------------------------------------------------------------
     // Collect RdRsp in RAM0/1
     // Initiate Write Requests
@@ -528,17 +566,15 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
         buff1_rd_cmplt  <= 1;
         Num_RdRsp_buff1 <= 0;
       end
-                      
-      // Track Reads from RAM
-      if (!write_fsm & Wr_go & !ab2l1_WrAlmFull_qq)
-      begin
-        Num_ram_reads   <= Num_ram_reads + 1'b1; 
-      end
-      
+                            
       // If all reads done: stop WrFSM, trigger write complete
-      Wr_cmplt          <= 0; 
-      Wr_cmplt_q        <= Wr_cmplt;
-      if ( Num_ram_reads[7] || ((Total_ram_reads > re2xy_NumLines) && finite_test) )
+      Wr_cmplt          <= 0;       
+      if ( detect_RAM_rd_cmp )
+      begin
+        latch_RAM_rd_cmp <= 1;
+      end      
+      
+      if ( detect_cur_rd_cmp | (|detect_cur_rd_cmp_reg[1:0]) | detect_RAM_rd_cmp | latch_RAM_rd_cmp )
       begin
         Wr_go           <= 0;
         Wr_cmplt        <= 1;
@@ -561,62 +597,64 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
         buff1_wr_cmplt  <= 1;
       end
       
-      if (Wr_cmplt_q)
-      Num_ram_reads     <= 0;
-      
       // ----------------------------------------------------------------------------
       // WrFSM: Requestor Stores Tx Writes in a FIFO
       // TxFIFO is sized in such a way that writes are guaranteed to be accepted
       // So, ab2l1_WrSent = 0 when WrEn=1 is an error condition
       // ----------------------------------------------------------------------------
-      ab2l1_WrAlmFull_q   <= ab2l1_WrAlmFull;
-      ab2l1_WrAlmFull_qq  <= ab2l1_WrAlmFull_q;
-      case (write_fsm)   /* synthesis parallel_case */
-      1'h0:
-        begin
-          if (Wr_go & !ab2l1_WrAlmFull_qq)
-          begin
-            // Read first CL of 'num_multi_CL' memWrite requests from RAM
-            write_fsm                        <= 1'h1;
-            CL_ID                            <= CL_ID + 1'b1;
-            memrd_addr                       <= {WrReq_tid[6:0], CL_ID};
-            ram_rdValid                      <= 1;
-            Total_ram_reads                  <= Total_ram_reads + 1'b1;
-            wrsop                            <= 1;
-            wrCLnum                          <= re2xy_multiCL_len[1:0];
-          end
-        end
+      ab2l1_WrAlmFull_q                        <= ab2l1_WrAlmFull;
+      ab2l1_WrAlmFull_qq                       <= ab2l1_WrAlmFull_q;     
+      not_mcl_req                              <= !re2xy_multiCL_len[0];
+      almfull_low                              <= !ab2l1_WrAlmFull_q;
+      ram_rdValid                              <= 0;
+      memrd_addr                               <= {WrReq_tid[6:0], CL_ID};
+      CL_ID                                    <= 0;
+      wrCLnum                                  <= 0;
       
-      1'h1:
-        begin
-          if (|wrCLnum[1:0])
-          begin
-          // Read remaining CLs of 're2xy_multiCL_len' memWrite requests from RAM
-          write_fsm                        <= 1'h1;
-          CL_ID                            <= CL_ID + 1'b1;
-          memrd_addr                       <= {WrReq_tid[6:0], CL_ID};
-          ram_rdValid                      <= 1;
-          Total_ram_reads                  <= Total_ram_reads + 1'b1;
-          wrsop                            <= 0;
-          wrCLnum                          <= wrCLnum - 1'b1;
-          end  
-                          
-          else
-          begin         
-          // Goto next set of multiCL requests; One cycle bubble between each set of multi CL writes. 
-          write_fsm                        <= 1'h0;
-          CL_ID                            <= 0;
-          ram_rdValid                      <= 0;
-          wrsop                            <= 1;
-          wrCLnum                          <= re2xy_multiCL_len[1:0];
-          WrReq_tid                        <= WrReq_tid + 1'b1;
-          end
-        end
-      
-      default:
+      if ( (write_fsm && wrCLnum == 2'h1) || (not_mcl_req && Wr_go && almfull_low) )
       begin
-        write_fsm                            <= write_fsm;
-      end
+        WrReq_tid                              <= WrReq_tid + 1'b1;
+      end  
+      
+      case (write_fsm)   /* synthesis parallel_case */
+        1'h0:
+          begin
+            if (Wr_go & !ab2l1_WrAlmFull_qq)
+            begin
+              // Read first CL of 'num_multi_CL' memWrite requests from RAM
+              ram_rdValid                      <= 1;
+              Total_ram_reads                  <= Total_ram_reads + 1'b1;
+              wrsop                            <= 1;
+              wrCLnum                          <= re2xy_multiCL_len[1:0];
+              
+              // if MCL mode is ON go to next state to issue remaining pkts of this MCL request
+              if (re2xy_multiCL_len[0])
+              begin
+               write_fsm                        <= 1'h1;
+               CL_ID                            <= CL_ID + 1'b1;
+              end
+            end
+          end
+        
+        1'h1:
+          begin
+            if (wrCLnum == 2'h1)
+            begin      
+              write_fsm                        <= 1'h0;
+              CL_ID                            <= 0;
+            end
+            
+            else
+            begin
+              CL_ID                            <= CL_ID + 1'b1;
+            end
+            
+            // Read remaining CLs of 're2xy_multiCL_len' memWrite requests from RAM
+            ram_rdValid                        <= 1;
+            Total_ram_reads                    <= Total_ram_reads + 1'b1;
+            wrsop                              <= 0;
+            wrCLnum                            <= wrCLnum - 1'b1;  
+          end
       endcase  
 
       // ----------------------------------------------------------------------------
@@ -701,14 +739,12 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
         Num_Write_rsp                          <= 0;
         pckd_num_wr_rsp                        <= 0;
         Total_ram_reads                        <= 20'h1;
-        Num_ram_reads                          <= 0;
         rd_done                                <= 0;
         Total_Num_RdRsp                        <= 0;
         trigger_rds_done                       <= 0;
         Num_RdRsp_buff0                        <= 0;
         Num_RdRsp_buff1                        <= 0;
         Wr_cmplt                               <= 0;
-        Wr_cmplt_q                             <= 0;
         rd_cmplt                               <= 0;
         buff1_status_T1                        <= 0;
         buff1_status_T2                        <= 0;
@@ -726,6 +762,9 @@ module test_lpbk1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
         buff1_serviced                         <= 1;
         buff1_rd_cmplt                         <= 0;
         buff0_rd_cmplt                         <= 0;
+        not_mcl_req                            <= 0;
+        almfull_low                            <= 0;
+        latch_RAM_rd_cmp                       <= 0;
       end 
     end
 

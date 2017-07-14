@@ -716,11 +716,11 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
             ErrorVector[3]  <= ab2re_ErrorValid;
 
         /* synthesis translate_off */
-        // if(af2cp_sTxPort.c1.valid )
-        //     $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
+        if(af2cp_sTxPort.c1.valid )
+            $display("*Req Type: %x \t Addr: %x \n Data: %x", af2cp_sTxPort.c1.hdr.req_type, af2cp_sTxPort.c1.hdr.address, af2cp_sTxPort.c1.data);
 
-        // if(af2cp_sTxPort.c0.valid)
-        //     $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
+        if(af2cp_sTxPort.c0.valid)
+            $display("*Req Type: %x \t Addr: %x", af2cp_sTxPort.c0.hdr.req_type, af2cp_sTxPort.c0.hdr.address);
 
         /* synthesis translate_on */
 
@@ -820,9 +820,10 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
         && !status_write
         && rnd_delay
         && !cp2af_sRxPort.c0TxAlmFull    
-        && ab2re_RdEn;
+        && ab2re_RdEn
+        &&!rd_pend_thresh;
 
-        re2ab_RdSent= RdHdr_valid & !rd_pend_thresh; 
+        re2ab_RdSent= RdHdr_valid ; 
 
         txFifo_RdAck = re2xy_go && rnd_delay  && !cp2af_sRxPort.c1TxAlmFull && txFifo_Dout_v && !wr_pend_thresh;
         wrreq_type   = txFifo_WrFence_qq ? eREQ_WRFENCE
@@ -885,7 +886,7 @@ module requestor #(parameter PEND_THRESH=1, ADDR_LMT=20, TXHDR_WIDTH=61, RXHDR_W
                      .CTL_WIDTH   (0),
                      .DEPTH_BASE2 (9),         
                      .GRAM_MODE   (3),
-                     .FULL_THRESH (2**9-8)     
+                     .FULL_THRESH (2**9-16)     
     )nlb_writeTx_fifo
     (                                          //--------------------- Input  ------------------
         .Resetb            (test_Reset_n),

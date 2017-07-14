@@ -182,12 +182,13 @@ module test_sw1 #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
    logic    [15:0]            ab2s1_RdRsp_q;
    logic    [20:0]            Num_RdRsp_q;
 
-   wire     [MDATA-2:0]       Wrmdata = s12ab_WrAddr[MDATA-2:0];
-   wire     [MDATA-2:0]       Rdmdata = s12ab_RdAddr[MDATA-2:0];
+
+   wire     [MDATA-1:0]       Wrmdata = s12ab_WrAddr[MDATA-1:0];
+   wire     [MDATA-1:0]       Rdmdata = s12ab_RdAddr[MDATA-1:0];
    assign                     s12ab_WrDin  = (WrFSM == Vwrfsm_UPDTFLAG) ? {wrDin[511:0]}  : {wrDin[511:17],s12ab_WrAddr[16:0]};
 
-   assign s12ab_RdTID = {1'b1, Rdmdata};
-   assign s12ab_WrTID = {1'b0, Wrmdata};
+   assign s12ab_RdTID = { Rdmdata};
+   assign s12ab_WrTID = { Wrmdata};
    
    always @(*)
    begin

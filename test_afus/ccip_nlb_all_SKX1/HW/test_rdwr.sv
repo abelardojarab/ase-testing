@@ -172,7 +172,7 @@ module test_rdwr #(parameter PEND_THRESH=1, ADDR_LMT=20, MDATA=14)
 
    always @(posedge Clk_400)
    begin
-     rw2ab_ErrorInfo  <= 'hx;   
+     rw2ab_ErrorInfo  <= 'h0;   
      if (!test_Resetb)
        begin
          rw2ab_ErrorValid <= 0;
