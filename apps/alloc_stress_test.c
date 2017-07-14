@@ -8,7 +8,7 @@ int main()
 
   struct buffer_t *buf;
   buf  = (struct buffer_t *)malloc(sizeof(struct buffer_t));
-  buf->memsize  = 2*1024*1024;
+  buf->memsize  = 2*1024;
 
   i = 0;
   while(1)

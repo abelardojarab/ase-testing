@@ -26,6 +26,7 @@ lib_only=0
 cov=0
 debug=0
 gtest=0
+parallel=0
 
 if [[ $arg_list == *"lib_only"* ]];
 then
@@ -47,10 +48,16 @@ then
     gtest=1
 fi
 
+if [[ $arg_list == *"parallel"* ]];
+then
+    parallel=1
+fi
+
 echo "Build OPAE stack with ASE = $lib_only"
 echo "Build OPAE with coverage  = $cov"
 echo "Build OPAE with debug     = $debug"
 echo "Build OPAE with GTest     = $gtest"
+echo "Enable Parallel option    = $parallel"
 
 cd $BASEDIR
 rm -rf $MYINST_DIR
@@ -86,7 +93,12 @@ fi
 eval $cmake_cmd
 
 ## Build and install
-make
+if [ $parallel -eq 1 ];
+then
+    make -j 8
+else
+    make
+fi
 make install
 
 ## If only library is to be built, return right here
@@ -102,7 +114,12 @@ rm -rf mybuild
 mkdir mybuild
 cd mybuild
 cmake -DCMAKE_INSTALL_PREFIX=$MYINST_DIR/ -DCMAKE_C_FLAGS=-isystem\ $MYINST_DIR/include ../
-make
+if [ $parallel -eq 1 ];
+then
+    make -j 8
+else
+    make
+fi
 make install
 
 ## Build MPF samples
