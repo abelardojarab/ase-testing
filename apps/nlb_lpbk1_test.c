@@ -178,6 +178,11 @@ int main(int argc, char *argv[])
   mmio_read32(AFU_ID_H + 4, &data32 );
   printf("data32 = %08x\n", (uint32_t)data32);
 
+#define ERR_TEST
+#ifdef ERR_TEST
+  raise(SIGSEGV);
+#endif
+  
 #if 0
   mmio_read32(0x1020, &data32 );
 #endif
