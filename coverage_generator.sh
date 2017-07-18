@@ -30,8 +30,9 @@ then
 elif [ $TESTNAME == "ccip_mmio_rdwr_stress" ];
 then
     $ASEVAL_GIT/config_generator.sh multi 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
-else
-    $ASEVAL_GIT/config_generator.sh single 0 silent 270.0 32 > $ASE_SRCDIR/ase.cfg
+elif [ $TESTNAME == "gtest" ];
+then
+    $ASEVAL_GIT/config_generator.sh multi 1234 silent 270.0 32 > $ASE_SRCDIR/ase.cfg
 fi
 
 ## Build with coverage metrics
