@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ve
 
 ## Sanity check input
 if [ "$1" = "" ];
@@ -51,17 +51,9 @@ echo "ChangeDir: $ASEVAL_GIT/test_afus/$TESTNAME/SW/"
 cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
-##if [[ $TESTNAME == "ccip_ase_fifo_nlb" ]] 
-##then
-##echo "DONE"
-##else
-## Wait till simulation gone
-while [ -f $ASE_WORKDIR/.ase_ready.pid ]
-do
-    sleep 1
-done
-sleep 3
-#fi
+## Kill simulator
+$ASEVAL_GIT/kill_running_ase.sh
+
 #######################################
 ##                                   ##
 ##     Coverage report generation    ##
