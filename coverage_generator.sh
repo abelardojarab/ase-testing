@@ -63,10 +63,10 @@ cd $ASE_COV
 ## Convert cov_db to reports
 urg -full64 -dir ase_simv.vdb -show tests -format both
 
-# lcov --base-directory $ASE_COV --directory $ASE_WORKDIR --capture --output-file $TESTNAME.info
 lcov --capture \
     --test-name $TESTNAME \
     --base-directory $PWD \
+    --config-file $ASEVAL_GIT/lcovrc.cfg \
     --directory $ASE_WORKDIR \
     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
