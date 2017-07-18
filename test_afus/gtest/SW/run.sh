@@ -14,14 +14,14 @@ set -e
 
 ## Build GTESTS for ASE.
 cd $FPGASW_GIT
-git checkout feature/GTEST-NOMERGE_ASE
+#git checkout feature/GTEST-NOMERGE_ASE
 #git merge develop
 cd $FPGASW_GIT/ase/api
-rm -rf mybuild
-mkdir mybuild
+#rm -rf mybuild
+#mkdir mybuild
 cd mybuild
-cmake ../../.. -DBUILD_ASE=ON -DBUILD_TESTS=ON -DGTEST_ROOT=/home/rrsharma/googletest/myinst/
-make
+#cmake ../../.. -DBUILD_ASE=ON -DBUILD_TESTS=ON -DGTEST_ROOT=/home/rrsharma/googletest/myinst/
+#make
 
 # Wait for readiness
 # echo "##################################"
