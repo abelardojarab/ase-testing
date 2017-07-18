@@ -67,8 +67,8 @@ lcov --capture \
     --test-name $TESTNAME \
     --base-directory $PWD \
     --directory $ASE_WORKDIR \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/__/sw/ \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/src/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
     --output-file $TESTNAME.info
 
 genhtml $TESTNAME.info --output-directory html_$TESTNAME
