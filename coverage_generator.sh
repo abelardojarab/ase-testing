@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ve
 
 ## Sanity check input
 if [ "$1" = "" ];
@@ -51,17 +51,9 @@ echo "ChangeDir: $ASEVAL_GIT/test_afus/$TESTNAME/SW/"
 cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
-##if [[ $TESTNAME == "ccip_ase_fifo_nlb" ]] 
-##then
-##echo "DONE"
-##else
-## Wait till simulation gone
-while [ -f $ASE_WORKDIR/.ase_ready.pid ]
-do
-    sleep 1
-done
-sleep 3
-#fi
+## Kill simulator
+$ASEVAL_GIT/kill_running_ase.sh
+
 #######################################
 ##                                   ##
 ##     Coverage report generation    ##
@@ -71,10 +63,10 @@ cd $ASE_COV
 ## Convert cov_db to reports
 urg -full64 -dir ase_simv.vdb -show tests -format both
 
-# lcov --base-directory $ASE_COV --directory $ASE_WORKDIR --capture --output-file $TESTNAME.info
 lcov --capture \
     --test-name $TESTNAME \
     --base-directory $PWD \
+    --config-file $ASEVAL_GIT/lcovrc.cfg \
     --directory $ASE_WORKDIR \
     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
