@@ -3,13 +3,18 @@
 echo "ASE_WORKDIR =" $ASE_WORKDIR
 
 # Check if ready file exists
-if [ -e $ASE_WORKDIR/.ase_ready.pid ] ; then
+echo "Looking for ASE lock file in ASE_WORKDIR=" $ASE_WORKDIR
+if [ -e $ASE_WORKDIR/.ase_ready.pid ]
+then
     pid=`cat $ASE_WORKDIR/.ase_ready.pid | grep pid | cut -d "=" -s -f2-`
-    echo "Killing Simulator PID " $pid
-    kill $pid
+    while [ -f $ASE_WORKDIR/.ase_ready.pid ]
+    do
+	echo "Killing Simulator PID " $pid
+	kill $pid
+	sleep 1
+    done
 else
-    echo "** ERROR => Simulator process not found ! **"
-    exit 1
+    echo "Simulator has probably already been killed"
 fi
 
 # Disk cleanup
