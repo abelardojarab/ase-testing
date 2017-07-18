@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-set -ve
+set -v
+set -e
 
 ## Sanity check input
 if [ "$1" = "" ];
@@ -21,22 +22,19 @@ cd $ASE_SRCDIR/
 
 ## Config set up
 $ASEVAL_GIT/create_bbb_afu_files.sh $TESTNAME
-if [ $TESTNAME == "ccip_nlb_mode0" || $TESTNAME == "gtest" ];
+if [ $TESTNAME == "ccip_nlb_mode0" ];
 then
-    $ASEVAL_GIT/config_generator.sh single 1234 noisy 300.0 32 > $ASE_SRCDIR/ase.cfg
+    $ASEVAL_GIT/config_generator.sh single 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
 elif [ $TESTNAME == "ccip_umsg_trigger" ];
 then
     $ASEVAL_GIT/config_generator.sh multi 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
-elif [ $TESTNAME == "ccip_mmio_rdwr_stress" ];
+elif [ $TESTNAME == "gtest" ];
 then
-    $ASEVAL_GIT/config_generator.sh multi 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
-else
-    $ASEVAL_GIT/config_generator.sh single 0 silent 270.0 32 > $ASE_SRCDIR/ase.cfg
+    $ASEVAL_GIT/config_generator.sh multi 0 silent 270.0 32 > $ASE_SRCDIR/ase.cfg
 fi
 
 ## Build with coverage metrics
 cd $ASE_SRCDIR/
-$ASEVAL_GIT/add_ase_secret_option.sh cov
 make ASE_COVERAGE=1 ASE_DEBUG=0
 
 ## Run simulation
@@ -51,8 +49,12 @@ echo "ChangeDir: $ASEVAL_GIT/test_afus/$TESTNAME/SW/"
 cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
-## Kill simulator
-$ASEVAL_GIT/kill_running_ase.sh
+## Wait till simulation gone
+while [ -f $ASE_WORKDIR/.ase_ready.pid ]
+do
+    sleep 1
+done
+sleep 3
 
 #######################################
 ##                                   ##
@@ -60,18 +62,16 @@ $ASEVAL_GIT/kill_running_ase.sh
 ##                                   ##
 #######################################
 cd $ASE_COV
-## Convert cov_db to reports
-urg -full64 -dir ase_simv.vdb -show tests -format both
-
+# lcov --base-directory $ASE_COV --directory $ASE_WORKDIR --capture --output-file $TESTNAME.info
 lcov --capture \
     --test-name $TESTNAME \
     --base-directory $PWD \
-    --config-file $ASEVAL_GIT/lcovrc.cfg \
     --directory $ASE_WORKDIR \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/__/sw/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/src/ \
     --output-file $TESTNAME.info
 
 genhtml $TESTNAME.info --output-directory html_$TESTNAME
 
-
+## Convert cov_db to reports
+urg -full64 -dir ase_simv.vdb -show tests -format both
