@@ -23,5 +23,14 @@ cd mybuild
 cmake ../../.. -DBUILD_ASE=ON -DBUILD_TESTS=ON -DGTEST_ROOT=$ASEVAL_GIT/myinst/.buildenv
 make
 
+# Wait for readiness
+echo "##################################"
+echo "#     Waiting for .ase_ready     #"
+echo "##################################"
+while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
+do
+sleep 1
+done
+
 ./bin/gtase
 
