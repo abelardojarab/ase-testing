@@ -50,11 +50,11 @@ cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
 ## Wait till simulation gone
-while [ -f $ASE_WORKDIR/.ase_ready.pid ]
-do
-    sleep 1
-done
-sleep 3
+# while [ -f $ASE_WORKDIR/.ase_ready.pid ]
+# do
+#     sleep 1
+# done
+# sleep 3
 
 #######################################
 ##                                   ##
