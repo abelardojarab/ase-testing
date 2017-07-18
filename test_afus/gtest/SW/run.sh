@@ -10,12 +10,12 @@ mkdir build
 cd build
 cmake ../ -DCMAKE_INSTALL_PREFIX=$ASEVAL_GIT/myinst
 make
-sudo make install
+make install
 
 ## Build GTESTS for ASE.
 cd $FPGASW_GIT
 git checkout feature/ase_gtest-NOMERGE
-git merge develop
+#git merge develop
 cd $FPGASW_GIT/ase/api
 rm -rf mybuild
 mkdir mybuild
