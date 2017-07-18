@@ -50,11 +50,11 @@ cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
 ## Wait till simulation gone
-while [ -f $ASE_WORKDIR/.ase_ready.pid ]
-do
-    sleep 1
-done
-sleep 3
+# while [ -f $ASE_WORKDIR/.ase_ready.pid ]
+# do
+#     sleep 1
+# done
+# sleep 3
 
 #######################################
 ##                                   ##
@@ -67,8 +67,8 @@ lcov --capture \
     --test-name $TESTNAME \
     --base-directory $PWD \
     --directory $ASE_WORKDIR \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/__/sw/ \
-    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/fpga-ASE.dir/src/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
+    --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
     --output-file $TESTNAME.info
 
 genhtml $TESTNAME.info --output-directory html_$TESTNAME
