@@ -14,7 +14,7 @@ make install
 
 ## Build GTESTS for ASE.
 cd $FPGASW_GIT
-git checkout feature/ase_gtest-NOMERGE
+git checkout feature/GTEST-NOMERGE_ASE
 #git merge develop
 cd $FPGASW_GIT/ase/api
 rm -rf mybuild
