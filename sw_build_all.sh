@@ -10,11 +10,6 @@ if [ -z "$FPGASW_GIT" ]; then
     exit 1
 fi
 
-if [ -z "$BBB_GIT" ]; then
-    echo "env(BBB_GIT) has not been set !"
-    exit 1
-fi
-
 if [ -z "$ASEVAL_GIT" ]; then
     echo "env(ASEVAL_GIT) has not been set !"
     exit 1
@@ -86,7 +81,7 @@ fi
 ## Gtest support
 if [ $gtest -eq 1 ];
 then
-    cmake_cmd="$cmake_cmd -DBUILD_TESTS=ON"
+    cmake_cmd="$cmake_cmd -DBUILD_TESTS=ON -DGTEST_ROOT=/home/rrsharma/googletest/myinst/"
 fi
 
 ## CMake command
@@ -106,6 +101,12 @@ if [ $lib_only -eq 1 ];
 then
     echo "BBBs will not be built... returning here !"
     exit 0
+fi
+
+## BBB_GIT check
+if [ -z "$BBB_GIT" ]; then
+    echo "env(BBB_GIT) has not been set !"
+    exit 1
 fi
 
 ## Build and install MPF
