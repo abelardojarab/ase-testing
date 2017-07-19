@@ -21,6 +21,8 @@
 #
 ################################################################
 export SVUNIT_INSTALL=$PWD
+echo "############################### *****************"
+echo $SVUNIT_INSTALL
 #if [ $PATH =~ *$SVUNIT_INSTALL* ] then
 #else
   export PATH=$SVUNIT_INSTALL/svunit_base:${PATH}
