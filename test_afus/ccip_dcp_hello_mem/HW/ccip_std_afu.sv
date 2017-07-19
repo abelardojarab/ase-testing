@@ -112,7 +112,7 @@ module ccip_std_afu(
   input           t_if_ccip_Rx     pck_cp2af_sRx;           // CCI-P Rx Port
   output          t_if_ccip_Tx     pck_af2cp_sTx;           // CCI-P Tx Port
 
-  wire [63:0]                   avs_byteenable;
+   // wire [63:0] 	  avs_byteenable;
   wire                          avs_waitrequest;
   wire [511:0]                  avs_readdata;
   wire                          avs_readdatavalid;

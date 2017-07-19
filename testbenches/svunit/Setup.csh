@@ -21,6 +21,8 @@
 #
 ################################################################
 setenv SVUNIT_INSTALL `pwd`
+echo "########################******************"
+echo $SVUNIT_INSTALL
 if ( $PATH =~ *$SVUNIT_INSTALL* ) then
 else
   setenv PATH ${PATH}:$SVUNIT_INSTALL/svunit_base	
