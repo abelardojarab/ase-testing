@@ -20,6 +20,18 @@ cd $FPGASW_GIT/ase/api
 #rm -rf mybuild
 #mkdir mybuild
 cd mybuild
+<<<<<<< HEAD
+cmake ../../.. -DBUILD_ASE=ON -DBUILD_TESTS=ON -DGTEST_ROOT=/home/rrojo/.buildenv
+make
+# Wait for readiness
+echo "##################################"
+echo "#     Waiting for .ase_ready     #"
+echo "##################################"
+while [ ! -f $ASE_WORKDIR/.ase_ready.pid ]
+do
+sleep 1
+done
+=======
 #cmake ../../.. -DBUILD_ASE=ON -DBUILD_TESTS=ON -DGTEST_ROOT=/home/rrsharma/googletest/myinst/
 #make
 
@@ -31,6 +43,7 @@ cd mybuild
 # do
 # sleep 1
 # done
+>>>>>>> 54d10d92c39cf71994cd636ca41aef49a0dd7275
 
 ./bin/gtase
 
