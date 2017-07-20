@@ -50,6 +50,9 @@ echo "ChangeDir: $ASEVAL_GIT/test_afus/$TESTNAME/SW/"
 cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
+## Kill application
+$ASEVAL_GIT/kill_running_ase.sh
+sleep 2
 
 #######################################
 ##                                   ##
@@ -62,6 +65,7 @@ lcov --capture \
      --base-directory $PWD \
      --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
      --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
+     --directory $ASE_WORKDIR/ \
      --output-file $TESTNAME.info
 
 ## Generate HTML
