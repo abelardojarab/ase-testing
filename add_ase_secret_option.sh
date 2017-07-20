@@ -9,7 +9,7 @@ CURRDIR=${PWD}
 
 COV_DIR=${ASE_SRCDIR}/coverage/
 
-COV_TYPES="line+cond+branch+fsm+tgl"
+COV_TYPES="cond+branch+fsm+tgl"
 
 VALGRIND_OPT="--tool=memcheck -v --log-file=valgrind.log --error-limit=no  --track-fds=yes --trace-children=yes  --leak-check=full --track-origins=yes  --show-reachable=yes  --show-leak-kinds=definite,possible --undef-value-errors=yes"
 

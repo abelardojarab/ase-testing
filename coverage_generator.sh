@@ -6,11 +6,11 @@ set -e
 ## Sanity check input
 if [ "$1" = "" ];
 then
-echo "Test input name is required!"
-return 1
+    echo "Test input name is required!"
+    return 1
 else
-echo "TESTNAME = $1"
-TESTNAME=$1
+    echo "TESTNAME = $1"
+    TESTNAME=$1
 fi
 
 ## Coverage directory name, create if not available
@@ -24,13 +24,13 @@ cd $ASE_SRCDIR/
 $ASEVAL_GIT/create_bbb_afu_files.sh $TESTNAME
 if [ $TESTNAME == "ccip_nlb_mode0" ];
 then
-$ASEVAL_GIT/config_generator.sh single 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
+    $ASEVAL_GIT/config_generator.sh single 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
 elif [ $TESTNAME == "ccip_umsg_trigger" ];
 then
-$ASEVAL_GIT/config_generator.sh multi 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
+    $ASEVAL_GIT/config_generator.sh multi 1234 silent 300.0 32 > $ASE_SRCDIR/ase.cfg
 elif [ $TESTNAME == "gtest" ];
 then
-$ASEVAL_GIT/config_generator.sh multi 0 silent 270.0 32 > $ASE_SRCDIR/ase.cfg
+    $ASEVAL_GIT/config_generator.sh multi 0 silent 270.0 32 > $ASE_SRCDIR/ase.cfg
 fi
 
 ## Build with coverage metrics
