@@ -35,6 +35,7 @@ fi
 
 ## Build with coverage metrics
 cd $ASE_SRCDIR/
+$ASEVAL_GIT/add_ase_secret_option.sh cov
 make ASE_COVERAGE=1 ASE_DEBUG=0
 
 ## Run simulation
@@ -49,12 +50,6 @@ echo "ChangeDir: $ASEVAL_GIT/test_afus/$TESTNAME/SW/"
 cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ./run.sh
 
-## Wait till simulation gone
-# while [ -f $ASE_WORKDIR/.ase_ready.pid ]
-# do
-#     sleep 1
-# done
-# sleep 3
 
 #######################################
 ##                                   ##
@@ -62,15 +57,15 @@ cd $ASEVAL_GIT/test_afus/$TESTNAME/SW/
 ##                                   ##
 #######################################
 cd $ASE_COV
-# lcov --base-directory $ASE_COV --directory $ASE_WORKDIR --capture --output-file $TESTNAME.info
 lcov --capture \
-	     --test-name $TESTNAME \
-	     --base-directory $PWD \
-	     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
-	     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
-	     --output-file $TESTNAME.info
+     --test-name $TESTNAME \
+     --base-directory $PWD \
+     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
+     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
+     --output-file $TESTNAME.info
 
-	     genhtml $TESTNAME.info --output-directory html_$TESTNAME
+## Generate HTML
+genhtml $TESTNAME.info --output-directory html_$TESTNAME
 
 ## Convert cov_db to reports
-	     urg -full64 -dir ase_simv.vdb -show tests -format both
+urg -full64 -dir ase_simv.vdb -show tests -format both
