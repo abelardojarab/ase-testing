@@ -50,9 +50,15 @@ then
     debug=1
 fi
 
+if [[ $arg_list == *"valgrind"* ]];
+then
+    valgrind=1
+fi
+
 echo "Profile option  = $prof"
 echo "Coverage option = $cov"
 echo "Debug option    = $debug"
+echo "Valgrind option = $valgrind"
 
 ## Open ASE workdir
 cd $ASE_SRCDIR
@@ -66,10 +72,6 @@ then
 	echo "SNPS_VLOGAN_OPT+= +define+ASE_PROFILE=1" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_VCS_OPT+= +vcs+loopreport +vcs+loopdetect -simprofile" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_SIM_OPT+= -simprofile time" >> $ASE_SRCDIR/ase_sources.mk
-	## Add Valgrind options in Makefile	
- 	echo "VALGRIND_OPT = ${VALGRIND_OPT}" >> $ASE_SRCDIR/ase_sources.mk
-	echo -e "\n" >> $ASE_SRCDIR/Makefile
-	cat $ASEVAL_GIT/snippets/valgrind_run.make >> $ASE_SRCDIR/Makefile
     fi
     ## Coverage options
     if [ $cov -eq 1 ];
@@ -81,6 +83,14 @@ then
 	echo "ASE_LD_SWITCHES+= -lgcov --coverage" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_VCS_OPT+= -cm_dir ${COV_DIR}/ase_simv -cm_name ase_cov -cm ${COV_TYPES} -cm_tgl mda -cm_hier ${ASEVAL_GIT}/ase_coverage.cfg" >> $ASE_SRCDIR/ase_sources.mk
 	echo "SNPS_SIM_OPT+= -cm ${COV_TYPES}" >> $ASE_SRCDIR/ase_sources.mk
+    fi
+    ## Valgrind option
+    if [ $valgrind -eq 1 ];
+    then
+	echo "Add Valgrind Options"
+ 	echo "VALGRIND_OPT = ${VALGRIND_OPT}" >> $ASE_SRCDIR/ase_sources.mk
+	echo -e "\n" >> $ASE_SRCDIR/Makefile
+	cat $ASEVAL_GIT/snippets/valgrind_run.make >> $ASE_SRCDIR/Makefile
     fi
     ## Debug options
     if [ $debug -eq 1 ];
