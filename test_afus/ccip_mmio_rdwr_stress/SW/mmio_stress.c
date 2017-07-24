@@ -3,6 +3,9 @@
 #include <unistd.h>
 #include <uuid/uuid.h>
 #include <opae/fpga.h>
+#include <pthread.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 int usleep(unsigned);
 
@@ -15,6 +18,21 @@ int usleep(unsigned);
 #ifndef MB
 # define MB(x)                       ((x) * 1024 * 1024)
 #endif // MB
+
+
+/*
+ * macro to check return codes, print error message, and goto cleanup label
+ * NOTE: this changes the program flow (uses goto)!
+ */
+/* #define ON_ERR_GOTO(res, label, desc)			\ */
+/*     do {							\ */
+/* 	if ((res) != FPGA_OK) {					\ */
+/* 	    print_err((desc), (res));				\ */
+/* 	    goto label;						\ */
+/* 	}							\ */
+/*     } while (0) */
+
+/* void print_err(const char *s, fpga_result res) fprintf(stderr, "Error %s: %s\n", s, fpgaErrStr(res)); */
 
 #define CACHELINE_ALIGNED_ADDR(p) ((p) >> LOG2_CL)
 
@@ -31,29 +49,71 @@ int usleep(unsigned);
 #define CSR_AFU_DSM_BASEH            0x0114
 
 #define MMIO_BYTE_SIZE               256*1024
-/* Type definitions */
-typedef struct {
-  uint32_t uint[16];
-} cache_line;
 
-/* SKX-P NLB0 AFU_ID */      
-   #define SKX_P_NLB0_AFUID "10C1BFF1-88D1-4DFB-96BF-6F5FC4038FAC"
+#define NUM_MMIO_WORKERS 16
+pthread_t tid [NUM_MMIO_WORKERS];
+    
+/* SKX-P NLB0 AFU_ID */
+#define MMIO_STRESS_AFUID "10C1BFF1-88D1-4DFB-96BF-6F5FC4038FAC"
 
-  /*
- * macro to check return codes, print error message, and goto cleanup label
- * NOTE: this changes the program flow (uses goto)!
- */
-#define ON_ERR_GOTO(res, label, desc)                    \
-	do {                                       \
-		if ((res) != FPGA_OK) {            \
-			print_err((desc), (res));  \
-			goto label;                \
-		}                                  \
-	} while (0)
 
-void print_err(const char *s, fpga_result res)
+struct MMIOThreadParams {
+    fpga_handle  handle;
+    bool         write_not_read;
+    bool         enable_64bit;
+    uint64_t     start_offset;
+    uint64_t     end_offset;
+};
+
+uint64_t err_cnt;
+pthread_mutex_t errcnt_mutex;
+
+void *MMIOWorkerThread(void *context)
 {
-	fprintf(stderr, "Error %s: %s\n", s, fpgaErrStr(res));
+    struct MMIOThreadParams *mmio = context;
+
+    uint64_t data64;
+    uint32_t data32;
+    
+    uint64_t offset;
+
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+    
+    for(offset = mmio->start_offset; offset < mmio->end_offset; )
+	{
+	    if (mmio->enable_64bit)
+		{
+		    if (mmio->write_not_read)
+			{
+			    fpgaWriteMMIO64(mmio->handle, 0, offset, offset);
+			}
+		    else
+			{
+			    fpgaReadMMIO64(mmio->handle, 0, offset, &data64);
+			    if (data32 != offset)
+				{
+				    printf("Error => Unexpected MMIO readback @%lx found %lx\n", offset, data64 );
+				}
+			}
+		    offset+=8;
+		}
+	    else
+		{
+		    if (mmio->write_not_read)
+			{
+			    fpgaWriteMMIO32(mmio->handle, 0, offset, offset);
+			}
+		    else
+			{
+			    fpgaReadMMIO32(mmio->handle, 0, offset, &data32);
+			    if (data32 != offset)
+				{
+				    printf("Error => Unexpected MMIO readback @%lx found %x\n", offset, data32 );
+				}
+			}
+		    offset+=4;
+		}
+	}
 }
 
 
@@ -72,30 +132,37 @@ int main(int argc, char *argv[]) {
   volatile uint64_t *status_ptr = NULL;
   volatile uint64_t *input_ptr  = NULL;
   volatile uint64_t *output_ptr = NULL;
-  fpga_result     res;  
+  fpga_result     res;
   int				ii;
   uint64_t        dsm_wsid;
   uint64_t        input_wsid;
   uint64_t        output_wsid;
-if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
-		fprintf(stderr, "Error parsing guid '%s'\n", SKX_P_NLB0_AFUID);
+if (uuid_parse(MMIO_STRESS_AFUID, guid) < 0) {
+		fprintf(stderr, "Error parsing guid '%s'\n", MMIO_STRESS_AFUID);
 		goto out_exit;
 	}
 
 	/* Look for AFC with MY_AFC_ID */
 	res = fpgaGetProperties(NULL, &filter);
-	ON_ERR_GOTO(res, out_exit, "creating properties object");
-
+	if (res != FPGA_OK)
+	    return -1;
+	
 	res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
-	ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
+	if (res != FPGA_OK)
+	    return -1;
+	//	ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
 
 	res = fpgaPropertiesSetGUID(filter, guid);
-	ON_ERR_GOTO(res, out_destroy_prop, "setting GUID");
+	if (res != FPGA_OK)
+	    return -1;
+	// ON_ERR_GOTO(res, out_destroy_prop, "setting GUID");
 
 	/* TODO: Add selection via BDF / device ID */
 
 	res = fpgaEnumerate(&filter, 1, &afc_token, 1, &num_matches);
-	ON_ERR_GOTO(res, out_destroy_prop, "enumerating AFCs");
+	if (res != FPGA_OK)
+	    return -1;
+	//	ON_ERR_GOTO(res, out_destroy_prop, "enumerating AFCs");
 
 	if (num_matches < 1) {
 		fprintf(stderr, "AFC not found.\n");
@@ -105,7 +172,10 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 
 	/* Open AFC and map MMIO */
 	res = fpgaOpen(afc_token, &afc_handle, 0);
-	ON_ERR_GOTO(res, out_exit, "opening AFC");
+	if (res != FPGA_OK)
+	    return -1;
+
+	// ON_ERR_GOTO(res, out_exit, "opening AFC");
   res = fpgaMapMMIO(afc_handle, 0, (uint64_t **)&mmio_ptr);
 	//ON_ERR_GOTO(res, out_exit, "mapping MMIO space");
 
@@ -114,25 +184,56 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
   res = fpgaReset(afc_handle);
 	//ON_ERR_GOTO(res, out_exit, "resetting AFC");
 
-	
+
   /*
    * Step 1: MMIOWrite32 through range
    */
+  struct MMIOThreadParams mmioParam;
+  mmioParam.handle = afc_handle;
+
+  int err;
+  
   printf(" Step 1: MMIOWrite32 through range");
-  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4) 
+#if 0
+  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4)
     {
-      res = fpgaWriteMMIO32(afc_handle, 0,ii, ii);
-	//ON_ERR_GOTO(res, out_exit, "MMIO writes 32 bit");
-    
-    }
+	res = fpgaWriteMMIO32(afc_handle, 0,ii, ii);
+	if (res != FPGA_OK)
+	    return -1;
+    }  
+  sleep(60);
+#else
+  // Start the threads
+  for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
+      {
+	  mmioParam.write_not_read = true;
+	  mmioParam.enable_64bit   = false;
+	  mmioParam.start_offset   = ii*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS);
+	  mmioParam.end_offset     = (ii+1)*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS) - 1;
+	  err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
+	  if (err != 0)
+	      {
+		  perror("pthread_create");
+		  exit(-1);
+	      }
+      }
+  
+  // Join the threads
+  for(ii = 0; ii < NUM_MMIO_WORKERS; ii++)
+      {
+	  pthread_join(tid[ii], NULL);
+      }
+  
+#endif
+
   printf(" DONE !\n");
-	 
-	 
+
+
   /*
    * Step 2: MMIORead32 through range
    */
   printf(" Step 2: MMIORead32 through range");
-  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4) 
+  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4)
     {
       res = fpgaReadMMIO32(afc_handle, 0, ii, &data32);
       // ON_ERR_GOTO(res, out_exit, "MMIO writes 32 bit");
@@ -148,11 +249,11 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
    * Step 3: MMIOWrite64 through range
    */
   printf(" Step 3: MMIOWrite64 through range");
-  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8) 
+  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8)
     {
       res = fpgaWriteMMIO64(afc_handle, 0, ii, (uint64_t)ii);
 	//ON_ERR_GOTO(res, out_exit, "writing 64 bit MMIO");
-   
+
     }
   printf(" DONE !\n");
 
@@ -161,7 +262,7 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
    * Step 4: MMIORead64 through range
    */
   printf(" Step 4: MMIORead64 through range");
-  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8) 
+  for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8)
     {
        res = fpgaReadMMIO64(afc_handle, 0, ii, &data64);
     //   ON_ERR_GOTO(res, out_exit, "reading 64 bit MMIO");
@@ -172,7 +273,7 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
     }
   printf(" DONE !\n");
 
-	
+
   printf("Done Running Test\n");
   /* Release accelerator */
 
@@ -181,9 +282,10 @@ if (uuid_parse(SKX_P_NLB0_AFUID, guid) < 0) {
 
 out_destroy_prop:
 	res = fpgaDestroyProperties(&filter);
-	ON_ERR_GOTO(res, out_exit, "destroying properties object");
+	if (res != FPGA_OK)
+	    return -1;
+
+	// ON_ERR_GOTO(res, out_exit, "destroying properties object");
  out_exit:
 	return res;
 }
-
-
