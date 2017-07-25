@@ -51,7 +51,7 @@ int usleep(unsigned);
 
 #define MMIO_BYTE_SIZE               256*1024
 
-#define NUM_MMIO_WORKERS 16
+#define NUM_MMIO_WORKERS 8
 pthread_t tid [NUM_MMIO_WORKERS];
 uint32_t start_offset[NUM_MMIO_WORKERS];
 uint32_t end_offset[NUM_MMIO_WORKERS];
@@ -82,6 +82,8 @@ void *MMIOWorkerThread(void *context)
     
     uint64_t offset;
 
+    // printf("Starting thread %lx\n", pthread_self());
+    
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     
     for(offset = mmio->start_offset; offset < mmio->end_offset; )
@@ -199,6 +201,8 @@ int main(int argc, char *argv[]) {
 
     //////////////////////////////////////////////////////////////////////////////////
 
+    struct MMIOThreadParams mmioParam[NUM_MMIO_WORKERS];
+
     /*
      * Prepare offsets
      */
@@ -208,6 +212,12 @@ int main(int argc, char *argv[]) {
 	    start_offset[ii]   = ii*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS);
 	    end_offset[ii]     = (ii+1)*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS) - 1;
 
+	    // Parameter
+	    mmioParam[ii].handle       = afc_handle;
+	    mmioParam[ii].id           = ii;
+	    mmioParam[ii].start_offset = start_offset[ii];
+	    mmioParam[ii].end_offset   = end_offset[ii];
+	    
 	    // Print ranges
 	    printf("\t%d : %x - %x\n", ii, start_offset[ii], end_offset[ii]);
 	}
@@ -215,12 +225,9 @@ int main(int argc, char *argv[]) {
     /*
      * Step 1: MMIOWrite32 through range
      */
-    struct MMIOThreadParams mmioParam;
-    mmioParam.handle = afc_handle;
-
     int err;
   
-    printf(" Step 1: MMIOWrite32 through range");
+    printf(" Step 1: MMIOWrite32 through range\t");
 #ifdef SERIAL
     for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4)
 	{
@@ -231,13 +238,14 @@ int main(int argc, char *argv[]) {
 #else
     // Start the threads
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
-	{
-	    mmioParam.id             = ii;
-	    mmioParam.write_not_read = true;
-	    mmioParam.enable_64bit   = false;
-	    mmioParam.start_offset   = start_offset[ii];
-	    mmioParam.end_offset     = end_offset[ii];
-	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
+	{	    
+	    /* mmioParam.id             = ii; */
+	    /* printf("   id  = %d\n", mmioParam.id); */
+	    mmioParam[ii].write_not_read = true;
+	    mmioParam[ii].enable_64bit   = false;
+	    /* mmioParam.start_offset   = start_offset[ii]; */
+	    /* mmioParam.end_offset     = end_offset[ii]; */
+	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam[ii]);
 	    if (err != 0)
 		{
 		    perror("pthread_create");
@@ -255,7 +263,7 @@ int main(int argc, char *argv[]) {
     /*
      * Step 2: MMIORead32 through range
      */
-    printf(" Step 2: MMIORead32 through range");
+    printf(" Step 2: MMIORead32 through range\t");
 #ifdef SERIAL
     for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 4)
 	{
@@ -269,12 +277,12 @@ int main(int argc, char *argv[]) {
 #else
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
 	{
-	    mmioParam.id             = ii;
-	    mmioParam.write_not_read = false;
-	    mmioParam.enable_64bit   = false;
-	    mmioParam.start_offset   = start_offset[ii];
-	    mmioParam.end_offset     = end_offset[ii];
-	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
+	    /* mmioParam.id             = ii; */
+	    mmioParam[ii].write_not_read = false;
+	    mmioParam[ii].enable_64bit   = false;
+	    /* mmioParam.start_offset   = start_offset[ii]; */
+	    /* mmioParam.end_offset     = end_offset[ii]; */
+	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam[ii]);
 	    if (err != 0)
 		{
 		    perror("pthread_create");
@@ -292,7 +300,7 @@ int main(int argc, char *argv[]) {
     /*
      * Step 3: MMIOWrite64 through range
      */
-    printf(" Step 3: MMIOWrite64 through range");
+    printf(" Step 3: MMIOWrite64 through range\t");
 #ifdef SERIAL
     for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8)
 	{
@@ -303,12 +311,12 @@ int main(int argc, char *argv[]) {
 #else
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
 	{
-	    mmioParam.id             = ii;
-	    mmioParam.write_not_read = true;
-	    mmioParam.enable_64bit   = true;
-	    mmioParam.start_offset   = start_offset[ii];
-	    mmioParam.end_offset     = end_offset[ii];
-	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
+	    /* mmioParam.id             = ii; */
+	    mmioParam[ii].write_not_read = true;
+	    mmioParam[ii].enable_64bit   = true;
+	    /* mmioParam[ii].start_offset   = start_offset[ii]; */
+	    /* mmioParam[ii].end_offset     = end_offset[ii]; */
+	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam[ii]);
 	    if (err != 0)
 		{
 		    perror("pthread_create");
@@ -326,7 +334,7 @@ int main(int argc, char *argv[]) {
     /*
      * Step 4: MMIORead64 through range
      */
-    printf(" Step 4: MMIORead64 through range");
+    printf(" Step 4: MMIORead64 through range\t");
 #ifdef SERIAL
     for(ii = 0; ii < MMIO_BYTE_SIZE ; ii = ii + 8)
 	{
@@ -340,12 +348,12 @@ int main(int argc, char *argv[]) {
 #else
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
 	{
-	    mmioParam.id             = ii;
-	    mmioParam.write_not_read = false;
-	    mmioParam.enable_64bit   = true;
-	    mmioParam.start_offset   = start_offset[ii];
-	    mmioParam.end_offset     = end_offset[ii];
-	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
+	    /* mmioParam[ii].id             = ii; */
+	    mmioParam[ii].write_not_read = false;
+	    mmioParam[ii].enable_64bit   = true;
+	    /* mmioParam[ii].start_offset   = start_offset[ii]; */
+	    /* mmioParam[ii].end_offset     = end_offset[ii]; */
+	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam[ii]);
 	    if (err != 0)
 		{
 		    perror("pthread_create");
