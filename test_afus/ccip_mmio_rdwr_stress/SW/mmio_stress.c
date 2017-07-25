@@ -53,13 +53,17 @@ int usleep(unsigned);
 
 #define NUM_MMIO_WORKERS 16
 pthread_t tid [NUM_MMIO_WORKERS];
-    
+uint32_t start_offset[NUM_MMIO_WORKERS];
+uint32_t end_offset[NUM_MMIO_WORKERS];
+
+
 /* SKX-P NLB0 AFU_ID */
 #define MMIO_STRESS_AFUID "10C1BFF1-88D1-4DFB-96BF-6F5FC4038FAC"
 
 
 struct MMIOThreadParams {
     fpga_handle  handle;
+    int          id;
     bool         write_not_read;
     bool         enable_64bit;
     uint64_t     start_offset;
@@ -91,7 +95,7 @@ void *MMIOWorkerThread(void *context)
 		    else
 			{
 			    fpgaReadMMIO64(mmio->handle, 0, offset, &data64);
-			    if (data32 != offset)
+			    if (data64 != offset)
 				{
 				    printf("Error => Unexpected MMIO readback @%lx found %lx\n", offset, data64 );
 				}
@@ -107,13 +111,14 @@ void *MMIOWorkerThread(void *context)
 		    else
 			{
 			    fpgaReadMMIO32(mmio->handle, 0, offset, &data32);
-			    if (data32 != offset)
+			    if ((uint64_t)data32 != offset)
 				{
 				    printf("Error => Unexpected MMIO readback @%lx found %x\n", offset, data32 );
 				}
 			}
 		    offset+=4;
 		}
+	    //	    printf("\tTID = %d\tMMIOAddr = %x\n", mmio->id, offset);
 	}
 }
 
@@ -195,6 +200,19 @@ int main(int argc, char *argv[]) {
     //////////////////////////////////////////////////////////////////////////////////
 
     /*
+     * Prepare offsets
+     */
+    for(ii = 0; ii < NUM_MMIO_WORKERS ; ii = ii + 1)
+	{
+	    // Calculate ranges
+	    start_offset[ii]   = ii*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS);
+	    end_offset[ii]     = (ii+1)*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS) - 1;
+
+	    // Print ranges
+	    printf("\t%d : %x - %x\n", ii, start_offset[ii], end_offset[ii]);
+	}
+    
+    /*
      * Step 1: MMIOWrite32 through range
      */
     struct MMIOThreadParams mmioParam;
@@ -214,10 +232,11 @@ int main(int argc, char *argv[]) {
     // Start the threads
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
 	{
+	    mmioParam.id             = ii;
 	    mmioParam.write_not_read = true;
 	    mmioParam.enable_64bit   = false;
-	    mmioParam.start_offset   = ii*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS);
-	    mmioParam.end_offset     = (ii+1)*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS) - 1;
+	    mmioParam.start_offset   = start_offset[ii];
+	    mmioParam.end_offset     = end_offset[ii];
 	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
 	    if (err != 0)
 		{
@@ -250,10 +269,11 @@ int main(int argc, char *argv[]) {
 #else
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
 	{
+	    mmioParam.id             = ii;
 	    mmioParam.write_not_read = false;
 	    mmioParam.enable_64bit   = false;
-	    mmioParam.start_offset   = ii*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS);
-	    mmioParam.end_offset     = (ii+1)*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS) - 1;
+	    mmioParam.start_offset   = start_offset[ii];
+	    mmioParam.end_offset     = end_offset[ii];
 	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
 	    if (err != 0)
 		{
@@ -283,10 +303,11 @@ int main(int argc, char *argv[]) {
 #else
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
 	{
+	    mmioParam.id             = ii;
 	    mmioParam.write_not_read = true;
 	    mmioParam.enable_64bit   = true;
-	    mmioParam.start_offset   = ii*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS);
-	    mmioParam.end_offset     = (ii+1)*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS) - 1;
+	    mmioParam.start_offset   = start_offset[ii];
+	    mmioParam.end_offset     = end_offset[ii];
 	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
 	    if (err != 0)
 		{
@@ -319,10 +340,11 @@ int main(int argc, char *argv[]) {
 #else
     for (ii = 0; ii < NUM_MMIO_WORKERS; ii++)
 	{
+	    mmioParam.id             = ii;
 	    mmioParam.write_not_read = false;
 	    mmioParam.enable_64bit   = true;
-	    mmioParam.start_offset   = ii*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS);
-	    mmioParam.end_offset     = (ii+1)*(MMIO_BYTE_SIZE / NUM_MMIO_WORKERS) - 1;
+	    mmioParam.start_offset   = start_offset[ii];
+	    mmioParam.end_offset     = end_offset[ii];
 	    err = pthread_create(&tid[ii], NULL, MMIOWorkerThread, &mmioParam);
 	    if (err != 0)
 		{

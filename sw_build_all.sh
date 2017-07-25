@@ -143,4 +143,4 @@ echo "#################################"
 echo "#       CCI-P MMIO Sample       #"
 echo "#################################"
 cd $ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/SW/
-gcc -g -o mmio_stress mmio_stress.c $MYINST_DIR/lib/libopae-c-ase.so -I $MYINST_DIR/include -luuid -std=c99
+gcc -g -o mmio_stress mmio_stress.c -I $MYINST_DIR/include  -L $MYINST_DIR/lib -luuid -lopae-c -lpthread -std=c99 
