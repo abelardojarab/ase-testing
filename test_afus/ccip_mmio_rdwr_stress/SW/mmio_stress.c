@@ -51,7 +51,7 @@ int usleep(unsigned);
 
 #define MMIO_BYTE_SIZE               256*1024
 
-#define NUM_MMIO_WORKERS 8
+#define NUM_MMIO_WORKERS 32
 pthread_t tid [NUM_MMIO_WORKERS];
 uint32_t start_offset[NUM_MMIO_WORKERS];
 uint32_t end_offset[NUM_MMIO_WORKERS];
