@@ -1,0 +1,24 @@
+set_global_assignment -name SEARCH_PATH ../../../rtl/afu/mode7_mt_200/include_files/common/
+set_global_assignment -name QSYS_FILE ../../../rtl/afu/mode7_mt_200/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT.qsys
+set_global_assignment -name MISC_FILE ../../../rtl/afu/mode7_mt_200/QSYS_IPs/RAM/lpbk1_RdRspRAM2PORT.qsys
+set_global_assignment -name QSYS_FILE ../../../rtl/afu/mode7_mt_200/QSYS_IPs/RAM/req_C1TxRAM2PORT.qsys
+set_global_assignment -name MISC_FILE ../../../rtl/afu/mode7_mt_200/QSYS_IPs/RAM/req_C1TxRAM2PORT.qsys
+
+
+
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/ccip_interface_reg.sv
+set_global_assignment -name VERILOG_FILE ../../../rtl/afu/mode7_mt_200/nlb_gram_sdp.v
+set_global_assignment -name VERILOG_FILE ../../../rtl/afu/mode7_mt_200/nlb_C1Tx_fifo.sv
+
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/test_sw1.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/requestor.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/nlb_lpbk.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/nlb_csr.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/arbiter.sv
+
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/ccip_std_afu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/ccip_async_shim.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../../../rtl/afu/mode7_mt_200/ccip_afifo_channel.sv
+
+# SDC FILE PATH
+#../../../syn/afu/setup/mode7_mt/mode7_mt128_100.sdc
