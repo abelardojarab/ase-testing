@@ -22,3 +22,4 @@ then
 else
     echo "Simulator has probably already been killed"
 fi
+exit 0
