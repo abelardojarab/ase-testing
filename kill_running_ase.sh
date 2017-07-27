@@ -17,8 +17,8 @@ then
 	sleep 1
 	let "kill_timer++"
     done
-    echo "Killing wrapper make script"
-    kill $(ps -p `fuser $ASE_SRCDIR` | grep make | cut -f 1 -d " ")    
+    # echo "Killing wrapper make script"
+    # kill $(ps -p `fuser $ASE_SRCDIR` | grep make | cut -f 1 -d " ")    
 else
     echo "Simulator has probably already been killed"
 fi
