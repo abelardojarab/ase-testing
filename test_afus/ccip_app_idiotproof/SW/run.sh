@@ -38,5 +38,17 @@ fi
 
 wait
 
+#####################################################################
+##                  Try with no simulator running                  ##
+#####################################################################
+$ASEVAL_GIT/kill_running_ase.sh
+LD_PRELOAD=libopae-c-ase.so ./hello_fpga &> no_sim.log
+if grep -Fxq "Simualtor is not running yet" no_sim.log
+then
+    echo "Simulator finder (false case) worked correctly -- SUCCESS !"
+else
+    echo "Test Failed !"
+fi
+
 echo "Test Complete"
 
