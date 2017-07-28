@@ -3,12 +3,17 @@
 afu=$1
 if [ $afu == "gtest" ];
 then
-afu="ccip_nlb_mode0"
+    afu="ccip_nlb_mode0"
 fi
 
 if [ $afu == "ccip_umsg_trigger" ];
 then
-afu="ccip_nlb_mode0"
+    afu="ccip_nlb_mode0"
+fi
+
+if [ $afu == "ccip_app_idiotproof" ];
+then
+    afu="ccip_nlb_mode0"
 fi
 
 ## BBB VLOG and DIR
