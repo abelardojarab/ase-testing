@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
     if (res != FPGA_OK)
 	return -1;
 	
-    res = fpgaPropertiesSetObjectType(filter, FPGA_AFC);
+    res = fpgaPropertiesSetObjectType(filter, FPGA_ACCELERATOR);
     if (res != FPGA_OK)
 	return -1;
     //	ON_ERR_GOTO(res, out_destroy_prop, "setting object type");
