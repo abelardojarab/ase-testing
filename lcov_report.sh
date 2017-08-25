@@ -16,7 +16,7 @@ $ASEVAL_GIT/coverage_generator.sh ccip_mmio_rdwr_stress
 $ASEVAL_GIT/coverage_generator.sh ccip_umsg_trigger
 $ASEVAL_GIT/coverage_generator.sh gtest
 $ASEVAL_GIT/coverage_generator.sh ccip_nlb_mode0_memcrash
-$ASEVAL_GIT/coverage_generator.sh ccip_app_idiotproof
+# $ASEVAL_GIT/coverage_generator.sh ccip_app_idiotproof
 
 ## Generate combined report
 cd $ASE_SRCDIR/coverage/
@@ -25,9 +25,13 @@ lcov -a ccip_nlb_mode0.info \
      -a ccip_umsg_trigger.info \
      -a gtest.info \
      -a ccip_nlb_mode0_memcrash.info \
-     -a ccip_app_idiotproof.info \
      -o raw.info
 
-lcov --remove raw.info 'common.c' 'safe_string/*' 'manage.c' 'reconf.c' 'umsg.c' 'error_report.c' 'event.c' --config-file $ASEVAL_GIT/lcovrc.cfg -o combined.info
+lcov --remove raw.info 'common.c' '*safe_string*' 'reconf.c' 'umsg.c' -o combined.info
 
-genhtml combined.info -o html
+genhtml combined.info -o html/
+
+
+
+#     -a ccip_app_idiotproof.info \
+# genhtml combined.info
