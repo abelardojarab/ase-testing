@@ -31,7 +31,7 @@ do
     git checkout $gitrev
     $ASEVAL_GIT/sw_build_all.sh lib_only
     echo "Running Simulator..."
-    make all sim ASE_PLATFORM=FPGA_PLATFORM_INTG_XEON &
+    make all sim ASE_PLATFORM=ASE_PLATFORM_MCP_SKYLAKE &
     $ASEVAL_GIT/wait_till_ase_ready.sh
     echo "Running application..."
     cd $FPGASW_GIT/mybuild/bin/
