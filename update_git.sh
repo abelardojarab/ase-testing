@@ -6,5 +6,5 @@ for dir in $GIT_DIR_LIST
 do
     cd $dir
     pwd
-    git pull
+    git fetch
 done
