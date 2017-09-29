@@ -43,7 +43,7 @@
 ##########################################################################
 
 include ase_sources.mk
-
+ASE_PLATFORM?=ASE_PLATFORM_MCP_SKYLAKE
 # Base directory
 ASE_BASEDIR = $(PWD)
 
@@ -72,6 +72,7 @@ WORK = work
 
 # ASE Source directory
 ASE_SRCDIR = $(shell pwd)
+OPAE_BASEDIR ?= $(ASE_SRCDIR)/../
 ASE_WORKDIR = $(ASE_SRCDIR)/$(WORK)
 
 # Configuration & regression file inputs
@@ -109,6 +110,9 @@ ASESW_FILE_LIST = \
 	$(ASE_SRCDIR)/sw/linked_list_ops.c \
 	$(ASE_SRCDIR)/sw/randomness_control.c \
 
+## Safe string sources
+SAFESTR_SRC_LIST = $(wildcard ${OPAE_BASEDIR}/safe_string/*.c)
+
 ## ASE top level module
 ASE_TOP = ase_top
 
@@ -124,9 +128,20 @@ CC=gcc
 SNPS_COMMAND = $(shell command -v vcs)
 MENT_COMMAND = $(shell command -v vsim)
 
+## For ModelSim figure out whether it is the 32 bit starter edition
+CC_INT_SIZE=-m64
+ifeq ($(SIMULATOR), QUESTA)
+  ifdef MENT_COMMAND
+    MENT_VERSION=$(shell vsim -version)
+    ifneq (,$(findstring STARTER EDITION, $(MENT_VERSION)))
+      CC_INT_SIZE=-m32
+    endif
+  endif
+endif
+
 ## C Compiler options
-CC_OPT = -g  -m64 -fPIC -D SIM_SIDE=1 -D SIMULATOR=$(SIMULATOR)
-CC_OPT+= -I $(ASE_SRCDIR)/sw/
+CC_OPT = -g  $(CC_INT_SIZE) -fPIC -D SIM_SIDE=1 -D SIMULATOR=$(SIMULATOR) -D $(ASE_PLATFORM)
+CC_OPT+= -I $(ASE_SRCDIR)/sw/ -I $(OPAE_BASEDIR)/common/include/
 # CC_OPT+= -std=c11
 CC_OPT+= -Wall -fstack-protector-all
 ifeq ($(ASE_DEBUG), 1)
@@ -174,6 +189,7 @@ SNPS_VHDLAN_OPT+= -work $(WORK)
 SNPS_VLOGAN_OPT = -nc -V -full64 +v2k -sverilog +define+$(SIMULATOR)
 SNPS_VLOGAN_OPT+= +incdir+$(DUT_INCDIR) +incdir+$(ASE_INCDIR)
 SNPS_VLOGAN_OPT+= +librescan -work $(WORK) -override_timescale=$(TIMESCALE)
+SNPS_VLOGAN_OPT+= +define+$(ASE_PLATFORM)
 SNPS_VLOGAN_OPT+= +define+VENDOR_ALTERA +define+TOOL_QUARTUS +define+NUM_AFUS=1 +define+NLB400_MODE_0
 SNPS_VLOGAN_OPT+= +define+NUM_AFUS_4 +define+NUM_PIPE_STAGES_2
 SNPS_VLOGAN_OPT+= +define+CCIP_IF_V0_1 +define+MPF_PLATFORM_BDX  +define+CCI_SIMULATION=1 
@@ -204,7 +220,7 @@ ifeq ($(ASE_PROFILE), 1)
 endif
 
 ## VCS elaboration
-SNPS_VCS_OPT = -nc -V +vcs+lic+wait -full64 -debug_all -Mupdate -lca
+SNPS_VCS_OPT = -nc -V +vcs+lic+wait -full64 -debug_pp -Mupdate -lca
 SNPS_VCS_OPT+= -j 4
 SNPS_VCS_OPT+= -l vcs_elab.log +vhdllib+$(WORK) -Mlib=$(WORK) +lint=TFIPC-L
 SNPS_VCS_OPT+= -override_timescale=$(TIMESCALE) -o $(WORK)/ase_simv
@@ -494,8 +510,9 @@ help: header
 sw_build:
 	make header
 	mkdir -p $(WORK)
+	cd $(WORK) ; $(CC) $(CC_OPT) -c $(SAFESTR_SRC_LIST) || exit 1 ; cd -
 	cd $(WORK) ; $(CC) $(CC_OPT) -c $(ASESW_FILE_LIST) || exit 1 ; cd -
-	cd $(WORK) ; $(CC) -g -shared -o $(ASE_SHOBJ_SO) `ls *.o` $(ASE_LD_SWITCHES) ; cd -
+	cd $(WORK) ; $(CC) $(CC_INT_SIZE) -g -shared -o $(ASE_SHOBJ_SO) `ls *.o` $(ASE_LD_SWITCHES) ; cd -
 	nm $(WORK)/$(ASE_SHOBJ_SO) > $(WORK)/$(ASE_SHOBJ_NAME).nm
 ifeq ($(ASE_DEBUG), 1)
 	objdump -S $(WORK)/$(ASE_SHOBJ_SO) > $(WORK)/$(ASE_SHOBJ_NAME).obj
@@ -529,7 +546,7 @@ questa_build: sw_build
 	@echo "#                                                          #"
 	@echo "############################################################"
 	cd $(WORK) ; vlib $(WORK) ; vmap work $(WORK) ; cd -
-	cd $(WORK) ; vlog $(MENT_VLOG_OPT) $(ASEHW_FILE_LIST) -l vlog-ase.log ; cd -
+	cd $(WORK) ; vlog $(MENT_VLOG_OPT) $(ASEHW_FILE_LIST) $(ASE_PLATFORM_FILE_LIST) -l vlog-ase.log ; cd -
 ifdef DUT_VHD_SRC_LIST
 	cd $(WORK) ; vcom $(MENT_VCOM_OPT) -f $(DUT_VHD_SRC_LIST) -l vcom-afu.log ; cd -
 endif
