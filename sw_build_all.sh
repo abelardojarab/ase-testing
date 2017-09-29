@@ -134,8 +134,8 @@ make test_random_ase prefix=$MYINST_DIR/
 echo "#################################"
 echo "#       CCI-P MUX Sample        #"
 echo "#################################"
-cd $BBB_GIT/BBB_ccip_mux/sample/sw/
-gcc -g -o hello_fpga_mux $BBB_GIT/BBB_ccip_mux/sample/sw/hello_fpga_mux.c $MYINST_DIR/lib/libopae-c-ase.so -I $MYINST_DIR/include -std=c99 -luuid
+cd $BBB_GIT/BBB_ccip_mux/samples/sw/
+gcc -g -o hello_fpga_mux hello_fpga_mux.c $MYINST_DIR/lib/libopae-c-ase.so -I $MYINST_DIR/include -std=c99 -luuid
 
 
 # MMIO Stress
