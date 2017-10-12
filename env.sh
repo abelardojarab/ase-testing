@@ -7,12 +7,11 @@ else
     BASEDIR=/home/rrsharma/xeon-fpga-src
 fi
 
-export ASEVAL_GIT=$BASEDIR/ase_regression/
-export BBB_GIT=$BASEDIR/BuildingBlocks/
+export ASEVAL_GIT=$BASEDIR/ase-testing/
+export BBB_GIT=$BASEDIR/intel-fpga-bbb-x/
 export BDX_GIT=$BASEDIR/bdx_fpga_piu/
-export FPGASW_GIT=$BASEDIR/cpt_sys_sw-fpga-sw/
-export FPGAINT_GIT=$BASEDIR/cpt_sys_sw-fpga-internal/
-export FPGADOC_GIT=$BASEDIR/cpt_sys_sw-fpga-doc/
+export FPGASW_GIT=$BASEDIR/opae-sdk-x/
+export FPGAINT_GIT=$BASEDIR/fpga-internal/
 export ASE_SRCDIR=$FPGASW_GIT/ase
 export ASE_WORKDIR=$FPGASW_GIT/ase/work
 export MYINST_DIR=$BASEDIR/myinst
@@ -24,7 +23,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MYINST_DIR/lib/
 echo "Directory settings =>"
 echo "FPGASW_GIT      : " $FPGASW_GIT
 echo "FPGAINT_GIT     : " $FPGAINT_GIT
-echo "FPGADOC_GIT     : " $FPGADOC_GIT
 echo "ASEVAL_GIT      : " $ASEVAL_GIT
 echo "BBB_GIT         : " $BBB_GIT
 echo "ASE_SRCDIR      : " $ASE_SRCDIR
