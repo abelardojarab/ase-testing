@@ -43,7 +43,7 @@
 ##########################################################################
 
 include ase_sources.mk
-ASE_PLATFORM?=ASE_PLATFORM_MCP_SKYLAKE
+ASE_PLATFORM?=FPGA_PLATFORM_INTG_XEON
 # Base directory
 ASE_BASEDIR = $(PWD)
 
