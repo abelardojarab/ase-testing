@@ -43,7 +43,7 @@ else
     echo "Test 2 failed !"    
 fi
 
-wait
+#wait
 
 sleep 2
 
