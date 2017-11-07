@@ -59,6 +59,18 @@ rm -rf $MYINST_DIR
 
 ## Build and install fpga-sw
 cd $FPGASW_GIT/
+
+# Temporary hack to keep RTL simulator scripts that expect to find
+# ccip_if_pkg.sv in ASE.  Once all users have platform_db on their
+# branches, change all references in hand-written simulator configurations
+# from $ASE_SRCDIR/rtl/ccip_if_pkg.sv to
+# $PLATFORM_DIR/platform_if/rtl/device_if/ccip_if_pkg.sv
+pushd ase/rtl
+if [ ! -e ccip_if_pkg.sv ]; then
+    ln -s ../../platforms/platform_if/rtl/device_if/ccip_if_pkg.sv
+fi
+popd
+
 rm -rf mybuild
 mkdir mybuild
 cd mybuild
