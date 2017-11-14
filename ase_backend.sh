@@ -1,8 +1,7 @@
 #!/bin/bash
-
 set -e
 
-gtest = 0
+gtest=0
 cd $BASEDIR
 rm -rf $MYINST_DIR
 
