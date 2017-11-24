@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GIT_DIR_LIST="$FPGASW_GIT $ASEVAL_GIT $BBB_GIT $FPGAINT_GIT $FPGADOC_GIT"
+GIT_DIR_LIST="$HOME/xeon-fpga-src/opae-sdk/ $HOME/xeon-fpga-src/opae-sdk-x/ $ASEVAL_GIT $HOME/xeon-fpga-src/intel-fpga-bbb/ $HOME/xeon-fpga-src/intel-fpga-bbb-x $FPGAINT_GIT $FPGADOC_GIT"
 
 for dir in $GIT_DIR_LIST
 do

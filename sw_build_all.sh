@@ -22,6 +22,7 @@ cov=0
 debug=0
 gtest=0
 parallel=0
+internal=0
 
 if [[ $arg_list == *"lib_only"* ]];
 then
@@ -48,11 +49,33 @@ then
     parallel=1
 fi
 
+if [[ $internal == *"internal"* ]];
+then
+    internal=1
+fi
+
+if [[ $internal=1 ]];
+then
+    echo "######################################"
+    echo "# Building internal GIT              #"
+    echo "######################################"
+    FPGASW_GIT=$FPGASW_GIT/../opae-sdk-x
+    BBB_GIT=$BBB_GIT/../intel-fpga-bbb-x
+else
+    echo "######################################"
+    echo "# Building external GIT              #"
+    echo "######################################"
+    FPGASW_GIT=$FPGASW_GIT/../opae-sdk
+    BBB_GIT=$BBB_GIT/../intel-fpga-bbb
+fi
+
 echo "Build OPAE stack with ASE = $lib_only"
 echo "Build OPAE with coverage  = $cov"
 echo "Build OPAE with debug     = $debug"
 echo "Build OPAE with GTest     = $gtest"
 echo "Enable Parallel option    = $parallel"
+echo "FPGASW_GIT                = $FPGASW_GIT"
+echo "BBB_GIT                   = $BBB_GIT"
 
 cd $BASEDIR
 rm -rf $MYINST_DIR
@@ -155,4 +178,4 @@ echo "#################################"
 echo "#       CCI-P MMIO Sample       #"
 echo "#################################"
 cd $ASEVAL_GIT/test_afus/ccip_mmio_rdwr_stress/SW/
-gcc -g -o mmio_stress mmio_stress.c -I $MYINST_DIR/include  -L $MYINST_DIR/lib -luuid -lopae-c -lpthread -std=c99 
+gcc -g -o mmio_stress mmio_stress.c -I $MYINST_DIR/include  -L $MYINST_DIR/lib -luuid -lopae-c -lpthread -std=c99
