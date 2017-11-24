@@ -8,9 +8,9 @@ else
 fi
 
 export ASEVAL_GIT=$BASEDIR/ase-testing/
-export BBB_GIT=$BASEDIR/intel-fpga-bbb-x/
+export BBB_GIT=$BASEDIR/intel-fpga-bbb/
 export BDX_GIT=$BASEDIR/bdx_fpga_piu/
-export FPGASW_GIT=$BASEDIR/opae-sdk-x/
+export FPGASW_GIT=$BASEDIR/opae-sdk/
 export FPGAINT_GIT=$BASEDIR/fpga-internal/
 export ASE_SRCDIR=$FPGASW_GIT/ase
 export ASE_WORKDIR=$FPGASW_GIT/ase/work
