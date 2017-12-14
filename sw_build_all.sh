@@ -42,6 +42,7 @@ fi
 if [[ $arg_list == *"gtest"* ]];
 then
     gtest=1
+    GTEST="/tmp/gtest"
 fi
 
 if [[ $arg_list == *"parallel"* ]];
@@ -59,7 +60,7 @@ then
     echo "######################################"
     echo "# Building internal GIT              #"
     echo "######################################"
-    FPGASW_GIT=$FPGASW_GIT/../opae-sdk-x
+    FPGASW_GIT=$FPGASW_GIT/../opae-sdk
     BBB_GIT=$BBB_GIT/../intel-fpga-bbb-x
 else
     echo "######################################"
@@ -94,12 +95,13 @@ if [ ! -e ccip_if_pkg.sv ]; then
 fi
 popd
 
-rm -rf mybuild
-mkdir mybuild
-cd mybuild
+rm -rf build
+mkdir build
+cd build
 
 ## CMake command
 cmake_cmd="cmake ../ -DCMAKE_INSTALL_PREFIX=$MYINST_DIR -DBUILD_ASE=ON"
+cmake_cmd_gtest="cmake ../ -DBUILD_ASE=ON"
 
 ## {lcov, debug, slim build options"
 if [ $cov -eq 1 ];
@@ -113,12 +115,7 @@ then
     cmake_cmd="$cmake_cmd "
 fi
 
-## Gtest support
-if [ $gtest -eq 1 ];
-then
-    cmake_cmd="$cmake_cmd -DBUILD_TESTS=ON -DGTEST_ROOT=/home/rrsharma/googletest/myinst/"
-fi
-
+cd $FPGASW_GIT/build
 ## CMake command
 eval $cmake_cmd
 
@@ -130,6 +127,18 @@ else
     make
 fi
 make install
+
+## Gtest support
+if [ $gtest -eq 1 ];
+then 
+    cd $FPGAINT_GIT/tests
+    rm -rf build
+    mkdir build
+    cd build
+    cmake_cmd_gtest="$cmake_cmd_gtest -DOPAE_SDK_SOURCE=$FPGASW_GIT -DGTEST_ROOT=$GTEST"
+    eval $cmake_cmd_gtest
+    make -j8
+fi
 
 ## If only library is to be built, return right here
 if [ $lib_only -eq 1 ];

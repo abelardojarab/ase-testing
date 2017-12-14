@@ -66,8 +66,8 @@ cd $ASE_COV
 lcov --capture \
      --test-name $TESTNAME \
      --base-directory $PWD \
-     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
-     --directory $FPGASW_GIT/mybuild/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
+     --directory $FPGASW_GIT/build/ase/api/CMakeFiles/opae-c-ase.dir/__/sw/ \
+     --directory $FPGASW_GIT/build/ase/api/CMakeFiles/opae-c-ase.dir/src/ \
      --directory $ASE_WORKDIR/ \
      --output-file $TESTNAME.info
 

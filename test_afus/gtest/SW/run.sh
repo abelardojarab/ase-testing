@@ -6,7 +6,7 @@ CURR_DIR=$PWD
 
 LD_LIBRARY_PATH=$MYINST_DIR/lib/
 
-cd $FPGASW_GIT/mybuild/bin/
+cd $FPGAINT_GIT/tests
 
 # Wait for readiness
 echo "##################################"
@@ -17,7 +17,7 @@ do
     sleep 1
 done
 
-./gtase
+ASE_LOG=0 LD_PRELOAD=libopae-c-ase.so LD_LIBRARY_PATH=$MYINST_DIR/lib/  ./build/gtase --gtest_filter="*CommonALL*"
 
 errcode=$?
 echo "Error code $errcode"
