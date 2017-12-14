@@ -59,7 +59,7 @@ then
     echo "######################################"
     echo "# Building internal GIT              #"
     echo "######################################"
-    FPGASW_GIT=$FPGASW_GIT/../opae-sdk
+    FPGASW_GIT=$FPGASW_GIT/../opae-sdk-x
     BBB_GIT=$BBB_GIT/../intel-fpga-bbb-x
 else
     echo "######################################"
