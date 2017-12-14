@@ -54,7 +54,7 @@ then
     internal=1
 fi
 
-if [[ $internal=1 ]];
+if [[ $internal -eq 1 ]];
 then
     echo "######################################"
     echo "# Building internal GIT              #"
