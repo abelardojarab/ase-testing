@@ -8,7 +8,7 @@ LD_LIBRARY_PATH=${MYINST_DIR}/lib/
 ## Start hello_fpga, kill immediately, check if send_simkill works ##
 #####################################################################
 echo "Starting App and killing within 2 seconds"
-cd $FPGASW_GIT/mybuild/bin/
+cd $FPGASW_GIT/build/bin/
 LD_PRELOAD=libopae-c-ase.so ./hello_fpga &
 
 sleep 2
@@ -28,7 +28,7 @@ sleep 2
 ##            Try run two applications at one time                 ##
 #####################################################################
 echo "Running Two Apps at one time"
-cd $FPGASW_GIT/mybuild/bin/
+cd $FPGASW_GIT/build/bin/
 echo "Starting App 1"
 LD_PRELOAD=libopae-c-ase.so ./hello_fpga | tee good_run.log & 
 good_pid=$!
