@@ -42,7 +42,6 @@ fi
 if [[ $arg_list == *"gtest"* ]];
 then
     gtest=1
-    GTEST="/tmp/gtest"
 fi
 
 if [[ $arg_list == *"parallel"* ]];
@@ -135,7 +134,7 @@ then
     rm -rf build
     mkdir build
     cd build
-    cmake_cmd_gtest="$cmake_cmd_gtest -DOPAE_SDK_SOURCE=$FPGASW_GIT -DGTEST_ROOT=$GTEST"
+    cmake_cmd_gtest="$cmake_cmd_gtest -DOPAE_SDK_SOURCE=$FPGASW_GIT "
     eval $cmake_cmd_gtest
     make -j8
 fi
