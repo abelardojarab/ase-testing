@@ -49,7 +49,7 @@ then
     parallel=1
 fi
 
-if [[ $internal == *"internal"* ]];
+if [[ $arg_list == *"internal"* ]];
 then
     internal=1
 fi
