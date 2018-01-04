@@ -1354,7 +1354,7 @@ endtask
 	reset();
 	clk_cb.ccip_rx.c0.mmioRdValid <= 1;
 	clk_cb.ccip_rx.c0.hdr    <= i;
-##512;
+##65536;
 ##3;
 	`FAIL_UNLESS_EQUAL(clk_cb.error_code[1],1);
 	end			
