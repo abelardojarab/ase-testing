@@ -3,6 +3,7 @@
 set -v
 set -e
 
+arg_list="$*"
 ## Sanity check input
 if [ "$1" = "" ];
 then
@@ -62,6 +63,8 @@ sleep 2
 ##     Coverage report generation    ##
 ##                                   ##
 #######################################
+if [[ $arg_list == *"cov"* ]];
+then
 cd $ASE_COV
 lcov --capture \
      --test-name $TESTNAME \
@@ -76,3 +79,4 @@ genhtml $TESTNAME.info --output-directory html_$TESTNAME
 
 ## Convert cov_db to reports
 urg -full64 -dir ase_simv.vdb -show tests -format both
+fi
