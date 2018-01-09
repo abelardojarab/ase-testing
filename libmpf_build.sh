@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ -z "$AALSDK_GIT" ]; then
-    echo "env(AALSDK_GIT) has not been set !"
+if [ -z "$FPGASW_GIT" ]; then
+    echo "env(FPGASW_GIT) has not been set !"
     exit 1
 fi
 
