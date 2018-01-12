@@ -42,7 +42,6 @@ cd $ASE_WORKDIR/
 vsim -c -l run.log -dpioutoftheblue 1 -novopt -sv_lib ase_libs -do "$ASE_SRCDIR/vsim_run.tcl" "+CONFIG=$ASE_SRCDIR/ase.cfg" ase_top &> /dev/null &
 
 ## Wait until ready
-echo " ****************************** DI ******************************* "
 $ASEVAL_GIT/wait_till_ase_ready.sh
 
 ## Run test
